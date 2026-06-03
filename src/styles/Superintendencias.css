@@ -1,0 +1,390 @@
+body {
+  font-family: "Inter", sans-serif;
+  /* mesmo fundo do Login */
+  background: linear-gradient(135deg, #0f547e 10%, #000000 100%);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* fallback para navegadores antigos */
+  background-color: #0091ea;
+}
+
+
+
+.dashboard-container {
+  text-align: center;
+  padding: 2rem 1rem;
+  /* reduz padding lateral no mobile */
+  max-width: 1300px;
+  /* centraliza e limita largura */
+  margin: 0 auto;
+}
+
+.super-container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.8rem;
+  justify-items: center;
+}
+
+.card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 360px;
+  text-align: left;
+  transition: transform .25s ease, box-shadow .25s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ====== CABEÇALHO ====== */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2.2rem;
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding-top: 1.5rem;
+}
+
+.dashboard-header h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+  /* texto em branco em vez do degradê */
+  color: #ffffff;
+  background: none;
+  background-clip: initial;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  text-shadow: none;
+}
+
+/* NAVBAR SUPERIOR */
+.navbar {
+  width: 100%;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
+
+.navbar-logo {
+  height: 60px;
+  opacity: 1.2;
+}
+
+/* Ícone hamburguer */
+.navbar-burger {
+  width: 32px;
+  height: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.navbar-burger span {
+  width: 100%;
+  height: 4px;
+  background: #0f547e;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.navbar-burger:hover span {
+  background: #12608f;
+}
+
+/* ANIMAÇÃO ao abrir */
+.menu-open .navbar-burger span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.menu-open .navbar-burger span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-open .navbar-burger span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* MENU LATERAL */
+.side-menu {
+  position: fixed;
+  top: 60px;
+  /* 👈 AGORA fica abaixo da navbar */
+  right: -270px;
+  width: 250px;
+  background: white;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  border-radius: 0 0 0 22px;
+  transition: 0.28s ease-in-out;
+  z-index: 300;
+}
+
+.menu-open .side-menu {
+  right: 0;
+}
+
+/* Botões do menu */
+.side-menu button {
+  background: linear-gradient(135deg, #0f547e, #000000);
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 15px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.side-menu button:hover {
+  background: linear-gradient(135deg, #12608f, #0b0b0b);
+  transform: scale(1.03);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.24);
+}
+
+/* Botão sair */
+.side-menu .logout-btn {
+  background: linear-gradient(135deg, #0f547e, #000000);
+  border: 1px solid rgba(0, 0, 0, 0.45);
+  color: white;
+  text-align: left;
+}
+
+.side-menu .logout-btn:hover {
+  filter: brightness(1.07);
+  transform: scale(1.05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* Fundo escurecido */
+.menu-overlay {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s;
+  z-index: 150;
+}
+
+.menu-open .menu-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* empurra o conteúdo para baixo da navbar */
+.dashboard-header,
+.dashboard-content,
+.economic-wrapper,
+.environment-wrapper {
+  margin-top: 70px;
+}
+
+
+.titulo-degrade {
+  background: linear-gradient(90deg, #0091ea 0%, #00bfa5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  text-shadow: 0 0 12px rgba(0, 191, 165, 0.15);
+}
+
+.dashboard-header p {
+  color: #ffffff;
+  /* subtítulo em branco */
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ====== TAGS ====== */
+.legenda {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tag {
+  padding: 0.35rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 500;
+}
+
+.tag.economia {
+  background-color: #0288d1;
+}
+
+.tag.sustentabilidade {
+  background-color: #4caf50;
+}
+
+.tag.inovacao {
+  background-color: #ff9800;
+}
+
+/* ====== GRID DE CARDS ====== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.8rem;
+  justify-items: center;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.card-grid {
+  /* se já existe em Root.css, essas regras serão complementares */
+  gap: 1rem;
+}
+
+/* ====== CARD BASE ====== */
+.card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 360px;
+  text-align: left;
+  transition: transform .25s ease, box-shadow .25s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card a,
+.card {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ====== HOVER ====== */
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.15);
+}
+
+.card.economia:hover {
+  border-left: 4px solid #0288d1;
+  box-shadow: 0 10px 30px rgba(2, 136, 209, 0.3);
+}
+
+.card.sustentabilidade:hover {
+  border-left: 4px solid #4caf50;
+  box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+}
+
+.card.inovacao:hover {
+  border-left: 4px solid #ff9800;
+  box-shadow: 0 10px 30px rgba(255, 152, 0, 0.3);
+}
+
+/* ====== CONTEÚDO ====== */
+.icone {
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.posicao {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  font-weight: 700;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin: 1rem 0 0.3rem 0;
+  color: #212121;
+}
+
+.card .fonte {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.2rem;
+}
+
+.card .subtitulo {
+  font-size: 0.85rem;
+  color: #777;
+  font-style: italic;
+}
+
+/* ajustes locais rápidos */
+.super-container .icone {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ====== SEÇÕES ====== */
+.economic-wrapper {
+  margin-top: 3rem;
+}
+
+.environment-wrapper {
+  margin-top: 2rem;
+}
+
+/* ====== RESPONSIVIDADE ====== */
+@media (max-width: 768px) {
+  .dashboard-header h1 {
+    font-size: 2.3rem;
+  }
+
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
+  .economic-wrapper {
+    margin-top: 2rem;
+  }
+}
+
+/* botão de sair — ajuste para a classe que estiver usando no seu markup */
+.button-sair,
+.btn-sair,
+.logout-button {
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+}

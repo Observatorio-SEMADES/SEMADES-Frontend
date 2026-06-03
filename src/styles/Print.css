@@ -1,0 +1,141 @@
+/* Estilos específicos para impressão */
+@media print {
+  /* esconder elementos que não devem aparecer na impressão */
+  .no-print { display: none !important; }
+
+  /* mostrar header e footer fixos */
+  .print-header {
+    display: block !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 36px;
+    z-index: 9999;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 18px;
+    border-bottom: none;
+    background: transparent;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-header .print-center {
+    text-align: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: #222;
+  }
+
+  /* criar margens na página impressa para não sobrepor conteúdo com header/footer */
+  body {
+    margin-top: 72px !important;
+    margin-bottom: 56px !important;
+  }
+
+  /* evitar que cards sejam cortados entre páginas */
+  .card, .economic-section, .environment-wrapper, .evolution-section {
+    page-break-inside: avoid;
+  }
+
+  /* melhorar aparência de gráficos (forçar background branco) */
+  .evolution-section, .economic-section, .card {
+    background: #fff !important;
+  }
+
+  /* Cores das categorias para impressão */
+  /* Textos das categorias no topo */
+  .legenda .tag { 
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 12px !important;
+    font-weight: 500 !important;
+  }
+  .legenda .tag.economia { color: #0288d1 !important; }
+  .legenda .tag.sustentabilidade { color: #4caf50 !important; }
+  .legenda .tag.inovacao { color: #ff9800 !important; }
+
+  /* Layout de impressão: fazer cards grandes e horizontais */
+  .card-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    max-width: none !important;
+    width: auto !important;
+    margin: 0 30px !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    max-width: none !important;
+    width: calc(100% - 4px) !important;
+    margin: 0 !important;
+    padding: 20px 24px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1.5rem !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border-left-width: 4px !important;
+    border-left-style: solid !important;
+    background: #fff !important;
+  }
+
+  /* Cores dos cards baseadas na categoria */
+  .card.economia { border-left-color: #0288d1 !important; }
+  .card.sustentabilidade { border-left-color: #4caf50 !important; }
+  .card.inovacao { border-left-color: #ff9800 !important; }
+
+  /* ícone à esquerda */
+  .card .icone {
+    flex: 0 0 40px !important;
+    font-size: 1.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    color: #555 !important;
+  }
+
+  /* conteúdo do card */
+  .card h2 { 
+    font-size: 1.1rem !important; 
+    margin: 0 0 2px 0 !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+  }
+  
+  .card .fonte { 
+    font-size: 0.85rem !important;
+    color: #666 !important;
+    margin: 0 !important;
+  }
+  
+  .card .subtitulo { 
+    font-size: 0.85rem !important;
+    color: #666 !important;
+    font-style: italic !important;
+    margin: 2px 0 0 0 !important;
+  }
+
+  /* posição no canto direito */
+  .card .posicao { 
+    position: absolute !important;
+    right: 24px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background-color: transparent !important;
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+  }
+
+  /* Cores da posição baseadas na categoria */
+  .card.economia .posicao { color: #0288d1 !important; }
+  .card.sustentabilidade .posicao { color: #4caf50 !important; }
+  .card.inovacao .posicao { color: #ff9800 !important; }
+}
+
+/* na tela, esconder esses elementos (apenas redundância) */
+.print-header, .print-footer { display: none; }
