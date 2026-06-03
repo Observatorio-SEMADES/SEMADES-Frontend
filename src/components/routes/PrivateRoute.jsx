@@ -9,7 +9,7 @@ const isLocalhost = () => {
 };
 
 // Espelha o mesmo controle de Login.jsx
-const admin_mode = import.meta.env.VITE_ADMIN_MODE === "true";
+const admin_mode = import.meta.env.DEV;
 
 function PrivateRoute({ element }) {
   const user = localStorage.getItem("authUser");

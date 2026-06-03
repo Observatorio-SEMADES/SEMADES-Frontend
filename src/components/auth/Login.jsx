@@ -10,8 +10,8 @@ import {
 
 const LOCALHOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 
-// Controlado por VITE_ADMIN_MODE=true no .env local (nunca em produção)
-const admin_mode = import.meta.env.VITE_ADMIN_MODE === "true";
+// Ativo automaticamente em npm run dev; nunca em build/produção
+const admin_mode = import.meta.env.DEV;
 
 
 

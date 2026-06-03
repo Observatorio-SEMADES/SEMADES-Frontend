@@ -25,7 +25,7 @@ npm run dev
 
 O servidor de desenvolvimento sobe em `http://localhost:5173`.
 
-Em modo de desenvolvimento local, o auto-login pode ser ativado via variável de ambiente (veja abaixo).
+Em modo de desenvolvimento local (`npm run dev`), o auto-login é habilitado automaticamente pelo Vite via `import.meta.env.DEV`. Não é necessário configurar nenhuma variável de ambiente para isso.
 
 ## Gerar build de produção
 
@@ -55,20 +55,20 @@ cp .env.example .env
 | `VITE_ALLOWED_GOOGLE_EMAILS` | Sim (produção) | E-mails autorizados, separados por vírgula |
 | `VITE_ALLOWED_GOOGLE_DOMAINS` | Não | Domínios autorizados, separados por vírgula |
 | `VITE_AUTH_API_URL` | Não | URL base da API de autenticação (se houver backend próprio) |
-| `VITE_ADMIN_MODE` | Não | `true` para auto-login em localhost durante desenvolvimento |
 
 Exemplo de `.env` local para desenvolvimento:
 
 ```
 VITE_GOOGLE_CLIENT_ID=seu-client-id.apps.googleusercontent.com
 VITE_ALLOWED_GOOGLE_EMAILS=usuario@exemplo.com,outro@exemplo.com
-VITE_ADMIN_MODE=true
 ```
+
+> **Auto-login em desenvolvimento:** em `npm run dev`, o Vite define `import.meta.env.DEV = true` automaticamente, ativando o auto-login sem nenhuma configuração adicional. Em `npm run build` e produção, `import.meta.env.DEV` é sempre `false` e o auto-login não funciona.
 
 ## Segurança
 
 - **Nunca commite o arquivo `.env`** — ele contém segredos e está listado no `.gitignore`.
-- A variável `VITE_ADMIN_MODE=true` é apenas para desenvolvimento local. Nunca configure essa variável em produção.
+- O auto-login local é controlado por `import.meta.env.DEV` (flag nativa do Vite), não por variável de ambiente. Isso garante que nunca seja ativado em build/produção.
 - `VITE_ALLOWED_GOOGLE_EMAILS` e `VITE_ALLOWED_GOOGLE_DOMAINS` controlam quem pode acessar o sistema em produção. Sem essas variáveis, o login externo fica bloqueado.
 
 ## Backend e API de autenticação
