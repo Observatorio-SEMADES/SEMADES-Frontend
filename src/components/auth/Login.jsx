@@ -7,25 +7,37 @@ import {
   hasConfiguredGoogleAccessRules,
   isAuthorizedGoogleProfile,
 } from "../../services/authAccess";
+import { loginWithEmailPassword } from "../../services/authApi";
+import { hasApiUrl } from "../../services/api";
+import { setSession } from "../../services/authSession";
 
 const LOCALHOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
-
-// Ativo automaticamente em npm run dev; nunca em build/produção
 const admin_mode = import.meta.env.DEV;
-
-
 
 const isLocalhost = () => {
   if (typeof window === "undefined") return false;
-  const hostname = window.location?.hostname || "";
-  return LOCALHOSTS.has(hostname);
+  return LOCALHOSTS.has(window.location?.hostname || "");
+};
+
+const DEV_USER = {
+  name: "admin",
+  email: "admin@localhost",
+  picture: "",
+  provider: "local",
+  role: "admin",
+  allowedFeatures: ["superintendencias", "prodes"],
 };
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const [slides, setSlides] = useState([]);
   const [slideAtual, setSlideAtual] = useState(0);
   const navigate = useNavigate();
+
+  const apiConfigured = hasApiUrl();
 
   const handleGoogleLogin = ({ credential, profile }) => {
     if (!isAuthorizedGoogleProfile(profile)) {
@@ -34,7 +46,6 @@ function Login() {
       setErro(getGoogleAccessMessage());
       return;
     }
-
     if (credential) localStorage.setItem("authToken", credential);
     if (profile) {
       localStorage.setItem(
@@ -50,34 +61,32 @@ function Login() {
     navigate("/home");
   };
 
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
+    setErro("");
+    setLoading(true);
+    try {
+      await loginWithEmailPassword({ email: email.trim(), password });
+      navigate("/home");
+    } catch (err) {
+      setErro(err.message ?? "Falha ao fazer login. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (admin_mode && isLocalhost()) {
-      localStorage.setItem("authToken", "local-admin");
-      localStorage.setItem(
-        "authUser",
-        JSON.stringify({
-          name: "admin",
-          email: "admin@localhost",
-          picture: "",
-          provider: "local",
-        })
-      );
-      navigate("/home");
-      return;
-    }
-
-    if (!admin_mode && isLocalhost()) {
-      const storedUser = localStorage.getItem("authUser");
-      try {
-        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
-        if (parsedUser?.provider === "local") {
-          localStorage.removeItem("authToken");
-          localStorage.removeItem("authUser");
-        }
-      } catch {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("authUser");
+      // Em DEV: garante que o token local existe para rotas protegidas,
+      // mas NÃO navega automaticamente se VITE_API_URL estiver configurado
+      // para permitir testar o login manual.
+      if (!localStorage.getItem("authToken")) {
+        setSession({ token: "local-admin", user: DEV_USER });
       }
+      if (!apiConfigured) {
+        navigate("/home");
+      }
+      return;
     }
 
     const user = localStorage.getItem("authUser");
@@ -85,9 +94,9 @@ function Login() {
     if (user && token) {
       navigate("/home");
     }
-  }, [navigate]);
+  }, [navigate, apiConfigured]);
 
-  // ======= SLIDES LOCAIS (imagens + frases + link) =======
+  // ── Slides ──────────────────────────────────────────────────────────────────
   useEffect(() => {
     const fotos = [
       {
@@ -126,13 +135,9 @@ function Login() {
         link: "https://www.campogrande.ms.gov.br/semades/",
       },
     ];
-
-    // embaralha para variar a ordem a cada acesso
-    const embaralhar = (array) => array.sort(() => Math.random() - 0.5);
-    setSlides(embaralhar(fotos));
+    setSlides(fotos.sort(() => Math.random() - 0.5));
   }, []);
 
-  // ======= TROCA AUTOMÁTICA =======
   useEffect(() => {
     if (slides.length === 0) return;
     const intervalo = setInterval(() => {
@@ -146,59 +151,99 @@ function Login() {
       {/* ===== LADO ESQUERDO ===== */}
       <div className="login-left">
         <div className="login-box">
-            <img
-              src="/logo/prefcg1.png"
-              alt="Prefeitura de Campo Grande"
-              className="logo-prefeitura"
-            />
+          <img
+            src="/logo/prefcg1.png"
+            alt="Prefeitura de Campo Grande"
+            className="logo-prefeitura"
+          />
 
-            <h1 className="login-title">
-              Seja bem-vindo ao
-              <br />
-              Dashboard da SEMADES
-            </h1>
+          <h1 className="login-title">
+            Seja bem-vindo ao
+            <br />
+            Dashboard da SEMADES
+          </h1>
 
-            <p className="login-instructions">
-              Acesse com sua conta Google institucional para visualizar os indicadores.
-            </p>
+          {erro && <p className="login-error">{erro}</p>}
 
-            {erro && <p className="login-error">{erro}</p>}
-            {admin_mode && isLocalhost() ? (
-              <p className="login-helper">Acesso local detectado. Entrando como admin...</p>
-            ) : !hasConfiguredGoogleAccessRules ? (
+          {apiConfigured ? (
+            /* ── Formulário e-mail / senha (backend configurado) ── */
+            <>
+              <p className="login-instructions">
+                Acesse com e-mail e senha.
+              </p>
+              <form onSubmit={handleEmailLogin} className="register-form" style={{ marginTop: "1rem" }}>
+                <input
+                  type="email"
+                  placeholder="E-mail"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+                <input
+                  type="password"
+                  placeholder="Senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  style={{ marginTop: "0.5rem" }}
+                />
+                <button type="submit" disabled={loading} style={{ marginTop: "0.75rem" }}>
+                  {loading ? "Entrando..." : "Entrar"}
+                </button>
+              </form>
+              <p className="login-helper" style={{ marginTop: "0.75rem" }}>
+                Não tem acesso?{" "}
+                <a href="/cadastro">Cadastre-se</a>
+              </p>
+            </>
+          ) : admin_mode && isLocalhost() ? (
+            <p className="login-helper">Acesso local detectado. Redirecionando...</p>
+          ) : !hasConfiguredGoogleAccessRules ? (
+            <>
+              <p className="login-instructions">
+                Acesse com sua conta Google institucional para visualizar os indicadores.
+              </p>
               <p className="login-helper">{getGoogleAccessMessage()}</p>
-            ) : (
-              <GoogleAuth onSuccess={handleGoogleLogin} onError={setErro} />
-            )}
-          </div>
-        </div>
-
-        {/* ===== LADO DIREITO (CARROSSEL INSTITUCIONAL) ===== */}
-        <div className="login-right">
-          {slides.length > 0 ? (
-            <div className="carousel-container">
-              {slides.map((slide, index) => (
-                <a
-                  key={index}
-                  href={slide.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`slide ${index === slideAtual ? "ativo" : ""}`}
-                >
-                  <img src={slide.src} alt={slide.titulo} />
-                  <div className="slide-overlay"></div>
-                  <div className="slide-texto">
-                    <h4>{slide.titulo}</h4>
-                    <p className="slide-descricao">{slide.descricao}</p>
-                    <span className="slide-link">Visitar site →</span>
-                  </div>
-                </a>
-              ))}
-            </div>
+            </>
           ) : (
-            <div className="carousel-loading">Carregando imagens...</div>
+            <>
+              <p className="login-instructions">
+                Acesse com sua conta Google institucional para visualizar os indicadores.
+              </p>
+              <GoogleAuth onSuccess={handleGoogleLogin} onError={setErro} />
+            </>
           )}
         </div>
+      </div>
+
+      {/* ===== LADO DIREITO (CARROSSEL INSTITUCIONAL) ===== */}
+      <div className="login-right">
+        {slides.length > 0 ? (
+          <div className="carousel-container">
+            {slides.map((slide, index) => (
+              <a
+                key={index}
+                href={slide.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`slide ${index === slideAtual ? "ativo" : ""}`}
+              >
+                <img src={slide.src} alt={slide.titulo} />
+                <div className="slide-overlay"></div>
+                <div className="slide-texto">
+                  <h4>{slide.titulo}</h4>
+                  <p className="slide-descricao">{slide.descricao}</p>
+                  <span className="slide-link">Visitar site →</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="carousel-loading">Carregando imagens...</div>
+        )}
+      </div>
     </div>
   );
 }

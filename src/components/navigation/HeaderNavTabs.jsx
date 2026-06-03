@@ -1,11 +1,15 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { canAccessFeature } from "../../services/permissions";
 
-const tabs = [
+const PUBLIC_TABS = [
   { label: "In\u00edcio", path: "/home" },
   { label: "Indicadores Observat\u00f3rio", path: "/dashboard" },
-  { label: "Superintend\u00eancias", path: "/superintendencias" },
   { label: "Dados Centro", path: "/dados-centro" },
+];
+
+const RESTRICTED_TABS = [
+  { label: "Superintend\u00eancias", path: "/superintendencias", feature: "superintendencias" },
 ];
 
 function HeaderNavButton({ tab }) {
@@ -31,6 +35,11 @@ function HeaderNavButton({ tab }) {
 }
 
 export default function HeaderNavTabs() {
+  const visibleRestrictedTabs = RESTRICTED_TABS.filter((tab) =>
+    canAccessFeature(tab.feature)
+  );
+  const tabs = [...PUBLIC_TABS, ...visibleRestrictedTabs];
+
   return (
     <div className="navbar-tabs" aria-label="Navega\u00e7\u00e3o principal">
       {tabs.map((tab) => (

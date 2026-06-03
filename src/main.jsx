@@ -1,34 +1,31 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 import Root from "./Root.jsx";
 import HomePageWrapper from "./components/dashboard/HomePageWrapper.jsx";
-import PrivateRoute from "./components/routes/PrivateRoute";
+import FeatureRoute from "./components/routes/FeatureRoute";
+import LoginStatusBadge from "./components/auth/LoginStatusBadge";
 import "./styles/global.css";
 import Superintendencias from "./components/superintendencias/Superintendencias";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
+      {/* Badge global de sessão — aparece em todas as páginas quando logado */}
+      <LoginStatusBadge />
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/cadastro" element={<Navigate to="/" replace />} />
-        <Route
-          path="/home"
-          element={<PrivateRoute element={<HomePageWrapper />} />}
-        />
-        <Route
-          path="/dashboard"
-          element={<PrivateRoute element={<Root />} />}
-        />
-        <Route
-          path="/dados-centro"
-          element={<PrivateRoute element={<Root />} />}
-        />
+        <Route path="/cadastro" element={<Register />} />
+        {/* Rotas públicas — acessíveis sem login */}
+        <Route path="/home" element={<HomePageWrapper />} />
+        <Route path="/dashboard" element={<Root />} />
+        <Route path="/dados-centro" element={<Root />} />
+        {/* Rota restrita — exige autenticação + feature "superintendencias" */}
         <Route
           path="/superintendencias"
-          element={<PrivateRoute element={<Superintendencias />} />}
+          element={<FeatureRoute feature="superintendencias" element={<Superintendencias />} />}
         />
       </Routes>
     </Router>

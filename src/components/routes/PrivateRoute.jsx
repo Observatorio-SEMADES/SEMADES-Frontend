@@ -36,6 +36,8 @@ function PrivateRoute({ element }) {
           email: "admin@localhost",
           picture: "",
           provider: "local",
+          role: "admin",
+          allowedFeatures: ["superintendencias", "prodes"],
         })
       );
     }
