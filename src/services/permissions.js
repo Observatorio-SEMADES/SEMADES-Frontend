@@ -3,10 +3,6 @@ import { clearSession } from './authSession.js';
 
 const PERMISSIONS_KEY = 'authPermissions';
 
-const LOCALHOSTS = new Set(['localhost', '127.0.0.1', '::1']);
-const isLocalhost = () =>
-  typeof window !== 'undefined' && LOCALHOSTS.has(window.location?.hostname ?? '');
-
 export function getCurrentUser() {
   if (typeof window === 'undefined') return null;
   const raw = localStorage.getItem('authUser');
@@ -72,9 +68,10 @@ export function canAccessFeature(feature) {
   const user = getCurrentUser();
   if (!user) return false;
 
-  // Com API configurada mas sem permissão validada ainda: em produção bloqueia
-  // a feature restrita; em DEV+localhost libera apenas para teste manual.
-  if (hasApiUrl() && !(import.meta.env.DEV && isLocalhost())) {
+  // Com backend configurado, a fonte de verdade é o cache validado por
+  // /permissions/me. Sem cache ainda, bloqueia a feature restrita (não confia
+  // no allowedFeatures local). Sem API (dev offline), usa o usuário local.
+  if (hasApiUrl()) {
     return false;
   }
 

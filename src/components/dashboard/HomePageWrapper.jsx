@@ -1,13 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import HomePage from "./HomePage";
 import "../../styles/Root.css";
 import HeaderNavTabs from "../navigation/HeaderNavTabs";
+import AuthMenuItems from "../auth/AuthMenuItems";
 import Footer from "../navigation/Footer";
 
 export default function HomePageWrapper() {
-  const navigate = useNavigate();
-
   const loggedUser = (() => {
     if (typeof window === "undefined") return "";
     const raw = localStorage.getItem("authUser");
@@ -19,13 +17,6 @@ export default function HomePageWrapper() {
       return "";
     }
   })();
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("authUser");
-    navigate("/");
-  };
 
   const toggleMenu = () => {
     document.body.classList.toggle("menu-open");
@@ -60,15 +51,8 @@ export default function HomePageWrapper() {
       </nav>
 
       <div className="side-menu no-print">
-        <button
-          onClick={() => {
-            handleLogout();
-            closeMenu();
-          }}
-          className="logout-btn"
-        >
-          Sair
-        </button>
+        {/* Login / sessão dentro do menu das três listras */}
+        <AuthMenuItems />
       </div>
 
       <div className="menu-overlay no-print" onClick={closeMenu} />

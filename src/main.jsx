@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Root from "./Root.jsx";
@@ -16,7 +16,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       {/* Badge global de sessão — aparece em todas as páginas quando logado */}
       <LoginStatusBadge />
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* Entrada pública: o site abre direto, sem tela de login obrigatória */}
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        {/* Login antigo continua acessível, mas não é a entrada do site */}
+        <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Register />} />
         {/* Rotas públicas — acessíveis sem login */}
         <Route path="/home" element={<HomePageWrapper />} />

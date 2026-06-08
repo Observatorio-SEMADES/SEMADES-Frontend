@@ -1,11 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import "../../styles/Superintendencias.css";
 import HeaderNavTabs from "../navigation/HeaderNavTabs";
+import AuthMenuItems from "../auth/AuthMenuItems";
 import Footer from "../navigation/Footer";
 
 export default function Superintendencias() {
-  const navigate = useNavigate();
   const loggedUser = (() => {
     if (typeof window === "undefined") return "";
     const raw = localStorage.getItem("authUser");
@@ -24,13 +23,6 @@ export default function Superintendencias() {
 
   const closeMenu = () => {
     document.body.classList.remove("menu-open");
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("authUser");
-    navigate("/");
   };
 
   const handleExport = () => {
@@ -110,15 +102,8 @@ export default function Superintendencias() {
         >
           Exportar
         </button>
-        <button
-          onClick={() => {
-            handleLogout();
-            closeMenu();
-          }}
-          className="logout-btn"
-        >
-          Sair
-        </button>
+        {/* Login / sessão dentro do menu das três listras */}
+        <AuthMenuItems />
       </div>
 
       {/* OVERLAY (fundo escurecido) */}

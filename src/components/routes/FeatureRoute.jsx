@@ -22,8 +22,10 @@ const DEV_USER = {
 
 // Estados: 'pending' (validando) | 'allowed' | 'denied' | 'unauth'
 export default function FeatureRoute({ feature, element }) {
-  const devBypass = DEV_MODE && isLocalhost();
   const apiConfigured = hasApiUrl();
+  // Bypass de dev SÓ quando não há backend configurado. Com VITE_API_URL,
+  // a permissão é sempre validada pelo backend (não engana a regra).
+  const devBypass = DEV_MODE && isLocalhost() && !apiConfigured;
 
   const [state, setState] = useState(() => {
     if (devBypass) return "allowed";
@@ -66,7 +68,8 @@ export default function FeatureRoute({ feature, element }) {
 
   if (devBypass) return element;
   if (state === "pending") return null; // valida a sessão antes de renderizar (sem layout)
-  if (state === "unauth") return <Navigate to="/" replace />;
+  // Site é público: sem auth ou sem permissão, volta para a home pública.
+  if (state === "unauth") return <Navigate to="/home" replace />;
   if (state === "denied") return <Navigate to="/home" replace />;
   return element;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./styles/Root.css";
 import "./styles/DadosCentro.css";
 import "./styles/Print.css";
@@ -7,6 +7,7 @@ import EnvironmentCards from "./components/dashboard/EnvironmentCards";
 import EconomicSection from "./components/dashboard/EconomicSection";
 import DadosCentro from "./components/dados-centro/DadosCentro";
 import HeaderNavTabs from "./components/navigation/HeaderNavTabs";
+import AuthMenuItems from "./components/auth/AuthMenuItems";
 import Footer from "./components/navigation/Footer";
 
 const indicadores = [
@@ -77,7 +78,6 @@ const indicadores = [
 ];
 
 export default function Root() {
-  const navigate = useNavigate();
   const location = useLocation();
   const isDadosCentro = location.pathname === "/dados-centro";
   const loggedUser = (() => {
@@ -91,14 +91,6 @@ export default function Root() {
       return "";
     }
   })();
-
-  // logout — limpa o login e volta pra tela inicial
-  const handleLogout = () => {
-    localStorage.removeItem("auth");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("authUser");
-    navigate("/");
-  };
 
   // abre/fecha o menu (classe no body)
   const toggleMenu = () => {
@@ -155,15 +147,8 @@ export default function Root() {
           Exportar
         </button>
 
-        <button
-          onClick={() => {
-            handleLogout();
-            closeMenu();
-          }}
-          className="logout-btn"
-        >
-          Sair
-        </button>
+        {/* Login / sessão dentro do menu das três listras */}
+        <AuthMenuItems />
       </div>
 
       {/* OVERLAY (fundo escurecido) */}

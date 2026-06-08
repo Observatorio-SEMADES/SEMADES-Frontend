@@ -76,16 +76,14 @@ function Login() {
   };
 
   useEffect(() => {
-    if (admin_mode && isLocalhost()) {
-      // Em DEV: garante que o token local existe para rotas protegidas,
-      // mas NÃO navega automaticamente se VITE_API_URL estiver configurado
-      // para permitir testar o login manual.
+    // Auto-login de desenvolvimento APENAS quando não há backend configurado.
+    // Com VITE_API_URL, a fonte de verdade é o login real no backend — não
+    // criamos sessão admin local (senão Superintendências apareceria sem auth).
+    if (admin_mode && isLocalhost() && !apiConfigured) {
       if (!localStorage.getItem("authToken")) {
         setSession({ token: "local-admin", user: DEV_USER });
       }
-      if (!apiConfigured) {
-        navigate("/home");
-      }
+      navigate("/home");
       return;
     }
 
