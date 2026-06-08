@@ -31,7 +31,9 @@ export async function apiRequest(path, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(data?.message ?? `Erro ${response.status}`);
+    const err = new Error(data?.message ?? `Erro ${response.status}`);
+    err.status = response.status;
+    throw err;
   }
   return data ?? {};
 }

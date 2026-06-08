@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getStoredUser, clearSession } from "../../services/authSession";
+import { getStoredUser, clearSession, SESSION_CHANGE_EVENT } from "../../services/authSession";
 
 const badgeStyle = {
   position: "fixed",
@@ -35,11 +35,16 @@ export default function LoginStatusBadge() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setUser(getStoredUser());
+    const sync = () => setUser(getStoredUser());
+    sync();
 
-    const onStorage = () => setUser(getStoredUser());
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    // "storage" cobre mudanças em outras abas; SESSION_CHANGE_EVENT cobre a aba atual.
+    window.addEventListener("storage", sync);
+    window.addEventListener(SESSION_CHANGE_EVENT, sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener(SESSION_CHANGE_EVENT, sync);
+    };
   }, []);
 
   if (!user) return null;
