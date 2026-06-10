@@ -1,26 +1,9 @@
 import React from "react";
 import "../../styles/Superintendencias.css";
-import HeaderNavTabs from "../navigation/HeaderNavTabs";
-import AuthMenuItems from "../auth/AuthMenuItems";
 import Footer from "../navigation/Footer";
 
+// A topbar/menu lateral vivem no TopBar global (main.jsx), fora da transição.
 export default function Superintendencias() {
-  const toggleMenu = () => {
-    document.body.classList.toggle("menu-open");
-  };
-
-  const closeMenu = () => {
-    document.body.classList.remove("menu-open");
-  };
-
-  const handleExport = () => {
-    const header = document.getElementById("print-header");
-    if (header) {
-      header.innerHTML = `<div class="print-center"></div>`;
-    }
-    setTimeout(() => window.print(), 180);
-  };
-
   const indi = [
     {
       icone: "📃",
@@ -62,38 +45,6 @@ export default function Superintendencias() {
 
   return (
     <div className="dashboard-container">
-      {/* NAVBAR SUPERIOR */}
-      <nav className="navbar no-print">
-        <div className="navbar-left">
-          <img src="/logo/prefcg1.png" alt="Prefeitura" className="navbar-logo" />
-        </div>
-
-        <HeaderNavTabs />
-
-        <div className="navbar-burger" onClick={toggleMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
-
-      {/* MENU LATERAL */}
-      <div className="side-menu no-print">
-        <button
-          onClick={() => {
-            handleExport();
-            closeMenu();
-          }}
-        >
-          Exportar
-        </button>
-        {/* Login / sessão dentro do menu das três listras */}
-        <AuthMenuItems />
-      </div>
-
-      {/* OVERLAY (fundo escurecido) */}
-      <div className="menu-overlay no-print" onClick={closeMenu}></div>
-
       {/* usado apenas na impressão */}
       <div id="print-header" className="print-header no-print" aria-hidden="true"></div>
 

@@ -6,8 +6,6 @@ import "./styles/Print.css";
 import EnvironmentCards from "./components/dashboard/EnvironmentCards";
 import EconomicSection from "./components/dashboard/EconomicSection";
 import DadosCentro from "./components/dados-centro/DadosCentro";
-import HeaderNavTabs from "./components/navigation/HeaderNavTabs";
-import AuthMenuItems from "./components/auth/AuthMenuItems";
 import Footer from "./components/navigation/Footer";
 import MetroVerseButton from "./components/Metroverse/MetroVerse";
 
@@ -82,65 +80,9 @@ export default function Root() {
   const location = useLocation();
   const isDadosCentro = location.pathname === "/dados-centro";
 
-  // abre/fecha o menu (classe no body)
-  const toggleMenu = () => {
-    document.body.classList.toggle("menu-open");
-  };
-
-  const closeMenu = () => {
-    document.body.classList.remove("menu-open");
-  };
-
-  // impressão
-  const handleExport = () => {
-    const header = document.getElementById("print-header");
-    if (header) {
-      header.innerHTML = `
-        <div class="print-center"></div>
-      `;
-    }
-    setTimeout(() => window.print(), 180);
-  };
-
+  // A topbar/menu lateral vivem no TopBar global (main.jsx), fora da transição.
   return (
     <div className="dashboard-container">
-      {/* NAVBAR SUPERIOR */}
-      <nav className="navbar no-print">
-        <div className="navbar-left">
-          <img
-            src="/logo/prefcg1.png"
-            alt="Prefeitura"
-            className="navbar-logo"
-          />
-        </div>
-
-        <HeaderNavTabs />
-
-        <div className="navbar-burger" onClick={toggleMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
-
-      {/* MENU LATERAL */}
-      <div className="side-menu no-print">
-        <button
-          onClick={() => {
-            handleExport();
-            closeMenu();
-          }}
-        >
-          Exportar
-        </button>
-
-        {/* Login / sessão dentro do menu das três listras */}
-        <AuthMenuItems />
-      </div>
-
-      {/* OVERLAY (fundo escurecido) */}
-      <div className="menu-overlay no-print" onClick={closeMenu} />
-
       {/* usado apenas na impressão */}
       <div
         id="print-header"

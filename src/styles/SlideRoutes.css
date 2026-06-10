@@ -1,0 +1,91 @@
+/* Transição de "empurrão" entre rotas (ver SlideRoutes.jsx).
+   Duração espelhada em DURATION_MS no componente. */
+
+.slide-stage {
+  position: relative;
+}
+
+.slide-stage.is-animating {
+  overflow: hidden;
+}
+
+/* Página antiga: sobreposta em absolute enquanto desliza para fora. */
+.slide-page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.slide-out-left,
+.slide-out-right,
+.slide-in-left,
+.slide-in-right {
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1);
+  animation-fill-mode: both;
+  will-change: transform;
+}
+
+.slide-out-left {
+  animation-name: slide-out-left;
+}
+.slide-out-right {
+  animation-name: slide-out-right;
+}
+.slide-in-left {
+  animation-name: slide-in-left;
+}
+.slide-in-right {
+  animation-name: slide-in-right;
+}
+
+/* Indo para a direita na ordem das abas: tudo é empurrado para a esquerda. */
+@keyframes slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes slide-in-left {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Voltando: tudo é empurrado para a direita. */
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes slide-in-right {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Respeita usuários que pedem menos movimento no sistema. */
+@media (prefers-reduced-motion: reduce) {
+  .slide-out-left,
+  .slide-out-right,
+  .slide-in-left,
+  .slide-in-right {
+    animation: none;
+  }
+  .slide-page {
+    display: none;
+  }
+}

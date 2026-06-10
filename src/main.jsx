@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Navigate } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Root from "./Root.jsx";
 import HomePageWrapper from "./components/dashboard/HomePageWrapper.jsx";
 import FeatureRoute from "./components/routes/FeatureRoute";
 import LoginStatusBadge from "./components/auth/LoginStatusBadge";
+import TopBar from "./components/navigation/TopBar";
+import SlideRoutes from "./components/transitions/SlideRoutes";
 import "./styles/global.css";
 import Superintendencias from "./components/superintendencias/Superintendencias";
 
@@ -14,7 +16,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Router>
       {/* Badge global de sessão — aparece em todas as páginas quando logado */}
       <LoginStatusBadge />
-      <Routes>
+      {/* Topbar estática: fica fora do SlideRoutes para não deslizar junto */}
+      <TopBar />
+      <SlideRoutes>
         {/* Entrada pública: o site abre direto, sem tela de login obrigatória */}
         <Route path="/" element={<Navigate to="/home" replace />} />
         {/* Login antigo continua acessível, mas não é a entrada do site */}
@@ -28,7 +32,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           path="/superintendencias"
           element={<FeatureRoute feature="superintendencias" element={<Superintendencias />} />}
         />
-      </Routes>
+      </SlideRoutes>
     </Router>
   </React.StrictMode>
 );
