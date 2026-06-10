@@ -9,6 +9,7 @@ import DadosCentro from "./components/dados-centro/DadosCentro";
 import HeaderNavTabs from "./components/navigation/HeaderNavTabs";
 import AuthMenuItems from "./components/auth/AuthMenuItems";
 import Footer from "./components/navigation/Footer";
+import MetroVerseButton from "./components/Metroverse/MetroVerse";
 
 const indicadores = [
   {
@@ -203,6 +204,8 @@ export default function Root() {
               ))}
             </main>
           </div>
+
+          <MetroVerseButton />
 
           <section className="economic-wrapper">
             <EconomicSection />
