@@ -13,24 +13,14 @@ function closeSideMenu() {
   }
 }
 
-const userInfoStyle = {
-  fontSize: "13px",
-  color: "#333",
-  padding: "4px 2px",
-  lineHeight: 1.35,
-  wordBreak: "break-word",
-};
-
 // Itens de autenticação exibidos DENTRO do menu das três listras (.side-menu):
 // - deslogado: botão "Login" que abre o LoginModal
-// - logado: "Logado como: nome/e-mail" + botão "Sair"
+// - logado: botão "Sair" (o status da sessão aparece só no badge do canto direito)
 export default function AuthMenuItems() {
-  const { user, isAuthenticated, logout } = useAuthSession();
+  const { isAuthenticated, logout } = useAuthSession();
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
-  const displayName = user?.name || user?.email || "Usuário";
 
   const handleOpenLogin = () => {
     closeSideMenu(); // fecha o menu antes de abrir o modal centralizado
@@ -57,16 +47,9 @@ export default function AuthMenuItems() {
   return (
     <>
       {isAuthenticated ? (
-        <>
-          <div style={userInfoStyle} title={displayName}>
-            Logado como:
-            <br />
-            <strong>{displayName}</strong>
-          </div>
-          <button type="button" className="logout-btn" onClick={handleLogout}>
-            Sair
-          </button>
-        </>
+        <button type="button" className="logout-btn" onClick={handleLogout}>
+          Sair
+        </button>
       ) : (
         <button type="button" onClick={handleOpenLogin}>
           Login

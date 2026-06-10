@@ -6,18 +6,6 @@ import AuthMenuItems from "../auth/AuthMenuItems";
 import Footer from "../navigation/Footer";
 
 export default function HomePageWrapper() {
-  const loggedUser = (() => {
-    if (typeof window === "undefined") return "";
-    const raw = localStorage.getItem("authUser");
-    if (!raw) return "";
-    try {
-      const parsed = JSON.parse(raw);
-      return parsed?.name || parsed?.email || "";
-    } catch {
-      return "";
-    }
-  })();
-
   const toggleMenu = () => {
     document.body.classList.toggle("menu-open");
   };
@@ -28,10 +16,6 @@ export default function HomePageWrapper() {
 
   return (
     <div className="dashboard-container">
-      {loggedUser ? (
-        <div className="login-status">Logado como {loggedUser}</div>
-      ) : null}
-
       <nav className="navbar no-print">
         <div className="navbar-left">
           <img

@@ -191,10 +191,6 @@ function Login() {
                   {loading ? "Entrando..." : "Entrar"}
                 </button>
               </form>
-              <p className="login-helper" style={{ marginTop: "0.75rem" }}>
-                Não tem acesso?{" "}
-                <a href="/cadastro">Cadastre-se</a>
-              </p>
             </>
           ) : admin_mode && isLocalhost() ? (
             <p className="login-helper">Acesso local detectado. Redirecionando...</p>

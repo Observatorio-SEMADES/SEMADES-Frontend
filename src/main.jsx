@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/auth/Login";
-import Register from "./components/auth/Register";
 import Root from "./Root.jsx";
 import HomePageWrapper from "./components/dashboard/HomePageWrapper.jsx";
 import FeatureRoute from "./components/routes/FeatureRoute";
@@ -20,7 +19,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Navigate to="/home" replace />} />
         {/* Login antigo continua acessível, mas não é a entrada do site */}
         <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Register />} />
         {/* Rotas públicas — acessíveis sem login */}
         <Route path="/home" element={<HomePageWrapper />} />
         <Route path="/dashboard" element={<Root />} />

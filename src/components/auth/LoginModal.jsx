@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import "../../styles/Login.css";
 import { loginWithEmailPassword } from "../../services/authApi";
 
@@ -113,10 +112,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
-
-        <p className="login-helper" style={{ marginTop: "0.75rem" }}>
-          Não tem acesso? <Link to="/cadastro" onClick={handleClose}>Cadastre-se</Link>
-        </p>
       </div>
     </div>
   );
