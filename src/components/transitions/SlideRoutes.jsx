@@ -11,7 +11,7 @@ import "../../styles/SlideRoutes.css";
 // (<Routes location={...}>) por cima, em position: absolute; a nova fica no
 // fluxo normal, mantendo a altura/scroll do documento corretos.
 
-const ROUTE_ORDER = ["/home", "/dashboard", "/dados-centro", "/superintendencias"];
+const ROUTE_ORDER = ["/home", "/dashboard", "/dados-centro", "/ferramentas", "/superintendencias"];
 const DURATION_MS = 800; // manter em sincronia com SlideRoutes.css
 
 function routeIndex(pathname) {

@@ -37,7 +37,7 @@ function PrivateRoute({ element }) {
           picture: "",
           provider: "local",
           role: "admin",
-          allowedFeatures: ["superintendencias", "prodes"],
+          allowedFeatures: ["superintendencias", "prodes", "ferramentas"],
         })
       );
     }

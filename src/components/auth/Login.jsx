@@ -25,7 +25,7 @@ const DEV_USER = {
   picture: "",
   provider: "local",
   role: "admin",
-  allowedFeatures: ["superintendencias", "prodes"],
+  allowedFeatures: ["superintendencias", "prodes", "ferramentas"],
 };
 
 function Login() {

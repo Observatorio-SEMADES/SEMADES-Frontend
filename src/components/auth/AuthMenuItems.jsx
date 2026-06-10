@@ -6,6 +6,8 @@ import { notifySessionChanged } from "../../services/authSession";
 import { hasApiUrl } from "../../services/api";
 import LoginModal from "./LoginModal";
 
+const RESTRICTED_PATHS = ["/superintendencias", "/ferramentas"];
+
 // Fecha o menu lateral das três listras (mesma convenção dos demais botões).
 function closeSideMenu() {
   if (typeof document !== "undefined") {
@@ -39,7 +41,7 @@ export default function AuthMenuItems() {
   const handleLogout = () => {
     logout(); // limpa authToken, authUser e authPermissions + notifica
     closeSideMenu();
-    if (location.pathname === "/superintendencias") {
+    if (RESTRICTED_PATHS.includes(location.pathname)) {
       navigate("/home");
     }
   };

@@ -10,6 +10,7 @@ import TopBar from "./components/navigation/TopBar";
 import SlideRoutes from "./components/transitions/SlideRoutes";
 import "./styles/global.css";
 import Superintendencias from "./components/superintendencias/Superintendencias";
+import Ferramentas from "./components/ferramentas/Ferramentas";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -27,6 +28,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/home" element={<HomePageWrapper />} />
         <Route path="/dashboard" element={<Root />} />
         <Route path="/dados-centro" element={<Root />} />
+        <Route
+          path="/ferramentas"
+          element={<FeatureRoute feature="superintendencias" element={<Ferramentas />} />}
+        />
         {/* Rota restrita — exige autenticação + feature "superintendencias" */}
         <Route
           path="/superintendencias"

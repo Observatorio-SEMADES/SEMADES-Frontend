@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { isAuthenticated, canAccessFeature, fetchMyPermissions } from "../../services/permissions";
+import { isAuthenticated, canAccessFeature, fetchMyPermissions, getCurrentUser } from "../../services/permissions";
 import { validateCurrentSession } from "../../services/authApi";
 import { hasApiUrl } from "../../services/api";
 
@@ -17,7 +17,7 @@ const DEV_USER = {
   picture: "",
   provider: "local",
   role: "admin",
-  allowedFeatures: ["superintendencias", "prodes"],
+  allowedFeatures: ["superintendencias", "prodes", "ferramentas"],
 };
 
 // Estados: 'pending' (validando) | 'allowed' | 'denied' | 'unauth'
@@ -56,8 +56,16 @@ export default function FeatureRoute({ feature, element }) {
         setState("unauth");
         return;
       }
+
       await fetchMyPermissions();
       if (!active) return;
+
+      const currentUser = getCurrentUser();
+      if (currentUser?.role === "admin") {
+        setState("allowed");
+        return;
+      }
+
       setState(canAccessFeature(feature) ? "allowed" : "denied");
     })();
 

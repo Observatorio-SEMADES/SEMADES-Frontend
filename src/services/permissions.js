@@ -61,12 +61,17 @@ export function canAccessFeature(feature) {
   if (cached) {
     if (cached.role === 'admin') return true;
     if (feature === 'superintendencias') return Boolean(cached.canAccessSuperintendencias);
+    if (feature === 'ferramentas') return Boolean(cached.canAccessFerramentas);
     if (feature === 'prodes') return Boolean(cached.canAccessProdes);
     return Array.isArray(cached.allowedFeatures) && cached.allowedFeatures.includes(feature);
   }
 
   const user = getCurrentUser();
   if (!user) return false;
+
+  // Admin local deve ver todas as abas, mesmo antes do cache de permissões
+  // ser carregado. A rota ainda valida a sessão e a feature no backend.
+  if (user.role === 'admin') return true;
 
   // Com backend configurado, a fonte de verdade é o cache validado por
   // /permissions/me. Sem cache ainda, bloqueia a feature restrita (não confia
@@ -75,6 +80,5 @@ export function canAccessFeature(feature) {
     return false;
   }
 
-  if (user.role === 'admin') return true;
   return getAllowedFeatures().includes(feature);
 }
