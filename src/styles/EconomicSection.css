@@ -53,36 +53,9 @@
   text-align: left;
 }
 
-/* ==== ITENS DE DADOS ==== */
-.economic-item {
-  background-color: #f1f5ff;
-  border-radius: 10px;
-  padding: 0.9rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ==== ITENS DE DADOS (StatCard, estilos base em ui.css) ==== */
+.info-card .stat-card {
   margin-bottom: 0.8rem;
-  transition: background-color 0.3s ease;
-}
-
-.economic-item:hover {
-  background-color: #e0e7ff;
-}
-
-.economic-info {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.economic-label {
-  color: #1e3a8a;
-  font-weight: 500;
-}
-
-.economic-value {
-  font-weight: 700;
-  color: #1d4ed8;
 }
 
 /* ==== GRÁFICO ==== */
@@ -210,14 +183,6 @@
 
   .economic-title {
     font-size: 1rem;
-  }
-
-  .economic-item {
-    padding: 0.7rem 0.9rem;
-  }
-
-  .economic-value {
-    font-size: 0.95rem;
   }
 }
 

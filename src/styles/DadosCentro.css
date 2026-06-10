@@ -1,133 +1,5 @@
-/* NAVBAR / HEADER */
-.navbar {
-  width: 100%;
-  height: 60px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 18px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 200;
-}
-
-.navbar-logo {
-  height: 60px;
-  opacity: 1.2;
-}
-
-.navbar-burger {
-  width: 32px;
-  height: 26px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.navbar-burger span {
-  width: 100%;
-  height: 4px;
-  background: #333;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.menu-open .navbar-burger span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-.menu-open .navbar-burger span:nth-child(2) { opacity: 0; }
-.menu-open .navbar-burger span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
-
-/* SIDE MENU */
-.side-menu {
-  position: fixed;
-  top: 60px;
-  right: -270px;
-  width: 250px;
-  background: white;
-  padding: 20px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-  border-radius: 0 0 0 22px;
-  transition: 0.28s ease-in-out;
-  z-index: 300;
-}
-
-.menu-open .side-menu { right: 0; }
-
-.side-menu button {
-  background: linear-gradient(90deg, #0091ea, #00bfa5);
-  border: 1px solid #ddd;
-  padding: 12px 14px;
-  border-radius: 12px;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.25s;
-  font-size: 15px;
-}
-
-.side-menu .logout-btn {
-  background: linear-gradient(90deg, #0091ea, #00bfa5);
-  border: none;
-  color: white;
-  text-align: left;
-}
-
-.menu-overlay {
-  position: fixed;
-  top: 60px;
-  left: 0;
-  width: 100%;
-  height: calc(100vh - 60px);
-  background: rgba(0, 0, 0, 0.25);
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.25s;
-  z-index: 150;
-}
-
-.menu-open .menu-overlay { opacity: 1; pointer-events: auto; }
-
-/* DASHBOARD HEADER (título) */
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 2.2rem;
-  background: none;
-  box-shadow: none;
-  border: none;
-  padding-top: 1.5rem;
-}
-
-.dashboard-header h1 {
-  font-size: 3.2rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
-  color: #ffffff;
-  background: none;
-  -webkit-background-clip: initial;
-  -webkit-text-fill-color: initial;
-  text-shadow: none;
-}
-
-.titulo-degrade {
-  background: linear-gradient(90deg, #0091ea 0%, #00bfa5 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  text-shadow: 0 0 12px rgba(0, 191, 165, 0.15);
-}
-
-.dashboard-header p {
-  color: #ffffff;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
+/* Estilos específicos da página Dados Centro.
+   Navbar, menu lateral e cabeçalho vivem em Root.css/global.css. */
 
 /* Card contendo o gráfico */
 .dados-card {
@@ -481,65 +353,48 @@
   min-width: 0;
 }
 
-.resumo-card {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 14px;
-  padding: 12px 14px;      /* ← ligeiramente menor (fininho) */
-  height: 82px;            /* ← ALTURA FIXA (igual ao Valor Total) */
-  box-sizing: border-box;  /* ← garante consistência */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  display: flex;
-  gap: 12px;
-  align-items: center;
+.looker-linkcard {
+  flex: 0 0 360px;
   min-width: 0;
+  text-decoration: none;
+  color: inherit;
 }
 
-.resumo-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #0091ea, #00bfa5);
+@media (max-width: 980px) {
+  .bar-cards-row {
+    flex-direction: column;
+    max-width: 92%;
+    padding: 0;
+  }
+  .bar-cards-row .dados-card {
+    width: 100%;
+  }
+}
+
+
+
+
+/* ===========================
+   CARDS RESUMO (ANTES DOS GRÁFICOS) + CARD LOOKER
+   =========================== */
+
+.resumo-row {
+  width: 100%;
+  max-width: min(1180px, calc(100vw - 32px));
+  margin: 1.2rem auto 1.4rem auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 38px;
+  gap: 18px;
+  align-items: stretch;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
-.resumo-icon::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-}
-
-.resumo-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
+.resumo-cards {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
   min-width: 0;
-  transform: translateX(-26px);
-  flex: 1;              /* ocupa todo o espaço restante do card */
-  align-items: center;  /* centraliza título/valor */
-  text-align: center;   /* centraliza o texto */
-}
-
-
-.resumo-title {
-  font-weight: 800;
-  color: #1f2933;
-  font-size: 0.95rem;
-  line-height: 1.1;
-}
-
-.resumo-value {
-  color: #053a6b;
-  font-weight: 900;
-  font-size: 1.05rem;
-  line-height: 1.1;
-  word-break: break-word;
 }
 
 .looker-linkcard {
@@ -656,50 +511,3 @@
     grid-template-columns: 1fr;
   }
 }
-
-/* substitui o quadradinho azul por uma imagem (bandeira) */
-.looker-flag {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  object-fit: cover;
-  flex: 0 0 42px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-  background: #ffffff;
-}
-
-/* ícones em imagem nos cards resumo */
-.resumo-icon-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  object-fit: contain;
-  flex: 0 0 38px;
-  background: #ffffff;
-}
-
-/* Aumenta ícones dos cards:
-   Área do Terreno */
-.resumo-card:nth-child(4) .resumo-icon-img {
-  width: 50px;
-  height: 50px;
-  flex: 0 0 50px;
-}
-
-/* Aumenta ícones dos cards:
-   Quantidade de Imóveis */
-.resumo-card:nth-child(1) .resumo-icon-img {
-  width: 60px;
-  height: 60px;
-  flex: 0 0 60px;
-}
-
-
-/* Aumenta ícones dos cards:
-   Valor Venal */
-  .resumo-card:nth-child(2) .resumo-icon-img {
-  width: 68px;
-  height: 68px;
-  flex: 0 0 68px;
-  }

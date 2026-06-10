@@ -9,16 +9,18 @@ import {
   Legend,
   Title,
 } from "chart.js";
+import { Sprout, Leaf, TreePine } from "lucide-react";
+import SectionTitle from "../ui/SectionTitle";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const forestData = [
-  { icon: "\u{1F331}", label: "Mudas Doadas/Distribuídas", value: 27153 },
-  { icon: "\u{1F33F}", label: "Mudas Plantadas", value: 9429 },
+  { icon: Sprout, label: "Mudas Doadas/Distribuídas", value: 27153 },
+  { icon: Leaf, label: "Mudas Plantadas", value: 9429 },
 ];
 
 const plantingRate = 34.7;
-const sectionTitle = "\u{1F333} Sustentabilidade e Meio Ambiente";
+const sectionTitle = "Sustentabilidade e Meio Ambiente";
 const sectionPeriod = "Jan/2025 - Dez/2025";
 
 const arbolinkTableData = [
@@ -75,7 +77,9 @@ export default function EnvironmentCards() {
   return (
     <section className="env-container">
       <div className="env-header">
-        <h2 className="env-title">{sectionTitle}</h2>
+        <SectionTitle icon={TreePine} className="env-title">
+          {sectionTitle}
+        </SectionTitle>
         <p>{sectionPeriod}</p>
       </div>
 
@@ -85,7 +89,7 @@ export default function EnvironmentCards() {
             <div key={item.label} className="card-row">
               <div className="left">
                 <span className="item-icon" aria-hidden="true">
-                  {item.icon}
+                  <item.icon size={18} />
                 </span>
                 <span>{item.label}</span>
               </div>

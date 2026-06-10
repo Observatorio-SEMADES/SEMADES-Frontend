@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../../styles/HomePage.css';
 import EventCarousel from './EventCarousel';
 import Noticias from './Noticias';
+import SectionTitle from '../ui/SectionTitle';
+import { eventosCalendario } from '../../data/eventos';
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -52,12 +54,7 @@ export default function HomePage() {
     },
   ];
 
-  // Dados de exemplo para eventos/notas (estáticos, imutáveis)
-  const events = [
-    { id: 'e1', date: new Date(2026, 0, 22), title: 'Reunião SEMADES', note: 'Planejamento 2026' },
-    { id: 'e2', date: new Date(2026, 0, 25), title: 'Publicação Relatório', note: 'Dados ambientais Q4' },
-    { id: 'e3', date: new Date(2026, 0, 28), title: 'Workshop', note: 'Capacitação equipe' },
-  ];
+  const events = eventosCalendario;
 
   // ===== utilitários atualizados para considerar notas adicionadas =====
   const hasEvent = (day) => {
@@ -318,7 +315,7 @@ export default function HomePage() {
       <div className="homepage-container">
         {/* Seção de Calendário com Notas (agora começa após o hero/logo) */}
         <section className="calendar-section">
-        <h2 className="section-title">Calendário e Publicações</h2>
+        <SectionTitle>Calendário e Publicações</SectionTitle>
         <div className="calendar-container">
           {/* Calendário Principal */}
           <div className="calendar-main">
