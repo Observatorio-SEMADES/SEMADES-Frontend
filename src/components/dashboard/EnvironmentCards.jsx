@@ -13,13 +13,28 @@ import {
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const forestData = [
-  { icon: "\u{1F331}", label: "Mudas Doadas", value: 25261 },
-  { icon: "\u{1F33F}", label: "Mudas Plantadas", value: 5577 },
+  { icon: "\u{1F331}", label: "Mudas Doadas/Distribuídas", value: 27153 },
+  { icon: "\u{1F33F}", label: "Mudas Plantadas", value: 9429 },
 ];
 
-const plantingRate = 22.1;
+const plantingRate = 34.7;
 const sectionTitle = "\u{1F333} Sustentabilidade e Meio Ambiente";
-const sectionPeriod = "Janeiro - Setembro 2025";
+const sectionPeriod = "Jan/2025 - Dez/2025";
+
+const arbolinkTableData = [
+  { month: "Janeiro", pruning: 92, evaluated: 184, suppression: 106 },
+  { month: "Fevereiro", pruning: 122, evaluated: 376, suppression: 218 },
+  { month: "Março", pruning: 110, evaluated: 290, suppression: 195 },
+  { month: "Abril", pruning: 165, evaluated: 333, suppression: 200 },
+  { month: "Maio", pruning: 144, evaluated: 289, suppression: 153 },
+  { month: "Junho", pruning: 180, evaluated: 208, suppression: 113 },
+  { month: "Julho", pruning: 261, evaluated: 272, suppression: 165 },
+  { month: "Agosto", pruning: 149, evaluated: 292, suppression: 132 },
+  { month: "Setembro", pruning: 227, evaluated: 302, suppression: 217 },
+  { month: "Outubro", pruning: 193, evaluated: 388, suppression: 277 },
+  { month: "Novembro", pruning: 134, evaluated: 272, suppression: 197 },
+  { month: "Dezembro", pruning: 126, evaluated: 357, suppression: 199 },
+];
 
 export default function EnvironmentCards() {
   const pieData = {
@@ -88,6 +103,47 @@ export default function EnvironmentCards() {
 
         <div className="chart-container" aria-hidden="true">
           <Pie data={pieData} options={options} />
+        </div>
+      </div>
+
+      <div className="arbolink-table-section">
+        <div className="table-header">
+          <h3 className="table-title">Solicitações Mensais Arbolink</h3>
+        </div>
+        <div className="table-wrapper">
+          <table className="arbolink-table">
+            <thead>
+              <tr>
+                <th>Mês</th>
+                <th>Solicitações de Poda/Remoção</th>
+                <th>Número de Árvores Avaliadas</th>
+                <th>Autorização de Supressão Expedidas</th>
+              </tr>
+            </thead>
+            <tbody>
+              {arbolinkTableData.map((row, idx) => (
+                <tr key={idx} className={idx % 2 === 0 ? "even-row" : "odd-row"}>
+                  <td className="month-cell">{row.month}</td>
+                  <td>{row.pruning.toLocaleString("pt-BR")}</td>
+                  <td>{row.evaluated.toLocaleString("pt-BR")}</td>
+                  <td>{row.suppression.toLocaleString("pt-BR")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="table-footer">
+          <p className="arbolink-source">
+            Fonte:{" "}
+            <a
+              href="https://cg-painel-publico.arbolink.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Arbolink (SEMADES)
+            </a>
+            {" "} — {sectionPeriod}
+          </p>
         </div>
       </div>
     </section>
