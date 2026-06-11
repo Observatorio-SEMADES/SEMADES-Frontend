@@ -1,93 +1,175 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Label,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import StatCard from "../ui/StatCard";
-import DashboardCard from "../ui/DashboardCard";
 import {
   resumoCentro,
-  areaLotePorBairro as data,
-  areaLotePorProprietario as proprietarios,
+  areaLotePorBairro,
+  areaLotePorProprietario,
   proprietariosImoveisQtd,
   proprietariosValorAcumulado,
 } from "../../data/dadosCentro";
 
-export default function DadosCentro() {
-  const [hoverBairro, setHoverBairro] = useState(null);
-  const [hoverProprietario, setHoverProprietario] = useState(null);
+// Paleta de 10 tons de azul (espelha --blue-1..10 de DadosCentro.css, usada nas
+// fatias dos donuts e nos swatches da legenda).
+const BLUE_PALETTE = [
+  "#021a3b", "#053a6b", "#0a4e8f", "#0f66b3", "#1a80d6",
+  "#3399e6", "#66b3f0", "#9cc9f8", "#cfe9ff", "#ecf7ff",
+];
+const BAR_FILL = "#0a4e8f";
 
-  // Tooltips dos gráficos de barras (1 e 2)
-  const [barTip1, setBarTip1] = useState(null);
-  const [barTip2, setBarTip2] = useState(null);
-  const barAreaRef1 = useRef(null);
-  const barAreaRef2 = useRef(null);
+const moneyBRL = new Intl.NumberFormat("pt-BR", {
+  style: "currency",
+  currency: "BRL",
+  maximumFractionDigits: 2,
+});
 
-  const radius = 140;
+// Donut (recharts) + legenda lateral. Passar o mouse numa fatia ou num item da
+// legenda destaca os dois (estado `hover` compartilhado). Substitui o SVG e o
+// cálculo de ângulos feitos à mão.
+function DonutCard({ title, subtitle, ariaLabel, data }) {
+  const [hover, setHover] = useState(null);
 
-  const slicesBairro = useMemo(() => {
-    let start = -Math.PI / 2;
-    return data.map((d, i) => {
-      const angle = (d.value / 100) * Math.PI * 2;
-      const end = start + angle;
+  return (
+    <section className="dados-card">
+      <div className="chart-header-left">
+        {title}
+        {subtitle && <span className="chart-subtitle"> - {subtitle}</span>}
+      </div>
 
-      const x1 = Math.cos(start) * radius;
-      const y1 = Math.sin(start) * radius;
-      const x2 = Math.cos(end) * radius;
-      const y2 = Math.sin(end) * radius;
+      <div className="chart-box">
+        <div style={{ width: "100%", maxWidth: 340, height: 320 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart aria-label={ariaLabel} role="img">
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="label"
+                cx="50%"
+                cy="50%"
+                innerRadius={62}
+                outerRadius={140}
+                startAngle={90}
+                endAngle={-270}
+                stroke="#fff"
+                strokeWidth={2}
+                isAnimationActive={false}
+                onMouseEnter={(_, i) => setHover(i)}
+                onMouseLeave={() => setHover(null)}
+              >
+                {data.map((entry, i) => (
+                  <Cell
+                    key={entry.label}
+                    fill={BLUE_PALETTE[i % BLUE_PALETTE.length]}
+                    fillOpacity={hover !== null && hover !== i ? 0.32 : 1}
+                  />
+                ))}
+                <Label
+                  position="center"
+                  content={({ viewBox }) => {
+                    const { cx, cy } = viewBox;
+                    return (
+                      <g>
+                        <text x={cx} y={cy - 6} textAnchor="middle" fontWeight="700" fontSize="16" fill="#1f2933">
+                          Top 10
+                        </text>
+                        <text x={cx} y={cy + 18} textAnchor="middle" fontSize="12" fill="#666">
+                          Área de Lote
+                        </text>
+                      </g>
+                    );
+                  }}
+                />
+              </Pie>
+              <Tooltip
+                formatter={(value, name) => [`${value}%`, name]}
+                contentStyle={{ borderRadius: 8, border: "1px solid #e5e7eb" }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
 
-      const large = angle > Math.PI ? 1 : 0;
-      const path = `M 0 0 L ${x1} ${y1} A ${radius} ${radius} 0 ${large} 1 ${x2} ${y2} Z`;
-
-      start = end;
-      return { path, i };
-    });
-  }, [data]);
-
-  const slicesProprietario = useMemo(() => {
-    let start2 = -Math.PI / 2;
-    return proprietarios.map((d, i) => {
-      const angle = (d.value / 100) * Math.PI * 2;
-      const end = start2 + angle;
-
-      const x1 = Math.cos(start2) * radius;
-      const y1 = Math.sin(start2) * radius;
-      const x2 = Math.cos(end) * radius;
-      const y2 = Math.sin(end) * radius;
-
-      const large = angle > Math.PI ? 1 : 0;
-      const path = `M 0 0 L ${x1} ${y1} A ${radius} ${radius} 0 ${large} 1 ${x2} ${y2} Z`;
-
-      start2 = end;
-      return { path, i };
-    });
-  }, [proprietarios]);
-
-  const isDimmed = (hoverIndex, i) => hoverIndex !== null && hoverIndex !== i;
-
-  // Formatadores
-  const moneyBRL = useMemo(
-    () =>
-      new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-        maximumFractionDigits: 2,
-      }),
-    []
+      <div className="legend-box">
+        <div className="legend-list" onMouseLeave={() => setHover(null)}>
+          {data.map((d, i) => (
+            <div
+              className={[
+                "legend-item",
+                hover !== null && hover !== i ? "dimmed" : "",
+                hover === i ? "hovered" : "",
+              ].join(" ")}
+              key={d.label}
+              onMouseEnter={() => setHover(i)}
+            >
+              <div className={`legend-swatch swatch-${i + 1}`}></div>
+              <div className="legend-label">{d.label}</div>
+              <div className="legend-value">{d.value}%</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
+}
 
-  // Tooltip helper
-  const handleTip = (e, item, setTip, ref, valueText) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
+// Card de barras verticais (recharts). Substitui o plot em divs com grid, labels
+// e tooltip manuais. `valueFormatter` formata o tooltip; `tickFormatter`/`ticks`
+// controlam a escala do eixo Y.
+function BarCard({ title, data, valueFormatter, yTicks, yDomain, yTickFormatter }) {
+  return (
+    <section className="dados-card bar-card">
+      <div className="chart-header-left">{title}</div>
 
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+      <div className="bar-chart-wrap">
+        <div style={{ width: "100%", height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data} margin={{ top: 10, right: 12, left: 0, bottom: 36 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis
+                dataKey="label"
+                tick={{ fill: "#6b7280", fontSize: 9 }}
+                interval={0}
+                angle={-30}
+                textAnchor="end"
+                height={50}
+              />
+              <YAxis
+                tick={{ fill: "#6b7280", fontSize: 10 }}
+                domain={yDomain}
+                ticks={yTicks}
+                tickFormatter={yTickFormatter}
+                width={56}
+              />
+              <Tooltip
+                formatter={(value) => [valueFormatter(value), null]}
+                contentStyle={{ borderRadius: 8, border: "1px solid #e5e7eb" }}
+              />
+              <Bar dataKey="value" fill={BAR_FILL} radius={[3, 3, 0, 0]} isAnimationActive={false} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
-    setTip({
-      x,
-      y,
-      label: item.label,
-      valueText,
-    });
-  };
+        <div className="bar-source">
+          Fonte: <b>Planurb</b> - 2025
+        </div>
+      </div>
+    </section>
+  );
+}
 
+export default function DadosCentro() {
   return (
     <>
       {/* ===== CARDS RESUMO + CARD LOOKER (ANTES DE TODOS OS GRÁFICOS) ===== */}
@@ -125,307 +207,40 @@ export default function DadosCentro() {
         </a>
       </div>
 
-      {/* ===== CARD 1 ===== */}
-      <section className="dados-card">
-        <div className="chart-header-left">
-          Área de Lote por Bairro (Top 10)
-          <span className="chart-subtitle"> - Planurb, 2025</span>
-        </div>
+      {/* ===== DONUTS ===== */}
+      <DonutCard
+        title="Área de Lote por Bairro (Top 10)"
+        subtitle="Planurb, 2025"
+        ariaLabel="Área de Lote por Bairro (Top 10)"
+        data={areaLotePorBairro}
+      />
 
-        <div className="chart-box">
-          <svg
-            width="340"
-            height="340"
-            viewBox="0 0 340 340"
-            xmlns="http://www.w3.org/2000/svg"
-            role="img"
-            aria-label="Área de Lote (Top 10)"
-            onMouseLeave={() => setHoverBairro(null)}
-          >
-            <g transform="translate(170,170)">
-              {slicesBairro.map(({ path, i }) => (
-                <path
-                  key={i}
-                  d={path}
-                  fill={`var(--blue-${i + 1})`}
-                  stroke="#fff"
-                  strokeWidth="2"
-                  className={[
-                    isDimmed(hoverBairro, i) ? "dimmed" : "",
-                    hoverBairro === i ? "hovered-slice" : "",
-                  ].join(" ")}
-                  onMouseEnter={() => setHoverBairro(i)}
-                />
-              ))}
-
-              <circle cx="0" cy="0" r="60" fill="#ffffff" />
-              <text x="0" y="-6" textAnchor="middle" fontWeight="700" fontSize="16" fill="#1f2933">
-                Top 10
-              </text>
-              <text x="0" y="18" textAnchor="middle" fontSize="12" fill="#666">
-                Área de Lote
-              </text>
-            </g>
-          </svg>
-        </div>
-
-        <div className="legend-box">
-          <div className="legend-list" onMouseLeave={() => setHoverBairro(null)}>
-            {data.map((d, i) => (
-              <div
-                className={[
-                  "legend-item",
-                  isDimmed(hoverBairro, i) ? "dimmed" : "",
-                  hoverBairro === i ? "hovered" : "",
-                ].join(" ")}
-                key={i}
-                onMouseEnter={() => setHoverBairro(i)}
-              >
-                <div className={`legend-swatch swatch-${i + 1}`}></div>
-                <div className="legend-label">{d.label}</div>
-                <div className="legend-value">{d.value}%</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== CARD 2 ===== */}
-      <section className="dados-card">
-        <div className="chart-header-left">
-          Área de Lote por Proprietário (Top 10)
-          <span className="chart-subtitle"> - Planurb, 2025</span>
-        </div>
-
-        <div className="chart-box">
-          <svg
-            width="340"
-            height="340"
-            viewBox="0 0 340 340"
-            xmlns="http://www.w3.org/2000/svg"
-            role="img"
-            aria-label="Área de Lote por Proprietário (Top 10)"
-            onMouseLeave={() => setHoverProprietario(null)}
-          >
-            <g transform="translate(170,170)">
-              {slicesProprietario.map(({ path, i }) => (
-                <path
-                  key={`p-${i}`}
-                  d={path}
-                  fill={`var(--blue-${i + 1})`}
-                  stroke="#fff"
-                  strokeWidth="2"
-                  className={[
-                    isDimmed(hoverProprietario, i) ? "dimmed" : "",
-                    hoverProprietario === i ? "hovered-slice" : "",
-                  ].join(" ")}
-                  onMouseEnter={() => setHoverProprietario(i)}
-                />
-              ))}
-
-              <circle cx="0" cy="0" r="60" fill="#ffffff" />
-              <text x="0" y="-6" textAnchor="middle" fontWeight="700" fontSize="16" fill="#1f2933">
-                Top 10
-              </text>
-              <text x="0" y="18" textAnchor="middle" fontSize="12" fill="#666">
-                Área de Lote
-              </text>
-            </g>
-          </svg>
-        </div>
-
-        <div className="legend-box">
-          <div className="legend-list" onMouseLeave={() => setHoverProprietario(null)}>
-            {proprietarios.map((d, i) => (
-              <div
-                className={[
-                  "legend-item",
-                  isDimmed(hoverProprietario, i) ? "dimmed" : "",
-                  hoverProprietario === i ? "hovered" : "",
-                ].join(" ")}
-                key={`lp-${i}`}
-                onMouseEnter={() => setHoverProprietario(i)}
-              >
-                <div className={`legend-swatch swatch-${i + 1}`}></div>
-                <div className="legend-label">{d.label}</div>
-                <div className="legend-value">{d.value}%</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <DonutCard
+        title="Área de Lote por Proprietário (Top 10)"
+        subtitle="Planurb, 2025"
+        ariaLabel="Área de Lote por Proprietário (Top 10)"
+        data={areaLotePorProprietario}
+      />
 
       {/* ===== 2 CARDS DE BARRAS LADO A LADO ===== */}
       <div className="bar-cards-row">
-        {/* ===== GRÁFICO 1 ===== */}
-        <section className="dados-card bar-card">
-          <div className="chart-header-left">Proprietários por Quantidade de Imóveis</div>
+        <BarCard
+          title="Proprietários por Quantidade de Imóveis"
+          data={proprietariosImoveisQtd}
+          valueFormatter={(value) => `${value} Imóveis`}
+          yDomain={[0, 80]}
+          yTicks={[0, 20, 40, 60, 80]}
+          yTickFormatter={(v) => v}
+        />
 
-          <div className="bar-chart-wrap">
-            {/* PLOT */}
-            <div
-              className="bar-plot"
-              ref={barAreaRef1}
-              onMouseLeave={() => setBarTip1(null)}
-            >
-              <div className="bar-ylabels" aria-hidden="true">
-                <div>80</div>
-                <div>60</div>
-                <div>40</div>
-                <div>20</div>
-                <div>0</div>
-              </div>
-
-              <div className="bar-grid" aria-hidden="true">
-                <div className="bar-grid-line" style={{ top: "0%" }} />
-                <div className="bar-grid-line" style={{ top: "25%" }} />
-                <div className="bar-grid-line" style={{ top: "50%" }} />
-                <div className="bar-grid-line" style={{ top: "75%" }} />
-                <div className="bar-grid-line" style={{ top: "100%" }} />
-
-                {Array.from({ length: 11 }).map((_, idx) => (
-                  <div
-                    key={`v1-${idx}`}
-                    className="bar-grid-vline"
-                    style={{ left: `${(idx / 10) * 100}%` }}
-                  />
-                ))}
-              </div>
-
-              {barTip1 && (
-                <div className="bar-tooltip" style={{ left: barTip1.x, top: barTip1.y }}>
-                  <div className="bar-tooltip-title">{barTip1.label}</div>
-                  <div className="bar-tooltip-value">{barTip1.valueText}</div>
-                </div>
-              )}
-
-              <div className="bars-row">
-                {proprietariosImoveisQtd.map((item, i) => {
-                  const maxY = 80;
-                  const pct = Math.max(0, Math.min(100, (item.value / maxY) * 100));
-                  const valueText = `${item.value} Imóveis`;
-
-                  return (
-                    <div className="bar-col" key={`qtd-${i}`}>
-                      <div
-                        className="bar-rect"
-                        style={{ height: `${pct}%` }}
-                        onMouseEnter={(e) => handleTip(e, item, setBarTip1, barAreaRef1, valueText)}
-                        onMouseMove={(e) => handleTip(e, item, setBarTip1, barAreaRef1, valueText)}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* labels fora do plot */}
-            <div className="bar-xlabels">
-              {proprietariosImoveisQtd.map((item, i) => {
-                const valueText = `${item.value} imóveis`;
-                return (
-                  <div
-                    key={`xl1-${i}`}
-                    className="bar-xlabel"
-                    title={item.label}
-                    onMouseEnter={(e) => handleTip(e, item, setBarTip1, barAreaRef1, valueText)}
-                    onMouseMove={(e) => handleTip(e, item, setBarTip1, barAreaRef1, valueText)}
-                  >
-                    {item.label}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="bar-source">
-              Fonte: <b>Planurb</b> - 2025
-            </div>
-          </div>
-        </section>
-
-        {/* ===== GRÁFICO 2 ===== */}
-        <section className="dados-card bar-card">
-          <div className="chart-header-left">Proprietários por Valor Acumulado em Imóveis</div>
-
-          <div className="bar-chart-wrap">
-            {/* PLOT */}
-            <div
-              className="bar-plot"
-              ref={barAreaRef2}
-              onMouseLeave={() => setBarTip2(null)}
-            >
-              <div className="bar-ylabels" aria-hidden="true">
-                <div>1,5 bi</div>
-                <div>1,0 bi</div>
-                <div>0,5 bi</div>
-                <div>0</div>
-              </div>
-
-              <div className="bar-grid" aria-hidden="true">
-                <div className="bar-grid-line" style={{ top: "0%" }} />
-                <div className="bar-grid-line" style={{ top: "33.333%" }} />
-                <div className="bar-grid-line" style={{ top: "66.666%" }} />
-                <div className="bar-grid-line" style={{ top: "100%" }} />
-
-                {Array.from({ length: 11 }).map((_, idx) => (
-                  <div
-                    key={`v2-${idx}`}
-                    className="bar-grid-vline"
-                    style={{ left: `${(idx / 10) * 100}%` }}
-                  />
-                ))}
-              </div>
-
-              {barTip2 && (
-                <div className="bar-tooltip" style={{ left: barTip2.x, top: barTip2.y }}>
-                  <div className="bar-tooltip-title">{barTip2.label}</div>
-                  <div className="bar-tooltip-value">{barTip2.valueText}</div>
-                </div>
-              )}
-
-              <div className="bars-row">
-                {proprietariosValorAcumulado.map((item, i) => {
-                  const maxY = 1500000000;
-                  const pct = Math.max(0, Math.min(100, (item.value / maxY) * 100));
-                  const valueText = moneyBRL.format(item.value);
-
-                  return (
-                    <div className="bar-col" key={`val-${i}`}>
-                      <div
-                        className="bar-rect"
-                        style={{ height: `${pct}%` }}
-                        onMouseEnter={(e) => handleTip(e, item, setBarTip2, barAreaRef2, valueText)}
-                        onMouseMove={(e) => handleTip(e, item, setBarTip2, barAreaRef2, valueText)}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* labels fora do plot */}
-            <div className="bar-xlabels">
-              {proprietariosValorAcumulado.map((item, i) => {
-                const valueText = moneyBRL.format(item.value);
-                return (
-                  <div
-                    key={`xl2-${i}`}
-                    className="bar-xlabel"
-                    title={item.label}
-                    onMouseEnter={(e) => handleTip(e, item, setBarTip2, barAreaRef2, valueText)}
-                    onMouseMove={(e) => handleTip(e, item, setBarTip2, barAreaRef2, valueText)}
-                  >
-                    {item.label}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="bar-source">
-              Fonte: <b>Planurb</b> - 2025
-            </div>
-          </div>
-        </section>
+        <BarCard
+          title="Proprietários por Valor Acumulado em Imóveis"
+          data={proprietariosValorAcumulado}
+          valueFormatter={(value) => moneyBRL.format(value)}
+          yDomain={[0, 1500000000]}
+          yTicks={[0, 500000000, 1000000000, 1500000000]}
+          yTickFormatter={(v) => (v === 0 ? "0" : `${(v / 1000000000).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} bi`)}
+        />
       </div>
     </>
   );

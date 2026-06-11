@@ -1,23 +1,15 @@
 import React from "react";
-// ...existing code...
 import "../../styles/EnvironmentCards.css";
-import { Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  Title,
-} from "chart.js";
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Sprout, Leaf, TreePine } from "lucide-react";
 import SectionTitle from "../ui/SectionTitle";
-
-ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const forestData = [
   { icon: Sprout, label: "Mudas Doadas/Distribuídas", value: 27153 },
   { icon: Leaf, label: "Mudas Plantadas", value: 9429 },
 ];
+
+const PIE_COLORS = ["#66bb6a", "#a5d6a7"];
 
 const plantingRate = 34.7;
 const sectionTitle = "Sustentabilidade e Meio Ambiente";
@@ -39,40 +31,7 @@ const arbolinkTableData = [
 ];
 
 export default function EnvironmentCards() {
-  const pieData = {
-    labels: forestData.map((d) => d.label),
-    datasets: [
-      {
-        data: forestData.map((d) => d.value),
-        backgroundColor: ["#66bb6a", "#a5d6a7"],
-        borderColor: ["#ffffff", "#ffffff"],
-        borderWidth: 2,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-      title: {
-        display: false,
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            const value = context.parsed;
-            const total = context.dataset.data.reduce((s, v) => s + v, 0);
-            const pct = ((value / total) * 100).toFixed(1);
-            return `${context.label}: ${value.toLocaleString("pt-BR")} (${pct}%)`;
-          },
-        },
-      },
-    },
-  };
+  const totalForest = forestData.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <section className="env-container">
@@ -105,8 +64,34 @@ export default function EnvironmentCards() {
           </div>
         </div>
 
-        <div className="chart-container" aria-hidden="true">
-          <Pie data={pieData} options={options} />
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={forestData}
+                dataKey="value"
+                nameKey="label"
+                cx="50%"
+                cy="50%"
+                outerRadius="78%"
+                stroke="#ffffff"
+                strokeWidth={2}
+                isAnimationActive={false}
+              >
+                {forestData.map((entry, index) => (
+                  <Cell key={entry.label} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value, name) => [
+                  `${value.toLocaleString("pt-BR")} (${((value / totalForest) * 100).toFixed(1)}%)`,
+                  name,
+                ]}
+                contentStyle={{ borderRadius: "8px", border: "1px solid #e5e7eb" }}
+              />
+              <Legend verticalAlign="bottom" />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

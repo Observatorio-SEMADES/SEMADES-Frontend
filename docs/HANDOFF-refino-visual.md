@@ -92,15 +92,17 @@ Commits: `feat(ui): cria componentes DashboardCard, StatCard, Badge e PageHeader
 
 Commits sugeridos: `fix(responsivo): navbar sem números mágicos e hambúrguer acessível` (TopBar.jsx, menuContext.js, HeaderNavTabs.jsx, AuthMenuItems.jsx, Root.css) · `feat(fluidez): transição de rotas curta + carrosséis com prefers-reduced-motion` (SlideRoutes.jsx/.css, HomePage.jsx/.css, EventCarousel.css)
 
-## 6. FASE 4 — Componentização estrutural
+## 6. FASE 4 — Componentização estrutural (CONCLUÍDA em 10/06/2026)
 
-1. `layout/AppShell` (TopBar + `<main>` + Footer): hoje cada página renderiza o próprio `<Footer />` (Root.jsx, HomePageWrapper.jsx, Superintendencias.jsx). Garantir UM `<main>` semântico por página (hoje `.card-grid` é `<main>` dentro de div — invertido).
-2. Separar `Root.jsx` em `pages/DashboardPage.jsx` + `pages/DadosCentroPage.jsx` (eliminar o `if (isDadosCentro)`); atualizar rotas em `main.jsx`. `HomePageWrapper` é absorvido pelo AppShell.
-3. Quebrar `HomePage.jsx` (546 linhas) em: `HeroCarousel`, `AboutSection`, `CalendarSection`, `NoteModal` (modal de notas é demo em memória — se quiser persistir, `localStorage` é mudança pequena sem backend).
-4. **Unificar gráficos em recharts** (já instalado): migrar pizza chart.js de `EnvironmentCards.jsx` e os gráficos SVG/divs feitos à mão de `DadosCentro.jsx` (~200 linhas de tooltip/grid manual) para recharts (`ResponsiveContainer` resolve responsividade). Depois remover `chart.js` + `react-chartjs-2` do package.json (~180KB de bundle).
-5. Deletar código morto (conferido por grep — sem imports): `EconomicCards.jsx` + `EconomicCards.css`, `EnvironmentIndicators.jsx` + `EnvironmentIndicators.css`, `IndicatorEvolution.css`. Conferir uso de `rss-parser` antes de remover do package.json (não encontrei uso).
+1. **`components/layout/AppShell.jsx`** criado (container `.dashboard-container` + UM `<main>` semântico + `<Footer />` + `#print-header` via prop `printable`). Removida a duplicação de Footer/container que existia em Root, HomePageWrapper e Superintendências. O `.card-grid` deixou de ser `<main>` (agora é `<div>`; o `<main>` é do AppShell).
+2. **`Root.jsx` eliminado** → `pages/DashboardPage.jsx` + `pages/DadosCentroPage.jsx` (acabou o `if (isDadosCentro)`). `HomePageWrapper.jsx` removido (absorvido pelo AppShell). Rotas em `main.jsx` agora envolvem cada página no `<AppShell>`; a proteção de `/superintendencias` continua no `FeatureRoute`.
+3. **`HomePage.jsx` (546 → ~110 linhas)** virou orquestrador do estado das notas; seções extraídas para `HeroCarousel`, `AboutSection`, `CalendarSection`, `NoteModal` (todos em `components/dashboard/`). O ciclo de vida dos object URLs dos anexos foi preservado (criados no NoteModal, revogados no HomePage ao desmontar / excluir).
+4. **Gráficos unificados em recharts**: a pizza chart.js de `EnvironmentCards.jsx` virou `PieChart`; os 2 donuts SVG + 2 barras feitos à mão de `DadosCentro.jsx` viraram `PieChart`/`BarChart` (componentes `DonutCard`/`BarCard` internos, com `ResponsiveContainer`). A legenda lateral dos donuts e o hover-dim foram mantidos. `chart.js` + `react-chartjs-2` removidos do package.json — **bundle 725KB → 586KB** (gzip 230 → 181KB).
+5. **Código morto deletado** (sem imports): `EconomicCards.jsx`+css, `EnvironmentIndicators.jsx`+css, `IndicatorEvolution.css`. `rss-parser` removido do package.json (sem uso).
 
-Commits: `refactor(layout): cria AppShell e separa páginas Dashboard e Dados Centro` · `refactor(home): divide HomePage em componentes menores` · `refactor(graficos): unifica gráficos em recharts e remove chart.js` · `chore: remove componentes e estilos não utilizados`
+> Pendência opcional: `DadosCentro.css` ainda tem ~150 linhas de estilos das barras/tooltip antigos (`.bar-plot`, `.bar-grid*`, `.bar-tooltip`, `.bar-ylabels`, `.bar-xlabel*`, `.bars-row`, `.bar-col`, `.bar-rect`) que ficaram órfãos após o recharts. Podem ser removidos numa limpeza futura (não quebram nada).
+
+Commits sugeridos: `chore(limpeza): remove componentes/estilos mortos e rss-parser` · `refactor(layout): cria AppShell e separa Dashboard/Dados Centro de Root` · `refactor(home): divide HomePage em HeroCarousel/AboutSection/CalendarSection/NoteModal` · `refactor(graficos): unifica gráficos em recharts e remove chart.js`
 
 ## 7. FASE 5 — Polish final
 
