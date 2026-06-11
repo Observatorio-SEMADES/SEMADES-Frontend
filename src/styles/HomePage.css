@@ -195,7 +195,7 @@ html, body {
 .indicator {
   width:10px;height:10px;border-radius:50%;background: rgba(255,255,255,0.25);border:none;cursor:pointer;
 }
-.indicator.active { background: var(--accent); transform: scale(1.2); }
+.indicator.active { background: var(--accent); transform: none; }
 
 /* logo que "penca" sobre o calendário (mantém ajuste anterior) */
 .hero-bottom {
@@ -557,16 +557,14 @@ img[src*="prefcg1"] {
   border-radius: 50%;
   background: rgba(255,255,255,0.25);
   border: none;
-  transition: transform .12s ease, background .12s;
+  transition: background .12s ease;
 }
 
-/* indicador ativo um pouco maior e com cor do tema */
+/* indicador ativo com a mesma geometria, só mudando a cor */
 .news-carousel-section .carousel-controls .indicator.active,
 .news-carousel-section .carousel-indicators .indicator.active {
-  width: 10px;
-  height: 10px;
   background: var(--accent);
-  transform: scale(1.08);
+  transform: none;
 }
 
 /* ajuste para telas muito pequenas */
@@ -579,8 +577,8 @@ img[src*="prefcg1"] {
   }
   .news-carousel-section .carousel-controls .indicator.active,
   .news-carousel-section .carousel-indicators .indicator.active {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 }
 

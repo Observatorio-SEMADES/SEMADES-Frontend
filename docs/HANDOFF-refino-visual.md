@@ -2,8 +2,7 @@
 
 > Documento de continuidade do plano de refinamento visual/UX/refatoração.
 > Branch de trabalho: `refino-visual-semades`. Última atualização: 10/06/2026.
-> **Fases 1 e 2 concluídas** (não commitadas — os commits ficam a cargo do dono do projeto;
-> há um snapshot em `backup/refino-fases-1-2` com uma divisão sugerida de commits).
+> **Fases 1–5 concluídas** + **Fase 6 concluída** (não commitadas — commits a cargo do dono do projeto).
 
 ---
 
@@ -12,7 +11,7 @@
 - Portal institucional da SEMADES (Prefeitura de Campo Grande/MS), React 18 + Vite 7, React Router 7.
 - Páginas: Home (`/home`), Dashboard de indicadores (`/dashboard`), Dados Centro (`/dados-centro`), Superintendências (`/superintendencias`, restrita por feature/auth), Login (`/login`, fora do fluxo principal — login real é via `LoginModal` no menu hambúrguer).
 - Os "dashboards" são **links externos** para o Looker Studio (não iframes).
-- `Root.jsx` serve duas rotas (`/dashboard` e `/dados-centro`) com `if (pathname)` — separação planejada na Fase 4.
+- `AppShell.jsx` serve de casca comum (container + `<main>` + Footer). Cada página tem seu próprio arquivo em `src/pages/`.
 - A TopBar global é renderizada em `main.jsx` fora do `SlideRoutes` (transição de rotas).
 
 ### Regras invioláveis (do dono do projeto)
@@ -29,7 +28,7 @@
 - **Tipografia**: Inter self-hosted via `@fontsource/inter` (pesos 400–800, importados em `main.jsx`). h1 `clamp(1.9rem→2.6rem)` peso 800; corpo 1rem/1.6; peso máximo 800.
 - **Cards**: raio 12px, borda `1px solid var(--gray-200)`, sombra suave em repouso, hover `translateY(-4px)` + sombra média, 180–220ms ease-out, borda esquerda colorida por categoria.
 - **Movimento**: 150–250ms; respeitar `prefers-reduced-motion` (já tem regra global). ⚠️ Nunca usar animação de entrada com `opacity: 0` + fill `both` (foi causa de seção invisível — ver §3.7).
-- **Ícones**: substituir emojis por `lucide-react` (ainda NÃO instalado — Fase 2).
+- **Ícones**: `lucide-react` instalado (`^1.17.0`). Não usar emojis.
 - Amarelo `--accent` nunca como fundo de texto branco (contraste); sobre amarelo usar texto `--gray-900`.
 
 ## 3. O que a FASE 1 já fez (concluída)
@@ -48,89 +47,104 @@
 8. Imagens comprimidas (mesmos nomes): campo4 6,4MB→414KB, campo5 7,7MB→367KB, campo1/2/3 e semades-about-bg 196–363KB. `theme-color` do index.html → `#0a4f9f`.
 9. Botões do menu lateral: brancos com texto escuro; `.logout-btn` em `--brand-700`.
 
-Commits sugeridos da Fase 1 (se ainda não commitados):
-- `refactor(estilos): cria design tokens e unifica fundo das páginas`
-- `feat(tipografia): adiciona fonte Inter e nova escala de títulos`
-- `perf(imagens): comprime fotos do carrossel da home`
+## 4. FASE 2 — Cards e layout (concluída)
 
-### Pendência de verificação
-- Página **Superintendências** não foi verificada visualmente (exige login + feature). Os cards dela agora herdam o estilo base do Root.css (padding 1.5rem, gap 1.8rem) — checar logado.
+`lucide-react` instalado; `src/components/ui/` criado (DashboardCard, StatCard, Badge, SectionTitle, PageHeader) com estilos em `src/styles/ui.css`; dados extraídos para `src/data/`; emojis e ícones JPG substituídos; badge `posicao` removido; botão MetroVerse restaurado ao local original (após o grid, antes da seção econômica); card Looker de Dados Centro e superintendências sem link mostram "Em breve"; CSS órfão removido e Print.css adaptado às novas classes. Extra: `api.js` só exibe "backend não está rodando" para falhas reais de rede (TypeError), demais erros sobem intactos.
 
-## 4. FASE 2 — Cards e layout (CONCLUÍDA em 10/06/2026)
+## 5. FASE 3 — Responsividade e fluidez (concluída)
 
-Tudo abaixo foi implementado: `lucide-react` instalado; `src/components/ui/`
-(DashboardCard, StatCard, Badge, SectionTitle, PageHeader) com estilos em
-`src/styles/ui.css`; dados extraídos para `src/data/`; emojis e ícones JPG
-substituídos; badge `posicao` removido; botão MetroVerse restaurado ao local
-original (após o grid, antes da seção econômica); card Looker de Dados Centro
-e superintendências sem link mostram "Em breve"; CSS órfão removido e Print.css
-adaptado às novas classes. Extra: `api.js` só exibe "backend não está rodando"
-para falhas reais de rede (TypeError), demais erros sobem intactos.
+1. **Navbar sem números mágicos**: TopBar.jsx mede a altura real da navbar (ref + `ResizeObserver`) e publica `--navbar-h` em `:root`. `side-menu`/`menu-overlay` usam `top: var(--navbar-h, 60px)`.
+2. Transição de rota: `DURATION_MS 800 → 250` e `SlideRoutes.css` reescrito para fade + deslize curto (24px).
+3. Hero da Home: recuo corrigido em 769–1024px; autoplay pausa no hover/foco; ticker de Eventos com `:focus-within` e `prefers-reduced-motion`.
+4. Hambúrguer: `<button aria-expanded aria-controls aria-label>`; estado migrado de `document.body.classList` para React state + `MenuContext`; fecha com `Esc` e ao trocar de rota.
 
-1. Instalar `lucide-react`. Criar `src/components/ui/`:
-   - `DashboardCard` — card de link para dashboard externo: ícone SVG, categoria (borda esquerda SEMPRE visível, não só no hover), título, fonte, descrição, ícone `external-link` (usuário precisa saber que sai do site), estado "Em breve" para itens sem `href` (hoje Superintendências tem 4 `<a>` sem href e o card Looker de Dados Centro idem — links comentados no código).
-   - `StatCard` — unifica `resumo-card` (DadosCentro) e `economic-item` (EconomicSection): ícone + rótulo + valor (+ link opcional). Usar `font-variant-numeric: tabular-nums`.
-   - `Badge` — chips de categoria com mapa central de cores (`--cat-*`).
-   - `SectionTitle` — h2 com linha de acento (substitui `section-title`, `noticias-heading`, `env-title`, `carousel-title`).
-   - `PageHeader` — título+subtítulo+legenda (substitui `dashboard-header` em Root/Superintendências/DadosCentro).
-2. Substituir emojis por ícones lucide nos cards (Root.jsx: 🏢💼🐄🌾🚢📦; Superintendencias: 📃📈🏙️👜; EconomicSection: 🏢👥📈🏆; EventCarousel/EnvironmentCards).
-3. Remover ou ressignificar o badge `posicao` ("1º…6º" — é só a ordem do array, não comunica nada).
-4. Criar `src/data/` e extrair dados mockados: `indicadores.js` (Root.jsx), `superintendencias.js`, `noticias.js` (Noticias.jsx), `eventos.js` (EventCarousel.jsx hostEvents + HomePage events), `economia.js` (EconomicSection economicDataByYear), `dadosCentro.js` (4 arrays de DadosCentro.jsx).
-5. Cards resumo de DadosCentro: trocar ícones JPG (quadrado branco visível: IconImoveis.jpg etc.) por ícones lucide.
-6. Integrar o botão MetroVerse (hoje um banner solto preto/roxo com `Logo-Havard.jpeg`) como card "Fonte externa" discreto no grid.
+## 6. FASE 4 — Componentização estrutural (concluída)
 
-Commits: `feat(ui): cria componentes DashboardCard, StatCard, Badge e PageHeader` · `refactor(dashboard): migra cards para o novo sistema` · `refactor(dados): extrai dados mockados para src/data`
+1. **`AppShell.jsx`** criado; Footer/container centralizados.
+2. **`Root.jsx` eliminado** → `pages/DashboardPage.jsx` + `pages/DadosCentroPage.jsx`.
+3. **`HomePage.jsx` (546 → ~110 linhas)** virou orquestrador; seções extraídas para `HeroCarousel`, `AboutSection`, `CalendarSection`, `NoteModal`.
+4. **Gráficos unificados em recharts**: chart.js + react-chartjs-2 removidos. Bundle 725KB → 586KB (gzip 230 → 181KB).
+5. **Código morto deletado**: `EconomicCards.jsx`, `EnvironmentIndicators.jsx`, `IndicatorEvolution.css`, `rss-parser`.
 
-## 5. FASE 3 — Responsividade e fluidez (CONCLUÍDA em 10/06/2026)
+## 7. FASE 5 — Polish final (concluída)
 
-1. **Navbar sem números mágicos**: TopBar.jsx mede a altura real da navbar (ref + `ResizeObserver`) e publica `--navbar-h` em `:root`. `side-menu`/`menu-overlay` agora usam `top: var(--navbar-h, 60px)` — removidos os `top: 96px/104px` chumbados dos breakpoints 900px/620px em Root.css.
-2. Transição de rota: `DURATION_MS 800 → 250` e `SlideRoutes.css` reescrito para fade + deslize curto (24px) com opacity, em vez de empurrão de 100vw. Mantido `prefers-reduced-motion`.
-3. Hero da Home: corrigido o recuo em 769–1024px (o `padding-left` vive em `.carousel-slide`, não em `.carousel-hero` — reduzido para 3.5rem no breakpoint 1024px); autoplay pausa no hover/foco (`isCarouselPaused` + `onMouseEnter/Leave`/`onFocusCapture/BlurCapture`) e é desligado sob `prefers-reduced-motion` (JS + CSS); ticker de Eventos ganhou `:focus-within` e `prefers-reduced-motion` (animação parada).
-4. Calendário: já empilhava as 2 colunas em ≤900px e as células de dia têm ≥40px (56px padrão, 40px em ≤400px) — verificado, sem mudança necessária.
-5. Tabela Arbolink: já tinha `overflow-x: auto` + `min-width` nos breakpoints (EnvironmentCards.css) — verificado, sem mudança necessária.
-6. Hambúrguer: virou `<button aria-expanded aria-controls="side-menu" aria-label>`; estado do menu migrado de `document.body.classList` para React state em TopBar.jsx (efeito sincroniza a classe `.menu-open` no body para o CSS continuar funcionando); fecha com `Esc` e ao trocar de rota. Filhos (HeaderNavTabs, AuthMenuItems) fecham via novo `MenuContext` (`useMenu().closeMenu()`) em vez de tocar no body.
+1. **Modais acessíveis**: hook `hooks/useDialog.js` (foco preso Tab/Shift+Tab, Esc, scroll-lock, foco de volta). Aplicado ao `NoteModal` e `EventModal`.
+2. **Carrosséis**: botão pausar/retomar no hero e no ticker de Eventos; `aria-live="polite"` no hero.
+3. **EmptyState + Skeleton** em `components/ui/`.
+4. **Footer**: removidos 4 `href="#"` quebrados.
+5. **Contraste AA dos badges**: economia → `#01679b`; sustentabilidade/inovação → texto `--gray-900`.
+6. **Preload do hero**: `<link rel="preload" as="image" href="/imagens-cg/campo1.jpg">` no `index.html`.
 
-Commits sugeridos: `fix(responsivo): navbar sem números mágicos e hambúrguer acessível` (TopBar.jsx, menuContext.js, HeaderNavTabs.jsx, AuthMenuItems.jsx, Root.css) · `feat(fluidez): transição de rotas curta + carrosséis com prefers-reduced-motion` (SlideRoutes.jsx/.css, HomePage.jsx/.css, EventCarousel.css)
+## 8. FASE 6 — Melhorias de dados e UX (concluída em 10/06/2026)
 
-## 6. FASE 4 — Componentização estrutural (CONCLUÍDA em 10/06/2026)
+### 8.1 Dados Centro (`/dados-centro`)
 
-1. **`components/layout/AppShell.jsx`** criado (container `.dashboard-container` + UM `<main>` semântico + `<Footer />` + `#print-header` via prop `printable`). Removida a duplicação de Footer/container que existia em Root, HomePageWrapper e Superintendências. O `.card-grid` deixou de ser `<main>` (agora é `<div>`; o `<main>` é do AppShell).
-2. **`Root.jsx` eliminado** → `pages/DashboardPage.jsx` + `pages/DadosCentroPage.jsx` (acabou o `if (isDadosCentro)`). `HomePageWrapper.jsx` removido (absorvido pelo AppShell). Rotas em `main.jsx` agora envolvem cada página no `<AppShell>`; a proteção de `/superintendencias` continua no `FeatureRoute`.
-3. **`HomePage.jsx` (546 → ~110 linhas)** virou orquestrador do estado das notas; seções extraídas para `HeroCarousel`, `AboutSection`, `CalendarSection`, `NoteModal` (todos em `components/dashboard/`). O ciclo de vida dos object URLs dos anexos foi preservado (criados no NoteModal, revogados no HomePage ao desmontar / excluir).
-4. **Gráficos unificados em recharts**: a pizza chart.js de `EnvironmentCards.jsx` virou `PieChart`; os 2 donuts SVG + 2 barras feitos à mão de `DadosCentro.jsx` viraram `PieChart`/`BarChart` (componentes `DonutCard`/`BarCard` internos, com `ResponsiveContainer`). A legenda lateral dos donuts e o hover-dim foram mantidos. `chart.js` + `react-chartjs-2` removidos do package.json — **bundle 725KB → 586KB** (gzip 230 → 181KB).
-5. **Código morto deletado** (sem imports): `EconomicCards.jsx`+css, `EnvironmentIndicators.jsx`+css, `IndicatorEvolution.css`. `rss-parser` removido do package.json (sem uso).
+**Donuts lado a lado** — criado `.donut-cards-row` (espelho do `.bar-cards-row`). `DonutCard` agora usa layout coluna (`.donut-compact`): gráfico 210×210 centralizado, legenda em grid 2×5 abaixo. Label do centro do donut era hardcoded "Área de Lote" para ambos — corrigido: primeiro donut "Por Bairro", segundo "Proprietário".
 
-> Pendência opcional: `DadosCentro.css` ainda tem ~150 linhas de estilos das barras/tooltip antigos (`.bar-plot`, `.bar-grid*`, `.bar-tooltip`, `.bar-ylabels`, `.bar-xlabel*`, `.bars-row`, `.bar-col`, `.bar-rect`) que ficaram órfãos após o recharts. Podem ser removidos numa limpeza futura (não quebram nada).
+**Barras horizontais** — `BarCard` usa `layout="vertical"` no recharts: `YAxis` vira eixo de labels (sem rotação, `width: 96`), `XAxis` vira eixo de valores. `radius` ajustado para `[0, 3, 3, 0]`. Altura 280 → 310px.
 
-Commits sugeridos: `chore(limpeza): remove componentes/estilos mortos e rss-parser` · `refactor(layout): cria AppShell e separa Dashboard/Dados Centro de Root` · `refactor(home): divide HomePage em HeroCarousel/AboutSection/CalendarSection/NoteModal` · `refactor(graficos): unifica gráficos em recharts e remove chart.js`
+**CSS limpo** — removidos ~150 linhas de CSS morto (`.bar-plot`, `.bar-grid*`, `.bar-ylabels`, `.bar-xlabel*`, `.bars-row`, `.bar-col`, `.bar-rect`, `.bar-tooltip*`), bloco `.resumo-row` duplicado, classes nunca usadas `.looker-icon` / `.looker-topbadge`. Arquivo 524 → 260 linhas.
 
-## 7. FASE 5 — Polish final (CONCLUÍDA em 10/06/2026)
+**StatCards legíveis** — valores grandes exibem forma curta em destaque (`R$ 2,52 bi`, `R$ 97,9 bi`, `7,6 mi m²`) com valor completo em fonte menor via nova prop `detail` em `StatCard` (acessível via `title`). Dados atualizados em `src/data/dadosCentro.js`.
 
-1. **Modais acessíveis**: hook `hooks/useDialog.js` (foco preso com Tab/Shift+Tab, fecha no `Esc`, trava o scroll do fundo e devolve o foco ao gatilho ao fechar). Aplicado ao `NoteModal` e ao modal de detalhes do `EventCarousel` (extraído para o componente interno `EventModal`); ambos com `role="dialog"`, `aria-modal`, `aria-label`/`aria-labelledby` e `tabIndex={-1}`.
-2. **Carrosséis**: botão pausar/retomar no hero (`HeroCarousel`, pausa manual além do hover/foco) e no ticker de Eventos (classe `.is-paused`); região `aria-live="polite"` anunciando o slide atual do hero (`aria-roledescription="carrossel"`).
-3. **EmptyState + Skeleton** (`components/ui/`): `Skeleton` substitui o "Carregando imagens..." do Login; `EmptyState` aparece na lista lateral do calendário quando não há eventos no mês. Estilos + shimmer (com `prefers-reduced-motion`) em `ui.css`.
-4. **Footer**: removidos os 4 `href="#"` quebrados (Email, Telefone, LGPD, Política) — viraram `<span class="semades-footer-text">` (placeholders com comentário indicando trocar por `<a href>`/`mailto:`/`tel:` reais). Resolve WCAG 2.4.4.
-5. **Contraste AA dos badges**: economia → azul mais escuro (`#01679b`, texto branco passa); sustentabilidade/inovação (claros) → texto `--gray-900`. As cores `--cat-*` originais seguem nas bordas dos cards.
-6. **Print.css revisado**: as classes que ele mira (`dash-card*`, `card-grid`, `page-header-legend .badge`) continuam batendo com o DOM após a Fase 4 — sem mudança necessária.
-7. **Preload do hero**: `<link rel="preload" as="image" href="/imagens-cg/campo1.jpg">` no `index.html` (primeira imagem do carrossel da Home → melhora o LCP). `srcset`/WebP ficou de fora (exige gerar assets — follow-up opcional).
+**Looker card** — mudado de `<a>` (sem href) para `<div>` com classe `.looker-disabled`; badge "Em breve" adicionado (`.looker-soon-badge`, posição absoluta top-right). Hover desabilitado via `.looker-disabled:hover .looker-card`.
 
-Commits sugeridos: `feat(a11y): modais com foco preso/Esc e carrosséis com pausar/aria-live` · `feat(ui): adiciona EmptyState e Skeleton e aplica no Login/calendário` · `fix(a11y): remove links href=# do rodapé e melhora contraste dos badges` · `perf(home): pré-carrega a primeira imagem do hero`
+### 8.2 Sustentabilidade e Meio Ambiente (`/dashboard` — `EnvironmentCards`)
 
-## 8. Armadilhas conhecidas (ler antes de mexer)
+**Dados extraídos** para `src/data/sustentabilidade.js`: `forestData`, `plantingRate`, `arbolinkTableData` e `arbolinkTotals` (pré-computados: Poda 1.903, Avaliadas 3.563, Supressão 2.172). Cores hardcoded substituídas por `var(--cat-sustentabilidade)`, `var(--gray-*)`.
 
-- **Todo CSS é global** (imports em componentes viram um bundle único). A ordem da cascata segue a ordem dos imports em `main.jsx`. Antes da Fase 1 havia 3+ definições da mesma classe vencendo por ordem de carga. Regra: aparência de navbar/menu/cabeçalho SÓ em `Root.css`; fundo SÓ em `global.css`. Não reintroduzir duplicatas.
-- A navbar é `position: fixed` com 60px — conteúdo de página precisa de folga (`.dashboard-header { margin-top: 64px }`). O hero da Home usa `.under-navbar` com −72px/+72px (herança de quando a navbar tinha 72px; funciona, mas alinhar quando mexer na navbar).
-- `Superintendencias.css` e `DadosCentro.css` devem permanecer mínimos (só estilos específicos da página).
-- O menu lateral abre/fecha via classe `menu-open` no `<body>` (manipulação imperativa em TopBar.jsx) — migração para estado React planejada na Fase 3.
-- `EventCarousel` duplica o array (`[...events, ...events]`) para o ticker infinito — qualquer mudança de dados mantém essa duplicação em mente.
-- Headless Firefox foi usado para screenshots de verificação (`npm run preview` + `firefox --headless --screenshot`); útil para validar visual sem subir o app manualmente.
+**Pizza eliminada** — substituída por 3 `StatCard` em grid (`env-stats-row`): Mudas Doadas | Mudas Plantadas | `TaxaCard`. O `TaxaCard` é um bloco local (reutiliza classes `.stat-card*` de `ui.css`) com barra de progresso verde mostrando os 34,7% — a taxa de plantio agora é o destaque visual, não mais texto de rodapé.
 
-## 9. Como validar cada fase
+**Tabela removida do corpo** — substituída por:
+- 3 `StatCard` com totais anuais (Poda | Avaliadas | Supressão)
+- Gráfico de barras agrupadas 12 meses (recharts, 3 séries em verde escuro/médio/claro)
+- Botão `.arbolink-table-trigger` com borda dashed verde, label "Ver solicitações mensais completas" + período alinhado à direita. No hover: borda vira sólida + fundo `#f0faf1`.
+
+**Modal slide-from-top** — ao clicar no trigger: overlay fade-in 280ms + dialog `translateY(-28px)→0` opacity 0→1, 380ms `cubic-bezier(0.22, 1, 0.36, 1)`. Usa `useDialog` (Esc, foco preso, scroll-lock). Tabela completa com linha `<tfoot>` de totais. `prefers-reduced-motion` desabilita a animação. Botão fechar: retângulo arredondado `7px`, borda `1px solid gray-200`, `padding: 0; line-height: 1` (evita descentramento de browser).
+
+### 8.3 Alinhamento de seções (`/dashboard`)
+
+`.economic-wrapper` em `Root.css` ganhou `max-width: 1200px; margin: 3rem auto 0`. EconomicSection e EnvironmentCards agora têm as mesmas bordas laterais que `.card-grid` e `.metroverse-button` (todos a 1200px centralizados no container de 1300px).
+
+### 8.4 Home (`/home`) — remoção de seções
+
+**Botões pausar/continuar removidos** do `HeroCarousel`: removidos imports `Pause`/`Play`, estado `isManuallyPaused`, botão `.carousel-pause` e o `<div class="carousel-controls">` que o envolvia. O autoplay ainda pausa no hover/foco. Indicadores de slide mantidos diretamente.
+
+**Calendário removido** — `CalendarSection` e `NoteModal` removidos do `HomePage`. Todo o estado e handlers de notas removidos (`notes`, `currentMonth`, `selectedDate`, `showNoteModal`, `openAddNoteModal`, `handleSubmitNote`, `deleteNote`, `useEffect` de limpeza de object URLs). Import de `eventosCalendario` removido.
+
+**EventCarousel removido** — seção de eventos animados (ticker) removida do `HomePage`. O `<div class="homepage-container">` que envolvia calendário + eventos foi removido junto.
+
+`HomePage.jsx` ficou com 12 linhas: apenas `HeroCarousel`, `AboutSection` e `Noticias`.
+
+Bundle: 590KB → 574KB (gzip 183 → 178KB).
+
+---
+
+## 9. Armadilhas conhecidas (ler antes de mexer)
+
+- **Todo CSS é global** (imports em componentes viram um bundle único). Regra: aparência de navbar/menu SÓ em `Root.css`; fundo SÓ em `global.css`. Não reintroduzir duplicatas.
+- A navbar é `position: fixed` com 60px — conteúdo precisa de `margin-top: 64px`. O hero usa `.under-navbar` com −72px/+72px (herança; funciona, mas alinhar quando mexer na navbar).
+- `Superintendencias.css` e `DadosCentro.css` devem permanecer mínimos.
+- O menu lateral abre/fecha via classe `menu-open` no `<body>` + `MenuContext` em TopBar.jsx.
+- `EventCarousel` foi removido da Home. O componente e seu CSS ainda existem em disco — não foram deletados.
+- `CalendarSection` e `NoteModal` foram removidos da Home. Os componentes ainda existem em disco.
+- `DadosCentro.css` ainda tem ~20 linhas de estilos de `.bar-source` e `.bar-chart-wrap` que são usados pelo `BarCard` atual (recharts) — não remover.
+- O `.looker-desc` dentro do looker-card usa `position: absolute; bottom: 14px` — depende de `.looker-card` ter `position: relative` (tem).
+
+## 10. Pendências opcionais
+
+- `DadosCentro.css` ainda tem alguns estilos de `.bar-source` / `.bar-chart-wrap` que podem ser revisados numa limpeza futura.
+- `CalendarSection.jsx`, `NoteModal.jsx`, `EventCarousel.jsx` e seus CSS ainda estão em disco — podem ser deletados se o dono confirmar que não voltarão.
+- `srcset`/WebP para imagens do hero carousel (melhora LCP em conexões lentas).
+- Página **Superintendências** não foi verificada visualmente (exige login + feature).
+
+## 11. Como validar
 
 ```bash
 npm run build                       # deve passar sem erros
 npm run preview -- --port 4173      # subir build
-# screenshots: /home, /dashboard, /dados-centro (Superintendências exige login)
 firefox --headless --screenshot out.png --window-size=1440,6200 http://localhost:4173/home
+firefox --headless --screenshot dash.png --window-size=1440,6200 http://localhost:4173/dashboard
+firefox --headless --screenshot dc.png --window-size=1440,6200 http://localhost:4173/dados-centro
 ```
-Checar: fundo claro único, navbar branca consistente, nenhum texto branco sobre fundo claro, Notícias visível, console sem erros.
+Checar: fundo claro único, navbar branca consistente, nenhum texto branco sobre fundo claro, console sem erros, modal Arbolink abre/fecha com animação, donuts lado a lado em `/dados-centro`.

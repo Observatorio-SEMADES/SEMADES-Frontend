@@ -5,9 +5,9 @@ import { Home, CircleDollarSign, Landmark, LandPlot } from "lucide-react";
 // Cards resumo no topo da página.
 export const resumoCentro = [
   { icon: Home, label: "Quantidade de Imóveis", value: "6.178" },
-  { icon: CircleDollarSign, label: "Valor Venal", value: "R$ 2.524.530.392,64" },
-  { icon: Landmark, label: "Valor Total", value: "R$ 97.944.779.641,77" },
-  { icon: LandPlot, label: "Área do Terreno", value: "7.617.790,94" },
+  { icon: CircleDollarSign, label: "Valor Venal", value: "R$ 2,52 bi", detail: "R$ 2.524.530.392,64" },
+  { icon: Landmark, label: "Valor Total", value: "R$ 97,9 bi", detail: "R$ 97.944.779.641,77" },
+  { icon: LandPlot, label: "Área do Terreno", value: "7,6 mi m²", detail: "7.617.790,94 m²" },
 ];
 
 // Percentual de área de lote por bairro (Top 10) — gráfico de pizza 1.

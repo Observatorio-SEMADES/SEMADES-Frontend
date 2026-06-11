@@ -3,7 +3,7 @@ import "../../styles/ui.css";
 
 // Indicador resumido: ícone + rótulo + valor. Com `href` vira link externo.
 // Unifica os antigos .resumo-card (DadosCentro) e .economic-item (EconomicSection).
-export default function StatCard({ icon: Icon, label, value, href }) {
+export default function StatCard({ icon: Icon, label, value, detail, href }) {
   const body = (
     <>
       <span className="stat-card-icon">
@@ -12,6 +12,7 @@ export default function StatCard({ icon: Icon, label, value, href }) {
       <span className="stat-card-text">
         <span className="stat-card-label">{label}</span>
         <span className="stat-card-value">{value}</span>
+        {detail && <span className="stat-card-detail" title={detail}>{detail}</span>}
       </span>
     </>
   );

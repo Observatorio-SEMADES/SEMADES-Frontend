@@ -355,3 +355,12 @@ a.stat-card:focus-visible {
   font-variant-numeric: tabular-nums;
   word-break: break-word;
 }
+
+.stat-card-detail {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--gray-400);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  word-break: break-all;
+}

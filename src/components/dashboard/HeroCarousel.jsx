@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Pause, Play } from 'lucide-react';
 
 // Carrossel do topo da Home (fotos de Campo Grande). Autônomo: gerencia o slide
 // atual, o autoplay (pausa no hover/foco e respeita prefers-reduced-motion) e o
@@ -14,8 +13,8 @@ const newsItems = [
   },
   {
     id: 2,
-    title: 'Sustentabilidade e Reciclagem',
-    description: 'Programa de coleta seletiva e gestão de resíduos para uma cidade mais limpa e sustentável.',
+    title: 'Capital dos Ipês em Flor',
+    description: 'Entre avenidas largas e áreas verdes, os ipês reforçam a identidade de Campo Grande como uma das cidades mais arborizadas do país.',
     image: '/imagens-cg/campo2.jpg',
     date: '18/01/2026',
   },
@@ -37,8 +36,7 @@ const newsItems = [
 
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isHoverPaused, setIsHoverPaused] = useState(false); // hover/foco
-  const [isManuallyPaused, setIsManuallyPaused] = useState(false); // botão pausar
+  const [isHoverPaused, setIsHoverPaused] = useState(false);
   const touchStartX = useRef(null);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % newsItems.length);
@@ -62,10 +60,9 @@ export default function HeroCarousel() {
     touchStartX.current = null;
   };
 
-  // Autoplay a cada 4s. Pausa no hover/foco, no botão pausar e respeita quem
-  // pediu menos movimento no sistema (prefers-reduced-motion).
+  // Autoplay a cada 4s. Pausa no hover/foco e respeita prefers-reduced-motion.
   useEffect(() => {
-    if (isHoverPaused || isManuallyPaused) return undefined;
+    if (isHoverPaused) return undefined;
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
@@ -77,7 +74,7 @@ export default function HeroCarousel() {
     }, 4000);
 
     return () => clearInterval(intervalId);
-  }, [isHoverPaused, isManuallyPaused]);
+  }, [isHoverPaused]);
 
   return (
     <section className="news-carousel-section under-navbar">
@@ -110,26 +107,15 @@ export default function HeroCarousel() {
         <button className="carousel-nav prev" onClick={prevSlide} aria-label="Anterior">‹</button>
         <button className="carousel-nav next" onClick={nextSlide} aria-label="Próximo">›</button>
 
-        <div className="carousel-controls">
-          <button
-            type="button"
-            className="carousel-pause"
-            onClick={() => setIsManuallyPaused((p) => !p)}
-            aria-pressed={isManuallyPaused}
-            aria-label={isManuallyPaused ? 'Retomar troca automática' : 'Pausar troca automática'}
-          >
-            {isManuallyPaused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
-          </button>
-          <div className="carousel-indicators">
-            {newsItems.map((_, index) => (
-              <button
-                key={index}
-                className={`indicator ${index === currentSlide ? 'active' : ''}`}
-                onClick={() => goToSlide(index)}
-                aria-label={`Ir para slide ${index + 1}`}
-              />
-            ))}
-          </div>
+        <div className="carousel-indicators">
+          {newsItems.map((_, index) => (
+            <button
+              key={index}
+              className={`indicator ${index === currentSlide ? 'active' : ''}`}
+              onClick={() => goToSlide(index)}
+              aria-label={`Ir para slide ${index + 1}`}
+            />
+          ))}
         </div>
 
         {/* Anúncio educado do slide atual para leitores de tela. */}
