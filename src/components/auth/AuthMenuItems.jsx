@@ -5,13 +5,7 @@ import { fetchMyPermissions } from "../../services/permissions";
 import { notifySessionChanged } from "../../services/authSession";
 import { hasApiUrl } from "../../services/api";
 import LoginModal from "./LoginModal";
-
-// Fecha o menu lateral das três listras (mesma convenção dos demais botões).
-function closeSideMenu() {
-  if (typeof document !== "undefined") {
-    document.body.classList.remove("menu-open");
-  }
-}
+import { useMenu } from "../navigation/menuContext";
 
 // Itens de autenticação exibidos DENTRO do menu das três listras (.side-menu):
 // - deslogado: botão "Login" que abre o LoginModal
@@ -21,9 +15,10 @@ export default function AuthMenuItems() {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { closeMenu } = useMenu();
 
   const handleOpenLogin = () => {
-    closeSideMenu(); // fecha o menu antes de abrir o modal centralizado
+    closeMenu(); // fecha o menu antes de abrir o modal centralizado
     setModalOpen(true);
   };
 
@@ -38,7 +33,7 @@ export default function AuthMenuItems() {
 
   const handleLogout = () => {
     logout(); // limpa authToken, authUser e authPermissions + notifica
-    closeSideMenu();
+    closeMenu();
     if (location.pathname === "/superintendencias") {
       navigate("/home");
     }
