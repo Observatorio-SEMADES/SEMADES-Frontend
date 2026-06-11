@@ -148,6 +148,15 @@ export default function Root() {
           Exportar
         </button>
 
+        <button 
+           onClick={() => {
+           window.open("https://paineis.campogrande.ms.gov.br/")
+           closeMenu();
+           }}
+           >
+            Paineis Planurb 
+        </button>
+
         {/* Login / sessão dentro do menu das três listras */}
         <AuthMenuItems />
       </div>

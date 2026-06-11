@@ -53,6 +53,15 @@ export default function HomePageWrapper() {
       <div className="side-menu no-print">
         {/* Login / sessão dentro do menu das três listras */}
         <AuthMenuItems />
+
+        <button
+          onClick={() => {
+            window.open("https://paineis.campogrande.ms.gov.br/")
+            closeMenu();
+          }
+          }>
+          Paineis Planurb
+        </button>
       </div>
 
       <div className="menu-overlay no-print" onClick={closeMenu} />
