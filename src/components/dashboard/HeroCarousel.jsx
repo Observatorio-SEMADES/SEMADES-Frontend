@@ -5,17 +5,11 @@ import React, { useEffect, useRef, useState } from 'react';
 // swipe no mobile. Extraído do HomePage para enxugar o componente-página.
 const newsItems = [
   {
-    id: 1,
-    title: 'Parques e Áreas Verdes',
-    description: 'Campo Grande é referência em gestão ambiental com seus belos parques urbanos e áreas de lazer.',
-    image: '/imagens-cg/campo1.jpg',
-    date: '20/01/2026',
-  },
-  {
     id: 2,
     title: 'Capital dos Ipês em Flor',
     description: 'Entre avenidas largas e áreas verdes, os ipês reforçam a identidade de Campo Grande como uma das cidades mais arborizadas do país.',
     image: '/imagens-cg/campo2.jpg',
+    position: 'center center',
     date: '18/01/2026',
   },
   {
@@ -23,6 +17,7 @@ const newsItems = [
     title: 'Campo Grande em Crescimento',
     description: 'A capital do estado investe em infraestrutura moderna e qualidade de vida para seus cidadãos.',
     image: '/imagens-cg/campo4.jpg',
+    position: 'center center',
     date: '12/01/2026',
   },
   {
@@ -30,7 +25,16 @@ const newsItems = [
     title: 'Inovação e Desenvolvimento',
     description: 'A SEMADES promove soluções inteligentes para o desenvolvimento sustentável de Campo Grande.',
     image: '/imagens-cg/campo5.jpg',
+    position: 'center center',
     date: '10/01/2026',
+  },
+  {
+    id: 1,
+    title: 'Praça das Araras',
+    description: 'Um dos cenários mais marcantes de Campo Grande, a Praça das Araras reúne arte urbana, convivência e a atmosfera acolhedora da capital sul-mato-grossense.',
+    image: '/imagens-cg/praca-araras.png',
+    position: '42% 22%',
+    date: '20/01/2026',
   },
 ];
 
@@ -93,7 +97,10 @@ export default function HeroCarousel() {
           <div
             key={item.id}
             className={`carousel-slide ${idx === currentSlide ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${item.image})` }}
+            style={{
+              backgroundImage: `url(${item.image})`,
+              backgroundPosition: item.position ?? 'center center',
+            }}
             aria-hidden={idx === currentSlide ? 'false' : 'true'}
           >
             <div className="hero-overlay" />

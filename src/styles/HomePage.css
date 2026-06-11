@@ -156,9 +156,14 @@ html, body {
   z-index: 4;
   left: 22px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  transition: none;
 }
 .carousel-nav.next { left: auto; right: 22px; }
-.carousel-nav:hover { background: rgba(0,0,0,0.6); }
+.carousel-nav:hover,
+.carousel-nav:focus-visible {
+  background: rgba(0,0,0,0.45);
+  transform: translateY(-50%);
+}
 
 /* Indicadores centralizados abaixo do carrossel (ocupa ambas colunas) */
 .carousel-controls {
@@ -171,7 +176,16 @@ html, body {
   align-items: center;
   gap:12px;
 }
-.carousel-indicators { display:flex; gap:10px; align-items: center; }
+.carousel-indicators {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
 /* Botão pausar/retomar o autoplay do hero. */
 .carousel-pause {
@@ -525,7 +539,7 @@ html, body {
   background: #ccc;
   border: none;
   cursor: pointer;
-  transition: background .2s;
+  transition: none;
 }
 .carousel-indicators .indicator.active {
   background: var(--accent);
@@ -557,7 +571,7 @@ img[src*="prefcg1"] {
   border-radius: 50%;
   background: rgba(255,255,255,0.25);
   border: none;
-  transition: background .12s ease;
+  transition: none;
 }
 
 /* indicador ativo com a mesma geometria, só mudando a cor */
