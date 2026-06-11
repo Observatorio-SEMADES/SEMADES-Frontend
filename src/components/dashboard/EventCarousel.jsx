@@ -1,8 +1,95 @@
 import React, { useMemo, useState } from 'react';
 import '../../styles/EventCarousel.css';
-import { Calendar, Clock, MapPin, Phone, Link as LinkIcon, StickyNote } from 'lucide-react';
+import { Calendar, Clock, MapPin, Phone, Link as LinkIcon, StickyNote, Pause, Play } from 'lucide-react';
 import SectionTitle from '../ui/SectionTitle';
 import { hostEvents } from '../../data/eventos';
+import { useDialog } from '../../hooks/useDialog';
+
+// Modal de detalhes do evento, isolado para poder usar o hook de acessibilidade
+// (foco preso, Esc, foco de volta) só quando está montado.
+function EventModal({ event, onClose }) {
+  const dialogRef = useDialog(onClose);
+  return (
+    <div className="event-modal-overlay" onClick={onClose}>
+      <div
+        className="event-modal"
+        onClick={(e) => e.stopPropagation()}
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="event-modal-title"
+        tabIndex={-1}
+      >
+        <button className="event-modal-close" onClick={onClose} aria-label="Fechar">✕</button>
+
+        <div className="event-modal-header">
+          <span className="event-modal-icon"><event.icon size={32} aria-hidden="true" /></span>
+          <h2 className="event-modal-title" id="event-modal-title">{event.title}</h2>
+        </div>
+
+        <div className="event-modal-content">
+          <div className="modal-info-group">
+            <h3>Detalhes do Evento</h3>
+
+            <div className="modal-info-item">
+              <span className="modal-info-icon"><Calendar size={20} aria-hidden="true" /></span>
+              <div className="modal-info-details">
+                <span className="modal-label">Data</span>
+                <span className="modal-value">{event.date}</span>
+              </div>
+            </div>
+
+            <div className="modal-info-item">
+              <span className="modal-info-icon"><Clock size={20} aria-hidden="true" /></span>
+              <div className="modal-info-details">
+                <span className="modal-label">{event.isUserNote ? 'Tipo' : 'Horário'}</span>
+                <span className="modal-value">{event.time}</span>
+              </div>
+            </div>
+
+            <div className="modal-info-item">
+              <span className="modal-info-icon">
+                {event.isUserNote ? <StickyNote size={20} aria-hidden="true" /> : <MapPin size={20} aria-hidden="true" />}
+              </span>
+              <div className="modal-info-details">
+                <span className="modal-label">{event.isUserNote ? 'Observação' : 'Local'}</span>
+                <span className="modal-value">{event.location}</span>
+              </div>
+            </div>
+
+            {event.contact && (
+              <div className="modal-info-item">
+                <span className="modal-info-icon"><Phone size={20} aria-hidden="true" /></span>
+                <div className="modal-info-details">
+                  <span className="modal-label">Contato</span>
+                  <span className="modal-value">
+                    <a href={`tel:${event.contact}`}>{event.contact}</a>
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {event.link && (
+              <div className="modal-info-item">
+                <span className="modal-info-icon"><LinkIcon size={20} aria-hidden="true" /></span>
+                <div className="modal-info-details">
+                  <span className="modal-label">Link</span>
+                  <span className="modal-value">
+                    <a href={event.link} target="_blank" rel="noopener noreferrer">Acessar</a>
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="event-modal-footer">
+          <button className="modal-btn-close" onClick={onClose}>Fechar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const formatEventDate = (date) =>
   new Intl.DateTimeFormat('pt-BR', {
@@ -12,6 +99,7 @@ const formatEventDate = (date) =>
 
 export default function EventCarousel({ userNotes = [] }) {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [tickerPaused, setTickerPaused] = useState(false);
 
   const events = useMemo(() => {
     const mappedNotes = userNotes.map((note, index) => ({
@@ -32,10 +120,21 @@ export default function EventCarousel({ userNotes = [] }) {
 
   return (
     <section className="event-carousel-section">
-      <SectionTitle tone="light">Eventos</SectionTitle>
-      
+      <div className="event-carousel-head">
+        <SectionTitle tone="light">Eventos</SectionTitle>
+        <button
+          type="button"
+          className="ticker-pause"
+          onClick={() => setTickerPaused((p) => !p)}
+          aria-pressed={tickerPaused}
+          aria-label={tickerPaused ? 'Retomar rolagem dos eventos' : 'Pausar rolagem dos eventos'}
+        >
+          {tickerPaused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+        </button>
+      </div>
+
       <div className="events-carousel-wrapper">
-        <div className="events-carousel-track">
+        <div className={`events-carousel-track${tickerPaused ? ' is-paused' : ''}`}>
           {/* Duplicamos os eventos para criar efeito contínuo */}
           {[...events, ...events].map((event, idx) => (
             <div 
@@ -77,82 +176,7 @@ export default function EventCarousel({ userNotes = [] }) {
 
       {/* ===== MODAL DE DETALHES DO EVENTO ===== */}
       {selectedEvent && (
-        <div className="event-modal-overlay" onClick={() => setSelectedEvent(null)}>
-          <div className="event-modal" onClick={(e) => e.stopPropagation()}>
-            <button className="event-modal-close" onClick={() => setSelectedEvent(null)}>✕</button>
-            
-            <div className="event-modal-header">
-              <span className="event-modal-icon"><selectedEvent.icon size={32} aria-hidden="true" /></span>
-              <h2 className="event-modal-title">{selectedEvent.title}</h2>
-            </div>
-
-            <div className="event-modal-content">
-              <div className="modal-info-group">
-                <h3>Detalhes do Evento</h3>
-                
-                <div className="modal-info-item">
-                  <span className="modal-info-icon"><Calendar size={20} aria-hidden="true" /></span>
-                  <div className="modal-info-details">
-                    <span className="modal-label">Data</span>
-                    <span className="modal-value">{selectedEvent.date}</span>
-                  </div>
-                </div>
-
-                <div className="modal-info-item">
-                  <span className="modal-info-icon"><Clock size={20} aria-hidden="true" /></span>
-                  <div className="modal-info-details">
-                    <span className="modal-label">
-                      {selectedEvent.isUserNote ? 'Tipo' : 'Horário'}
-                    </span>
-                    <span className="modal-value">{selectedEvent.time}</span>
-                  </div>
-                </div>
-
-                <div className="modal-info-item">
-                  <span className="modal-info-icon">
-                    {selectedEvent.isUserNote ? <StickyNote size={20} aria-hidden="true" /> : <MapPin size={20} aria-hidden="true" />}
-                  </span>
-                  <div className="modal-info-details">
-                    <span className="modal-label">
-                      {selectedEvent.isUserNote ? 'Observação' : 'Local'}
-                    </span>
-                    <span className="modal-value">{selectedEvent.location}</span>
-                  </div>
-                </div>
-
-                {selectedEvent.contact && (
-                  <div className="modal-info-item">
-                    <span className="modal-info-icon"><Phone size={20} aria-hidden="true" /></span>
-                    <div className="modal-info-details">
-                      <span className="modal-label">Contato</span>
-                      <span className="modal-value">
-                        <a href={`tel:${selectedEvent.contact}`}>{selectedEvent.contact}</a>
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {selectedEvent.link && (
-                  <div className="modal-info-item">
-                    <span className="modal-info-icon"><LinkIcon size={20} aria-hidden="true" /></span>
-                    <div className="modal-info-details">
-                      <span className="modal-label">Link</span>
-                      <span className="modal-value">
-                        <a href={selectedEvent.link} target="_blank" rel="noopener noreferrer">
-                          Acessar
-                        </a>
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="event-modal-footer">
-              <button className="modal-btn-close" onClick={() => setSelectedEvent(null)}>Fechar</button>
-            </div>
-          </div>
-        </div>
+        <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
     </section>
   );

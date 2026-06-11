@@ -1,5 +1,7 @@
 import React from 'react';
+import { CalendarDays } from 'lucide-react';
 import SectionTitle from '../ui/SectionTitle';
+import EmptyState from '../ui/EmptyState';
 
 const monthNames = [
   'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -146,6 +148,13 @@ export default function CalendarSection({
             </div>
           ) : (
             <div className="upcoming-events">
+              {monthItems.length === 0 && (
+                <EmptyState
+                  icon={CalendarDays}
+                  title="Sem eventos neste mês"
+                  description="Selecione um dia para adicionar uma nota."
+                />
+              )}
               {monthItems.map((event) => (
                 <div key={event.id} className="event-preview">
                   <span className="event-date">{event.date.getDate()}</span>

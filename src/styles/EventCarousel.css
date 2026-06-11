@@ -46,10 +46,38 @@
   }
 }
 
-/* Pausa na animação ao passar o mouse ou ao focar um card por teclado. */
+/* Pausa na animação ao passar o mouse, ao focar um card por teclado ou pelo
+   botão de pausar (.is-paused). */
 .events-carousel-wrapper:hover .events-carousel-track,
-.events-carousel-wrapper:focus-within .events-carousel-track {
+.events-carousel-wrapper:focus-within .events-carousel-track,
+.events-carousel-track.is-paused {
   animation-play-state: paused;
+}
+
+/* Cabeçalho da seção com o título e o botão pausar lado a lado. */
+.event-carousel-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.ticker-pause {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+.ticker-pause:hover,
+.ticker-pause:focus-visible {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Menos movimento: o ticker para por completo (mantém os cards estáticos). */

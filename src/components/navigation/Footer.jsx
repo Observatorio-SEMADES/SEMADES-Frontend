@@ -73,8 +73,10 @@ export default function Footer() {
 
           <section className="semades-footer-column" aria-labelledby="footer-contact-title">
             <h2 id="footer-contact-title">Contato</h2>
-            <a href="#">Email</a>
-            <a href="#">Telefone</a>
+            {/* Placeholders: trocar por <a href="mailto:..."> / <a href="tel:...">
+                quando os contatos reais forem definidos (evita link quebrado href="#"). */}
+            <span className="semades-footer-text">Email</span>
+            <span className="semades-footer-text">Telefone</span>
           </section>
 
           <section className="semades-footer-column" aria-labelledby="footer-social-title">
@@ -99,9 +101,11 @@ export default function Footer() {
         <div className="semades-footer-bottom">
           <span> © Semades Dashboard</span>
           <nav aria-label="Links institucionais do rodap\u00e9">
-            <a href="#">Lei Geral de Proteção de Dados</a>
+            {/* Placeholders — virar <a href> quando houver páginas reais de
+                LGPD / Política de Privacidade (evita link quebrado href="#"). */}
+            <span className="semades-footer-text">Lei Geral de Proteção de Dados</span>
             <span className="footer-separator" aria-hidden="true">|</span>
-            <a href="#">Política de Privacidade</a>
+            <span className="semades-footer-text">Política de Privacidade</span>
           </nav>
         </div>
       </div>

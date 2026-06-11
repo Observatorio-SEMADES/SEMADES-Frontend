@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useDialog } from '../../hooks/useDialog';
 
 // Modal de criação de nota (apenas demonstração em memória). Owns o estado do
 // formulário; ao salvar, entrega { title, observation, files, links } ao
@@ -6,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 // são criados aqui e passam a viver na nota — por isso só revogamos os que o
 // usuário remove ANTES de salvar; a limpeza final é feita no HomePage.
 export default function NoteModal({ selectedDate, currentMonth, onClose, onSubmit }) {
+  const dialogRef = useDialog(onClose); // foco preso, Esc, scroll-lock, foco de volta
   const [form, setForm] = useState({
     title: '',
     observation: '',
@@ -13,15 +15,6 @@ export default function NoteModal({ selectedDate, currentMonth, onClose, onSubmi
     linkInput: '',
     files: [], // { id, name, url, type }
   });
-
-  // Trava o scroll do fundo enquanto o modal está aberto.
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +61,15 @@ export default function NoteModal({ selectedDate, currentMonth, onClose, onSubmi
 
   return (
     <div className="note-modal-overlay" onClick={onClose}>
-      <div className="note-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="note-modal"
+        onClick={(e) => e.stopPropagation()}
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Adicionar nota"
+        tabIndex={-1}
+      >
         <h3>Adicionar Nota - {selectedDate}/{currentMonth.getMonth() + 1}/{currentMonth.getFullYear()}</h3>
         <form onSubmit={handleSubmit}>
           {/* Título com placeholder (sem label) */}

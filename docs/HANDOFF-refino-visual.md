@@ -104,17 +104,17 @@ Commits sugeridos: `fix(responsivo): navbar sem números mágicos e hambúrguer 
 
 Commits sugeridos: `chore(limpeza): remove componentes/estilos mortos e rss-parser` · `refactor(layout): cria AppShell e separa Dashboard/Dados Centro de Root` · `refactor(home): divide HomePage em HeroCarousel/AboutSection/CalendarSection/NoteModal` · `refactor(graficos): unifica gráficos em recharts e remove chart.js`
 
-## 7. FASE 5 — Polish final
+## 7. FASE 5 — Polish final (CONCLUÍDA em 10/06/2026)
 
-1. Modais (nota/evento): focus trap, `role="dialog"`, `aria-modal`, fechar com `Esc`, devolver foco ao gatilho.
-2. Carrosséis: `aria-live="polite"`, botão pausar.
-3. `EmptyState`/`Skeleton` aplicados (substituir "Carregando imagens..." do Login e estados vazios improvisados).
-4. Footer: links reais ou remoção dos `href="#"` (Email, Telefone, LGPD, Política de Privacidade — falha WCAG 2.4.4).
-5. Revisão de contraste AA (tags de legenda; texto sobre amarelo → `--gray-900`).
-6. Revisar `Print.css` com o novo layout (botão Exportar usa `window.print()` via TopBar).
-7. Hero: `<link rel="preload">` da primeira imagem; considerar `srcset`/WebP.
+1. **Modais acessíveis**: hook `hooks/useDialog.js` (foco preso com Tab/Shift+Tab, fecha no `Esc`, trava o scroll do fundo e devolve o foco ao gatilho ao fechar). Aplicado ao `NoteModal` e ao modal de detalhes do `EventCarousel` (extraído para o componente interno `EventModal`); ambos com `role="dialog"`, `aria-modal`, `aria-label`/`aria-labelledby` e `tabIndex={-1}`.
+2. **Carrosséis**: botão pausar/retomar no hero (`HeroCarousel`, pausa manual além do hover/foco) e no ticker de Eventos (classe `.is-paused`); região `aria-live="polite"` anunciando o slide atual do hero (`aria-roledescription="carrossel"`).
+3. **EmptyState + Skeleton** (`components/ui/`): `Skeleton` substitui o "Carregando imagens..." do Login; `EmptyState` aparece na lista lateral do calendário quando não há eventos no mês. Estilos + shimmer (com `prefers-reduced-motion`) em `ui.css`.
+4. **Footer**: removidos os 4 `href="#"` quebrados (Email, Telefone, LGPD, Política) — viraram `<span class="semades-footer-text">` (placeholders com comentário indicando trocar por `<a href>`/`mailto:`/`tel:` reais). Resolve WCAG 2.4.4.
+5. **Contraste AA dos badges**: economia → azul mais escuro (`#01679b`, texto branco passa); sustentabilidade/inovação (claros) → texto `--gray-900`. As cores `--cat-*` originais seguem nas bordas dos cards.
+6. **Print.css revisado**: as classes que ele mira (`dash-card*`, `card-grid`, `page-header-legend .badge`) continuam batendo com o DOM após a Fase 4 — sem mudança necessária.
+7. **Preload do hero**: `<link rel="preload" as="image" href="/imagens-cg/campo1.jpg">` no `index.html` (primeira imagem do carrossel da Home → melhora o LCP). `srcset`/WebP ficou de fora (exige gerar assets — follow-up opcional).
 
-Commits: `feat(a11y): melhora foco, modais e carrosséis` · `feat(ui): adiciona estados vazios e skeletons` · `style: ajustes finais de contraste, espaçamento e rodapé`
+Commits sugeridos: `feat(a11y): modais com foco preso/Esc e carrosséis com pausar/aria-live` · `feat(ui): adiciona EmptyState e Skeleton e aplica no Login/calendário` · `fix(a11y): remove links href=# do rodapé e melhora contraste dos badges` · `perf(home): pré-carrega a primeira imagem do hero`
 
 ## 8. Armadilhas conhecidas (ler antes de mexer)
 

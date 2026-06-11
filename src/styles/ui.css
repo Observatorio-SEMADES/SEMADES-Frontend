@@ -1,8 +1,54 @@
 /* ============================================================
    Componentes de UI compartilhados (src/components/ui)
    Usa apenas tokens de global.css. Prefixos exclusivos:
-   .badge-, .section-heading, .page-header, .dash-card, .stat-card
+   .badge-, .section-heading, .page-header, .dash-card, .stat-card,
+   .empty-state, .skeleton
    ============================================================ */
+
+/* ===== EmptyState (estado vazio padronizado) ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--gray-600);
+}
+.empty-state-icon {
+  display: inline-flex;
+  color: var(--gray-400);
+}
+.empty-state-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.empty-state-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+
+/* ===== Skeleton (placeholder de carregamento com shimmer) ===== */
+.skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 37%,
+    var(--gray-200) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
 
 .sr-only {
   position: absolute;
@@ -28,16 +74,21 @@
   background: var(--gray-500);
 }
 
+/* Contraste AA: economia usa um azul mais escuro (texto branco passa ≥4.5:1);
+   sustentabilidade e inovação são claras demais p/ texto branco, então recebem
+   texto escuro (--gray-900). As cores --cat-* originais seguem nas bordas dos cards. */
 .badge-economia {
-  background: var(--cat-economia);
+  background: #01679b;
 }
 
 .badge-sustentabilidade {
   background: var(--cat-sustentabilidade);
+  color: var(--gray-900);
 }
 
 .badge-inovacao {
   background: var(--cat-inovacao);
+  color: var(--gray-900);
 }
 
 .badge-externo {

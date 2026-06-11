@@ -87,7 +87,8 @@
   transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
-.semades-footer-column > a {
+.semades-footer-column > a,
+.semades-footer-column > .semades-footer-text {
   font-size: 0.94rem;
   line-height: 1.4;
 }

@@ -168,9 +168,30 @@ html, body {
   bottom: 18px;
   z-index: 5;
   display:flex;
+  align-items: center;
   gap:12px;
 }
-.carousel-indicators { display:flex; gap:10px; }
+.carousel-indicators { display:flex; gap:10px; align-items: center; }
+
+/* Botão pausar/retomar o autoplay do hero. */
+.carousel-pause {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+.carousel-pause:hover,
+.carousel-pause:focus-visible {
+  background: rgba(0, 0, 0, 0.55);
+}
 .indicator {
   width:10px;height:10px;border-radius:50%;background: rgba(255,255,255,0.25);border:none;cursor:pointer;
 }

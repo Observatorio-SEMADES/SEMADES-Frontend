@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Pause, Play } from 'lucide-react';
 
 // Carrossel do topo da Home (fotos de Campo Grande). Autônomo: gerencia o slide
 // atual, o autoplay (pausa no hover/foco e respeita prefers-reduced-motion) e o
@@ -36,7 +37,8 @@ const newsItems = [
 
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHoverPaused, setIsHoverPaused] = useState(false); // hover/foco
+  const [isManuallyPaused, setIsManuallyPaused] = useState(false); // botão pausar
   const touchStartX = useRef(null);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % newsItems.length);
@@ -60,10 +62,10 @@ export default function HeroCarousel() {
     touchStartX.current = null;
   };
 
-  // Autoplay a cada 4s. Pausa no hover/foco (isPaused) e respeita quem pediu
-  // menos movimento no sistema (prefers-reduced-motion).
+  // Autoplay a cada 4s. Pausa no hover/foco, no botão pausar e respeita quem
+  // pediu menos movimento no sistema (prefers-reduced-motion).
   useEffect(() => {
-    if (isPaused) return undefined;
+    if (isHoverPaused || isManuallyPaused) return undefined;
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
@@ -75,7 +77,7 @@ export default function HeroCarousel() {
     }, 4000);
 
     return () => clearInterval(intervalId);
-  }, [isPaused]);
+  }, [isHoverPaused, isManuallyPaused]);
 
   return (
     <section className="news-carousel-section under-navbar">
@@ -83,10 +85,12 @@ export default function HeroCarousel() {
         className="carousel-hero"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onFocusCapture={() => setIsPaused(true)}
-        onBlurCapture={() => setIsPaused(false)}
+        onMouseEnter={() => setIsHoverPaused(true)}
+        onMouseLeave={() => setIsHoverPaused(false)}
+        onFocusCapture={() => setIsHoverPaused(true)}
+        onBlurCapture={() => setIsHoverPaused(false)}
+        aria-roledescription="carrossel"
+        aria-label="Destaques de Campo Grande"
       >
         {newsItems.map((item, idx) => (
           <div
@@ -107,6 +111,15 @@ export default function HeroCarousel() {
         <button className="carousel-nav next" onClick={nextSlide} aria-label="Próximo">›</button>
 
         <div className="carousel-controls">
+          <button
+            type="button"
+            className="carousel-pause"
+            onClick={() => setIsManuallyPaused((p) => !p)}
+            aria-pressed={isManuallyPaused}
+            aria-label={isManuallyPaused ? 'Retomar troca automática' : 'Pausar troca automática'}
+          >
+            {isManuallyPaused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
+          </button>
           <div className="carousel-indicators">
             {newsItems.map((_, index) => (
               <button
@@ -118,6 +131,11 @@ export default function HeroCarousel() {
             ))}
           </div>
         </div>
+
+        {/* Anúncio educado do slide atual para leitores de tela. */}
+        <p className="sr-only" aria-live="polite">
+          Slide {currentSlide + 1} de {newsItems.length}: {newsItems[currentSlide].title}
+        </p>
       </div>
     </section>
   );
