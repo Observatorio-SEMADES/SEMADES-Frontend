@@ -81,16 +81,16 @@ para falhas reais de rede (TypeError), demais erros sobem intactos.
 
 Commits: `feat(ui): cria componentes DashboardCard, StatCard, Badge e PageHeader` · `refactor(dashboard): migra cards para o novo sistema` · `refactor(dados): extrai dados mockados para src/data`
 
-## 5. FASE 3 — Responsividade e fluidez
+## 5. FASE 3 — Responsividade e fluidez (CONCLUÍDA em 10/06/2026)
 
-1. **Navbar responsiva sem números mágicos**: hoje em ≤900px/≤620px as abas quebram em 2ª linha e `side-menu`/`menu-overlay` usam `top: 96px/104px` hardcoded (Root.css). Solução: mover abas para dentro do menu hambúrguer abaixo de 768px, ou medir altura real via CSS custom property.
-2. Transição de rota: `SlideRoutes.jsx` `DURATION_MS = 800` → ~250ms, com fade + slide curto (24px) em vez de empurrão de 100vw. Manter sincronizado com `SlideRoutes.css`.
-3. Hero da Home: `padding-left: 6.5rem` só ajustado em 1024px (769–1024px fica colado); pausar autoplay no hover/focus (autoplay de 4s em HomePage.jsx); `prefers-reduced-motion` para carrosséis (ticker de Eventos tem `animation-play-state: paused` no hover, falta reduced-motion).
-4. Calendário: empilhar grid 2 colunas antes de 900px; células de dia ≥ 40px de toque.
-5. Tabela Arbolink: conferir `overflow-x: auto` no mobile (4 colunas).
-6. Hambúrguer: virar `<button aria-expanded aria-controls>`; estado do menu por React state em vez de `document.body.classList` (TopBar.jsx `toggleMenu`); fechar com `Esc`. ⚠️ TopBar é compartilhada por todas as páginas — testar navegação com menu aberto.
+1. **Navbar sem números mágicos**: TopBar.jsx mede a altura real da navbar (ref + `ResizeObserver`) e publica `--navbar-h` em `:root`. `side-menu`/`menu-overlay` agora usam `top: var(--navbar-h, 60px)` — removidos os `top: 96px/104px` chumbados dos breakpoints 900px/620px em Root.css.
+2. Transição de rota: `DURATION_MS 800 → 250` e `SlideRoutes.css` reescrito para fade + deslize curto (24px) com opacity, em vez de empurrão de 100vw. Mantido `prefers-reduced-motion`.
+3. Hero da Home: corrigido o recuo em 769–1024px (o `padding-left` vive em `.carousel-slide`, não em `.carousel-hero` — reduzido para 3.5rem no breakpoint 1024px); autoplay pausa no hover/foco (`isCarouselPaused` + `onMouseEnter/Leave`/`onFocusCapture/BlurCapture`) e é desligado sob `prefers-reduced-motion` (JS + CSS); ticker de Eventos ganhou `:focus-within` e `prefers-reduced-motion` (animação parada).
+4. Calendário: já empilhava as 2 colunas em ≤900px e as células de dia têm ≥40px (56px padrão, 40px em ≤400px) — verificado, sem mudança necessária.
+5. Tabela Arbolink: já tinha `overflow-x: auto` + `min-width` nos breakpoints (EnvironmentCards.css) — verificado, sem mudança necessária.
+6. Hambúrguer: virou `<button aria-expanded aria-controls="side-menu" aria-label>`; estado do menu migrado de `document.body.classList` para React state em TopBar.jsx (efeito sincroniza a classe `.menu-open` no body para o CSS continuar funcionando); fecha com `Esc` e ao trocar de rota. Filhos (HeaderNavTabs, AuthMenuItems) fecham via novo `MenuContext` (`useMenu().closeMenu()`) em vez de tocar no body.
 
-Commits: `fix(responsivo): corrige quebras da navbar, calendário e tabela` · `feat(transicoes): suaviza transição de rotas e respeita prefers-reduced-motion`
+Commits sugeridos: `fix(responsivo): navbar sem números mágicos e hambúrguer acessível` (TopBar.jsx, menuContext.js, HeaderNavTabs.jsx, AuthMenuItems.jsx, Root.css) · `feat(fluidez): transição de rotas curta + carrosséis com prefers-reduced-motion` (SlideRoutes.jsx/.css, HomePage.jsx/.css, EventCarousel.css)
 
 ## 6. FASE 4 — Componentização estrutural
 

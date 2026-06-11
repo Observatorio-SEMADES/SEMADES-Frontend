@@ -1,4 +1,4 @@
-/* Transição de "empurrão" entre rotas (ver SlideRoutes.jsx).
+/* Transição curta (fade + deslize de 24px) entre rotas (ver SlideRoutes.jsx).
    Duração espelhada em DURATION_MS no componente. */
 
 .slide-stage {
@@ -9,23 +9,23 @@
   overflow: hidden;
 }
 
-/* Página antiga: sobreposta em absolute enquanto desliza para fora. */
+/* Página antiga: sobreposta em absolute enquanto sai. */
 .slide-page {
   position: absolute;
   inset: 0;
   width: 100%;
   pointer-events: none;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .slide-out-left,
 .slide-out-right,
 .slide-in-left,
 .slide-in-right {
-  animation-duration: 0.8s;
+  animation-duration: 0.25s;
   animation-timing-function: cubic-bezier(0.3, 0.7, 0.2, 1);
   animation-fill-mode: both;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 .slide-out-left {
@@ -41,39 +41,47 @@
   animation-name: slide-in-right;
 }
 
-/* Indo para a direita na ordem das abas: tudo é empurrado para a esquerda. */
+/* Indo para a direita na ordem das abas: conteúdo desliza um pouco à esquerda. */
 @keyframes slide-out-left {
   from {
     transform: translateX(0);
+    opacity: 1;
   }
   to {
-    transform: translateX(-100%);
+    transform: translateX(-24px);
+    opacity: 0;
   }
 }
 @keyframes slide-in-left {
   from {
-    transform: translateX(100%);
+    transform: translateX(24px);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 
-/* Voltando: tudo é empurrado para a direita. */
+/* Voltando: desliza um pouco à direita. */
 @keyframes slide-out-right {
   from {
     transform: translateX(0);
+    opacity: 1;
   }
   to {
-    transform: translateX(100%);
+    transform: translateX(24px);
+    opacity: 0;
   }
 }
 @keyframes slide-in-right {
   from {
-    transform: translateX(-100%);
+    transform: translateX(-24px);
+    opacity: 0;
   }
   to {
     transform: translateX(0);
+    opacity: 1;
   }
 }
 

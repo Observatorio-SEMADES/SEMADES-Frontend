@@ -46,9 +46,17 @@
   }
 }
 
-/* Pausa na animação ao passar o mouse */
-.events-carousel-wrapper:hover .events-carousel-track {
+/* Pausa na animação ao passar o mouse ou ao focar um card por teclado. */
+.events-carousel-wrapper:hover .events-carousel-track,
+.events-carousel-wrapper:focus-within .events-carousel-track {
   animation-play-state: paused;
+}
+
+/* Menos movimento: o ticker para por completo (mantém os cards estáticos). */
+@media (prefers-reduced-motion: reduce) {
+  .events-carousel-track {
+    animation: none;
+  }
 }
 
 /* ====== CARDS DE EVENTO ====== */

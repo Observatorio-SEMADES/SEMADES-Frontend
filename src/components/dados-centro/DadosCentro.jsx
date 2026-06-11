@@ -103,17 +103,26 @@ export default function DadosCentro() {
           ))}
         </div>
 
-        <div className="looker-linkcard">
-          <DashboardCard
-            imageSrc="/imagens-cg/BandeiraCampoGrandeMS.png"
-            imageAlt="Bandeira de Campo Grande - MS"
-            category="externo"
-            title="Dashboard dos Indicadores do Centro de Campo Grande - MS"
-            source="PLANURB, 2025"
-            description="Para uma observação mais detalhada"
-            // href="https://lookerstudio.google.com/u/0/reporting/e7c4b698-6d0f-41c3-92cc-5e882c02d6d1/page/1U2bF"
-          />
-        </div>
+        <a
+          className="looker-linkcard"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Abrir Looker do Centro de Campo Grande - MS"
+          // href="https://lookerstudio.google.com/u/0/reporting/e7c4b698-6d0f-41c3-92cc-5e882c02d6d1/page/1U2bF"
+        >
+          <div className="looker-card">
+            <img
+              className="looker-flag"
+              src="/imagens-cg/BandeiraCampoGrandeMS.png"
+              alt="Bandeira de Campo Grande - MS"
+            />
+            <div className="looker-text">
+              <div className="looker-title">Dashboard dos Indicadores do Centro de Campo Grande - MS</div>
+              <div className="looker-meta">PLANURB, 2025</div>
+              <div className="looker-desc">Para uma observação mais detalhada</div>
+            </div>
+          </div>
+        </a>
       </div>
 
       {/* ===== CARD 1 ===== */}

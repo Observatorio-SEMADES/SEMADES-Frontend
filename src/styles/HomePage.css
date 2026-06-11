@@ -29,6 +29,18 @@ html, body {
   z-index: 10;                 /* abaixo da navbar (navbar tem z-index:90) */
 }
 
+/* Menos movimento: corta o zoom/deslize dos slides do hero (o autoplay já é
+   desligado no JS sob prefers-reduced-motion). */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slide {
+    transition: opacity 200ms ease;
+    transform: none;
+  }
+  .carousel-slide.active {
+    transform: none;
+  }
+}
+
 /* quando quiser que o carrossel fique parcialmente por baixo da navbar */
 .news-carousel-section.under-navbar {
   margin-top: -72px;   /* "puxa" o carrossel para cima, ficando por baixo da navbar */
@@ -176,7 +188,10 @@ html, body {
 
 /* responsividade */
 @media (max-width: 1024px) {
-  .carousel-hero { height: 460px; padding-left: 3.5rem; } /* ajustado para telas médias */
+  .carousel-hero { height: 460px; }
+  /* o recuo do texto vive em .carousel-slide; reduzir só no .carousel-hero não
+     surtia efeito (769–1024px ficava com os 6.5rem do desktop). */
+  .carousel-slide { padding-left: 3.5rem; }
   .hero-content h3 { font-size: 1.6rem; }
 }
 @media (max-width: 768px) {

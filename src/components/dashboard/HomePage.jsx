@@ -9,6 +9,7 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const touchStartX = useRef(null);
 
   // ===== novos estados para notas temporárias / modal =====
@@ -210,14 +211,22 @@ export default function HomePage() {
     touchStartX.current = null;
   };
 
-  // Autoplay do carrossel a cada 4 segundos
+  // Autoplay do carrossel a cada 4 segundos. Pausa no hover/foco (isCarouselPaused)
+  // e respeita quem pediu menos movimento no sistema (prefers-reduced-motion).
   useEffect(() => {
+    if (isCarouselPaused) return undefined;
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return undefined;
+
     const intervalId = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % newsItems.length);
     }, 4000);
 
     return () => clearInterval(intervalId);
-  }, [newsItems.length]);
+  }, [newsItems.length, isCarouselPaused]);
 
   // Funções do calendário
   const getDaysInMonth = (date) => {
@@ -249,7 +258,15 @@ export default function HomePage() {
   return (
     <>
       <section className="news-carousel-section under-navbar">
-        <div className="carousel-hero" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        <div
+          className="carousel-hero"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onMouseEnter={() => setIsCarouselPaused(true)}
+          onMouseLeave={() => setIsCarouselPaused(false)}
+          onFocusCapture={() => setIsCarouselPaused(true)}
+          onBlurCapture={() => setIsCarouselPaused(false)}
+        >
           {newsItems.map((item, idx) => (
             <div
               key={item.id}
