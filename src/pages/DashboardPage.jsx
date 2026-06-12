@@ -33,6 +33,7 @@ export default function DashboardPage() {
               source={item.fonte}
               description={item.subtitulo}
               href={item.link}
+              to={item.to}
             />
           ))}
         </div>

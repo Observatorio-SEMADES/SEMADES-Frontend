@@ -1,0 +1,517 @@
+/* Página nativa de Empresas (/dashboard/empresas). Padrão visual do Dados Centro. */
+
+/* Linha do botão voltar: escapa da navbar fixa (60px) e alinha à esquerda
+   (o .dashboard-container é text-align:center). */
+.emp-back-wrap {
+  text-align: left;
+  margin-top: 2.5rem;
+}
+
+/* Título logo abaixo do botão, bem mais perto da topbar (sobrescreve o
+   espaçamento global do .page-header só nesta página). */
+.emp-back-wrap + .page-header {
+  margin-top: 0.75rem;
+  padding-top: 0;
+}
+
+.emp-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding: 0.38rem 1.5rem 0.38rem 1.2rem;
+  border: 1px solid var(--brand-700);
+  border-radius: 999px;
+  background: var(--brand-700);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(10, 79, 159, 0.25);
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.emp-back svg {
+  transition: transform 0.18s ease;
+}
+
+.emp-back:hover {
+  background: var(--brand-800);
+  border-color: var(--brand-800);
+  box-shadow: 0 4px 12px rgba(8, 58, 99, 0.32);
+  transform: translateY(-1px);
+}
+
+.emp-back:hover svg {
+  transform: translateX(-3px);
+}
+
+/* Empilhamento das seções com ritmo vertical único. */
+.emp-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Abas internas (Visão geral / Detalhamento) ── */
+.emp-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid var(--gray-200);
+  margin-bottom: -0.25rem; /* aproxima do painel (o gap do .emp-page é 1.25rem) */
+}
+
+.emp-tab {
+  position: relative;
+  flex: 1; /* largura total dividida igualmente (estilo Power BI) */
+  padding: 0.7rem 1.15rem;
+  margin-bottom: -2px; /* sobrepõe a borda do .emp-tabs */
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.emp-tab:hover {
+  color: var(--brand-700);
+  background: #f4f8ff;
+}
+
+.emp-tab.active {
+  color: var(--brand-700);
+  border-bottom-color: var(--accent);
+  background: #f4f8ff;
+}
+
+/* Painel da aba: mesmo ritmo vertical das seções + deslize ao trocar. */
+.emp-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: emp-tab-slide 0.28s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+/* Entra deslizando da esquerda para a direita. Base = opacity 1 (sem fill:both),
+   então ao fim da animação a seção fica sempre visível. */
+@keyframes emp-tab-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emp-tab-panel {
+    animation: none;
+  }
+}
+
+/* Card base */
+.emp-card {
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: 18px;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.emp-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  color: var(--gray-800);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Resumo (StatCards) ── */
+.emp-resumo-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* ── Linha donut + barras ── */
+.emp-top-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.emp-donut-box {
+  display: flex;
+  justify-content: center;
+}
+
+.emp-donut-legend {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.emp-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 10px;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.emp-legend-item:hover {
+  background: #f4f8ff;
+}
+
+.emp-legend-item.dimmed {
+  opacity: 0.45;
+}
+
+.emp-legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+
+.emp-legend-label {
+  flex: 1;
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.emp-legend-value {
+  color: var(--gray-900);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Tabela por bairro ── */
+.emp-table-scroll {
+  max-height: 460px;
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+}
+
+.emp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.emp-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f8ff;
+  border-bottom: 1px solid var(--gray-200);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.emp-table th.num {
+  text-align: right;
+}
+
+.emp-th-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: none;
+  background: transparent;
+  color: var(--gray-700);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.emp-table th.num .emp-th-btn {
+  justify-content: flex-end;
+}
+
+.emp-th-btn:hover {
+  color: var(--brand-700);
+}
+
+.emp-table tbody td {
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid #eef2f7;
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.emp-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.emp-table tbody tr:nth-child(even) td {
+  background: #fafcfe;
+}
+
+.emp-table tbody tr:hover td {
+  background: #eef5ff;
+}
+
+.emp-table td.num {
+  text-align: right;
+}
+
+.emp-table td.num.strong {
+  color: var(--gray-900);
+  font-weight: 700;
+}
+
+/* Célula do bairro: barrinha proporcional ao total atrás do nome. */
+.emp-td-bairro {
+  position: relative;
+  min-width: 9rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  white-space: nowrap;
+}
+
+.emp-td-bar {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  border-radius: 4px;
+  background: rgba(10, 79, 159, 0.14);
+  min-width: 2px;
+}
+
+.emp-td-name {
+  position: relative;
+}
+
+/* ── Busca por atividade ── */
+.emp-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--gray-500);
+  margin-bottom: 0.9rem;
+}
+
+.emp-search:focus-within {
+  border-color: var(--brand-600);
+  box-shadow: 0 0 0 4px rgba(10, 79, 159, 0.1);
+}
+
+.emp-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--gray-900);
+  font-size: 0.92rem;
+}
+
+.emp-search-count {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  color: var(--gray-400);
+  font-variant-numeric: tabular-nums;
+}
+
+.emp-filter-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1.1rem;
+}
+
+.emp-filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 360px;
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+}
+
+.emp-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.55rem 0.8rem;
+  border: none;
+  border-bottom: 1px solid #eef2f7;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.emp-filter-item:hover {
+  background: #f8fbff;
+}
+
+.emp-filter-item.active {
+  background: #eef5ff;
+  box-shadow: inset 3px 0 0 var(--brand-700);
+}
+
+.emp-filter-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--gray-800);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.emp-filter-num {
+  flex: 0 0 auto;
+  color: var(--brand-700);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.emp-filter-empty,
+.emp-filter-loading {
+  padding: 0.9rem;
+  color: var(--gray-500);
+  font-size: 0.88rem;
+}
+
+/* Painel de detalhe da atividade selecionada */
+.emp-filter-detail {
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  background: #fbfdff;
+}
+
+.emp-detail-name {
+  margin: 0 0 0.6rem;
+  color: var(--gray-900);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.emp-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.emp-detail-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(10, 79, 159, 0.08);
+  color: var(--brand-700);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.emp-detail-total {
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.emp-detail-sub {
+  margin-bottom: 0.55rem;
+  color: var(--gray-500);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.emp-detail-bairros {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.emp-detail-bairros li {
+  display: grid;
+  grid-template-columns: minmax(0, 7rem) 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.emp-detail-bairro {
+  color: var(--gray-800);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.emp-detail-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #e9eef5;
+  overflow: hidden;
+}
+
+.emp-detail-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--brand-700);
+  min-width: 3px;
+}
+
+.emp-detail-val {
+  color: var(--gray-900);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.emp-source {
+  margin: 0;
+  color: var(--gray-500);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 1000px) {
+  .emp-top-row {
+    grid-template-columns: 1fr;
+  }
+  .emp-filter-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .emp-resumo-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

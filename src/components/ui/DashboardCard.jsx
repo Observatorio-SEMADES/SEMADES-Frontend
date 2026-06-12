@@ -1,9 +1,12 @@
 import React from "react";
-import { ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ExternalLink, ArrowRight } from "lucide-react";
 import "../../styles/ui.css";
 
-// Card de link para dashboard externo (Looker Studio etc.).
-// Sem `href`, vira um card estático com selo "Em breve".
+// Card de dashboard. Três modos:
+// - `to`: navega para uma página interna do site (ex.: /dashboard/empresas).
+// - `href`: abre um dashboard externo (Looker Studio etc.) em nova aba.
+// - nenhum dos dois: card estático com selo "Em breve".
 // `icon` recebe um componente lucide; `imageSrc` troca o ícone por imagem.
 export default function DashboardCard({
   icon: Icon,
@@ -14,8 +17,10 @@ export default function DashboardCard({
   source,
   description,
   href,
+  to,
 }) {
-  const isAvailable = Boolean(href);
+  const isInternal = Boolean(to);
+  const isAvailable = isInternal || Boolean(href);
 
   const content = (
     <>
@@ -27,10 +32,12 @@ export default function DashboardCard({
             {Icon && <Icon size={26} strokeWidth={1.8} aria-hidden="true" />}
           </span>
         )}
-        {isAvailable ? (
-          <ExternalLink className="dash-card-external" size={18} aria-hidden="true" />
-        ) : (
+        {!isAvailable ? (
           <span className="dash-card-soon">Em breve</span>
+        ) : isInternal ? (
+          <ArrowRight className="dash-card-external" size={18} aria-hidden="true" />
+        ) : (
+          <ExternalLink className="dash-card-external" size={18} aria-hidden="true" />
         )}
       </div>
       <h2>{title}</h2>
@@ -44,6 +51,14 @@ export default function DashboardCard({
       <div className={`dash-card dash-card-${category} dash-card-disabled`}>
         {content}
       </div>
+    );
+  }
+
+  if (isInternal) {
+    return (
+      <Link className={`dash-card dash-card-${category}`} to={to}>
+        {content}
+      </Link>
     );
   }
 

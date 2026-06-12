@@ -56,7 +56,6 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
 
         <div className="login-modal-header">
           <div className="login-modal-brand">
-            <span className="login-modal-eyebrow">Acesso interno</span>
             <img
               src="/logo/prefcg1.png"
               alt="Prefeitura de Campo Grande"

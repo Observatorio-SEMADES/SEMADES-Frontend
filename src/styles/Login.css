@@ -257,21 +257,6 @@ button:hover {
   flex: 0 0 auto;
 }
 
-.login-modal-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
-  padding: 0.15rem 0.55rem;
-  border: 1px solid rgba(10, 79, 159, 0.12);
-  border-radius: 999px;
-  background: rgba(10, 79, 159, 0.06);
-  color: var(--brand-700);
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
 .login-modal-header h2 {
   margin: 0.55rem 0 0.35rem;
   color: var(--gray-900);

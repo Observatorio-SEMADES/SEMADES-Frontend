@@ -16,7 +16,8 @@ export const indicadores = [
     titulo: "Empresas",
     fonte: "PLANURB, 2025",
     subtitulo: "Crescimento e número de estabelecimentos ativos",
-    link: "https://lookerstudio.google.com/reporting/c2481516-de21-4653-af24-08c88b02cac5",
+    // Dashboard nativo no próprio site (substitui o Looker Studio).
+    to: "/dashboard/empresas",
   },
   {
     icone: Briefcase,
