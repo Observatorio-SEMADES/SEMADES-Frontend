@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import { Mail, Lock } from "lucide-react";
 import "../../styles/Login.css";
 import { loginWithEmailPassword } from "../../services/authApi";
 
@@ -54,7 +55,14 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         </button>
 
         <div className="login-modal-header">
-          <span className="login-modal-eyebrow">Acesso interno</span>
+          <div className="login-modal-brand">
+            <span className="login-modal-eyebrow">Acesso interno</span>
+            <img
+              src="/logo/prefcg1.png"
+              alt="Prefeitura de Campo Grande"
+              className="login-modal-logo"
+            />
+          </div>
           <h2>Entrar</h2>
           <p className="login-modal-subtitle">
             Use seu e-mail e senha para acessar recursos restritos do observatório.
@@ -64,24 +72,30 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         {erro && <p className="login-error login-modal-error">{erro}</p>}
 
         <form onSubmit={handleSubmit} className="register-form login-modal-form">
-          <input
-            className="login-modal-input"
-            type="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-          />
-          <input
-            className="login-modal-input"
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-          />
+          <label className="login-modal-field">
+            <Mail className="login-modal-field-icon" size={18} strokeWidth={1.8} aria-hidden="true" />
+            <input
+              className="login-modal-input"
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+          </label>
+          <label className="login-modal-field">
+            <Lock className="login-modal-field-icon" size={18} strokeWidth={1.8} aria-hidden="true" />
+            <input
+              className="login-modal-input"
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+          </label>
           <button type="submit" className="login-modal-submit" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </button>
