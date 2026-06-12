@@ -25,7 +25,8 @@ export const indicadores = [
     titulo: "Empregos",
     fonte: "CAGED, 2026",
     subtitulo: "Geração de empregos formais e informais",
-    link: "https://lookerstudio.google.com/reporting/38fdf9ca-ce21-4bb8-8c32-26a0cf7cbe86",
+    // Dashboard nativo no próprio site (substitui o Looker Studio).
+    to: "/dashboard/empregos",
   },
   {
     icone: Beef,
