@@ -1,0 +1,280 @@
+/* Página nativa de Agronegócio: Agricultura (/dashboard/agro-agricultura). Padrão Empregos/Pecuária. */
+
+.agr-back-wrap {
+  text-align: left;
+  margin-top: 2.5rem;
+}
+
+.agr-back-wrap + .page-header {
+  margin-top: 0.75rem;
+  padding-top: 0;
+}
+
+.agr-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding: 0.38rem 1.5rem 0.38rem 1.2rem;
+  border: 1px solid var(--brand-700);
+  border-radius: 999px;
+  background: var(--brand-700);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(10, 79, 159, 0.25);
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.agr-back svg {
+  transition: transform 0.18s ease;
+}
+
+.agr-back:hover {
+  background: var(--brand-800);
+  border-color: var(--brand-800);
+  box-shadow: 0 4px 12px rgba(8, 58, 99, 0.32);
+  transform: translateY(-1px);
+}
+
+.agr-back:hover svg {
+  transform: translateX(-3px);
+}
+
+.agr-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Filtros (Produto + Ano, ambos dropdown) ── */
+.agr-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.agr-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.agr-filter-label {
+  flex: 0 0 auto;
+  min-width: 5rem;
+  color: var(--gray-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Abas ── */
+.agr-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid var(--gray-200);
+  margin-bottom: -0.25rem;
+}
+
+.agr-tab {
+  position: relative;
+  flex: 1;
+  padding: 0.7rem 1.15rem;
+  margin-bottom: -2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.agr-tab:hover {
+  color: var(--brand-700);
+  background: #f4f8ff;
+}
+
+.agr-tab.active {
+  color: var(--brand-700);
+  border-bottom-color: var(--accent);
+  background: #f4f8ff;
+}
+
+.agr-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: agr-tab-slide 0.28s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+@keyframes agr-tab-slide {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agr-tab-panel { animation: none; }
+}
+
+.agr-clickbars .recharts-bar-rectangle {
+  cursor: pointer;
+}
+
+/* ── Card base ── */
+.agr-card {
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: 18px;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.agr-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  color: var(--gray-800);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Resumo (StatCards) — 4 cartões ── */
+.agr-resumo-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* ── Evolução: dois gráficos lado a lado ── */
+.agr-evo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Tabela ── */
+.agr-table-scroll {
+  max-height: 480px;
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+}
+
+.agr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.agr-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f8ff;
+  border-bottom: 1px solid var(--gray-200);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.agr-table th.num {
+  text-align: right;
+}
+
+.agr-th-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.6rem 0.95rem;
+  border: none;
+  background: transparent;
+  color: var(--gray-700);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.agr-table th.num .agr-th-btn {
+  justify-content: flex-end;
+}
+
+.agr-th-btn:hover {
+  color: var(--brand-700);
+}
+
+.agr-table tbody td {
+  padding: 0.5rem 0.95rem;
+  border-bottom: 1px solid #eef2f7;
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.agr-table tbody tr:nth-child(even) td {
+  background: #fafcfe;
+}
+
+.agr-table tbody tr:hover td {
+  background: #eef5ff;
+}
+
+.agr-table tbody tr.sel td {
+  background: #fff8e1;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.agr-table td.num {
+  text-align: right;
+}
+
+.agr-td-name {
+  font-weight: 600;
+  color: var(--gray-800);
+  white-space: nowrap;
+}
+
+.agr-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  background: #f4f8ff;
+  border-top: 1px solid var(--gray-200);
+  padding: 0.6rem 0.95rem;
+  color: var(--gray-900);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.agr-table tfoot td.num {
+  text-align: right;
+}
+
+.agr-source {
+  margin: 0;
+  color: var(--gray-500);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 1000px) {
+  .agr-evo-grid {
+    grid-template-columns: 1fr;
+  }
+  .agr-resumo-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .agr-resumo-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -364,3 +364,86 @@ a.stat-card:focus-visible {
   line-height: 1.2;
   word-break: break-all;
 }
+
+/* ── FilterDropdown (filtro com muitas opções: mostra o atual, abre a lista) ── */
+.ui-dropdown {
+  position: relative;
+}
+
+.ui-dd-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 9.5rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--gray-800);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ui-dd-toggle:hover,
+.ui-dd-toggle.open {
+  border-color: var(--brand-600);
+  color: var(--brand-700);
+}
+
+.ui-dd-toggle.open {
+  box-shadow: 0 0 0 4px rgba(10, 79, 159, 0.1);
+}
+
+.ui-dd-toggle svg {
+  flex: 0 0 auto;
+  transition: transform 0.18s ease;
+}
+
+.ui-dd-toggle.open svg {
+  transform: rotate(180deg);
+}
+
+.ui-dd-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 20;
+  min-width: 11rem;
+  max-height: 264px;
+  overflow: auto;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.ui-dd-item {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gray-700);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.ui-dd-item:hover {
+  background: #f4f8ff;
+  color: var(--brand-700);
+}
+
+.ui-dd-item.active {
+  background: var(--brand-700);
+  color: #fff;
+}

@@ -1,0 +1,296 @@
+/* Página nativa de Agronegócio: Pecuária (/dashboard/agro-pecuaria). Padrão Empregos. */
+
+.pec-back-wrap {
+  text-align: left;
+  margin-top: 2.5rem;
+}
+
+.pec-back-wrap + .page-header {
+  margin-top: 0.75rem;
+  padding-top: 0;
+}
+
+.pec-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding: 0.38rem 1.5rem 0.38rem 1.2rem;
+  border: 1px solid var(--brand-700);
+  border-radius: 999px;
+  background: var(--brand-700);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(10, 79, 159, 0.25);
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.pec-back svg {
+  transition: transform 0.18s ease;
+}
+
+.pec-back:hover {
+  background: var(--brand-800);
+  border-color: var(--brand-800);
+  box-shadow: 0 4px 12px rgba(8, 58, 99, 0.32);
+  transform: translateY(-1px);
+}
+
+.pec-back:hover svg {
+  transform: translateX(-3px);
+}
+
+.pec-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Abas principais (Rebanho / Abate) ── */
+.pec-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid var(--gray-200);
+  margin-bottom: -0.25rem;
+}
+
+.pec-tab {
+  position: relative;
+  flex: 1;
+  padding: 0.7rem 1.15rem;
+  margin-bottom: -2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.pec-tab:hover {
+  color: var(--brand-700);
+  background: #f4f8ff;
+}
+
+.pec-tab.active {
+  color: var(--brand-700);
+  border-bottom-color: var(--accent);
+  background: #f4f8ff;
+}
+
+/* Painel da aba: ritmo vertical + deslize ao trocar (base opacity 1, sem fill:both). */
+.pec-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: pec-tab-slide 0.28s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+@keyframes pec-tab-slide {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pec-tab-panel { animation: none; }
+}
+
+/* ── Filtros (chips estilo BI): animal + período ── */
+.pec-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pec-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.pec-filter-label {
+  flex: 0 0 auto;
+  min-width: 4rem;
+  color: var(--gray-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pec-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pec-chip {
+  padding: 0.4rem 0.95rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--gray-700);
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pec-chip:hover {
+  border-color: var(--brand-600);
+  color: var(--brand-700);
+  background: #f4f8ff;
+}
+
+.pec-chip.active {
+  background: var(--brand-700);
+  border-color: var(--brand-700);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(10, 79, 159, 0.25);
+}
+
+.pec-clickbars .recharts-bar-rectangle {
+  cursor: pointer;
+}
+
+/* O filtro em dropdown (Mês/Ano) usa o componente compartilhado ui/FilterDropdown
+   (classes .ui-dd-* em ui.css). */
+
+/* ── Card base ── */
+.pec-card {
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: 18px;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.pec-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  color: var(--gray-800);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Resumo (StatCards) — 4 cartões ── */
+.pec-resumo-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* ── Dois gráficos lado a lado ── */
+.pec-top-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── Tabela ── */
+.pec-table-scroll {
+  max-height: 460px;
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+}
+
+.pec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.pec-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f8ff;
+  border-bottom: 1px solid var(--gray-200);
+  text-align: left;
+  white-space: nowrap;
+  padding: 0.6rem 0.95rem;
+  color: var(--gray-700);
+  font-weight: 700;
+}
+
+.pec-table th.num {
+  text-align: right;
+}
+
+.pec-table tbody td {
+  padding: 0.5rem 0.95rem;
+  border-bottom: 1px solid #eef2f7;
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.pec-table tbody tr:nth-child(even) td {
+  background: #fafcfe;
+}
+
+.pec-table tbody tr:hover td {
+  background: #eef5ff;
+}
+
+.pec-table tbody tr.sel td {
+  background: #fff8e1;
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.pec-table td.num {
+  text-align: right;
+}
+
+.pec-td-name {
+  font-weight: 600;
+  color: var(--gray-800);
+  white-space: nowrap;
+}
+
+.pec-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  background: #f4f8ff;
+  border-top: 1px solid var(--gray-200);
+  padding: 0.6rem 0.95rem;
+  color: var(--gray-900);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.pec-table tfoot td.num {
+  text-align: right;
+}
+
+.pec-source {
+  margin: 0;
+  color: var(--gray-500);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 1000px) {
+  .pec-top-row {
+    grid-template-columns: 1fr;
+  }
+  .pec-resumo-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .pec-resumo-row {
+    grid-template-columns: 1fr;
+  }
+}

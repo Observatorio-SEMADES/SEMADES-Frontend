@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import { ChevronUp, ChevronDown, Scale, UserPlus, UserMinus, Briefcase, Timer } from "lucide-react";
 import StatCard from "../../ui/StatCard";
+import FilterDropdown from "../../ui/FilterDropdown";
 import {
   empregosPeriodo,
   empregosSetores,
@@ -373,7 +374,10 @@ export default function Empregos() {
     <div className="emg-page">
       <div className="emg-filters">
         <ChipFilter label="Setor" allLabel="Todos os setores" options={empregosSetores} value={setor} onChange={setSetor} />
-        <ChipFilter label="Período" allLabel="Todo o período" options={empregosAnos} value={ano} onChange={setAno} />
+        <div className="emg-filter">
+          <span className="emg-filter-label">Período:</span>
+          <FilterDropdown allLabel="Todo o período" options={empregosAnos} value={ano} onChange={setAno} />
+        </div>
       </div>
 
       <div className="emg-resumo-row">

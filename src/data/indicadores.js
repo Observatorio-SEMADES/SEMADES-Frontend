@@ -34,7 +34,8 @@ export const indicadores = [
     titulo: "Agronegócio: Pecuária",
     fonte: "IBGE, 2024",
     subtitulo: "Produção e movimentação de rebanhos",
-    link: "https://lookerstudio.google.com/reporting/ddb6fd56-6187-4941-adb5-def4eca70f70",
+    // Dashboard nativo no próprio site (substitui o Looker Studio).
+    to: "/dashboard/agro-pecuaria",
   },
   {
     icone: Wheat,
@@ -42,7 +43,8 @@ export const indicadores = [
     titulo: "Agronegócio: Agricultura",
     fonte: "IBGE, 2024",
     subtitulo: "Produção e área plantada das principais culturas",
-    link: "https://lookerstudio.google.com/reporting/07f206fd-4594-4ad6-a155-0303421cd099",
+    // Dashboard nativo no próprio site (substitui o Looker Studio).
+    to: "/dashboard/agro-agricultura",
   },
   {
     icone: Ship,
