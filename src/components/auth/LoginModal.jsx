@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Check } from "lucide-react";
 import "../../styles/Login.css";
 import { loginWithEmailPassword } from "../../services/authApi";
 
@@ -9,7 +9,8 @@ import { loginWithEmailPassword } from "../../services/authApi";
 export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  // status: "idle" | "loading" | "success"
+  const [status, setStatus] = useState("idle");
   const [erro, setErro] = useState("");
 
   if (!isOpen || typeof document === "undefined") return null;
@@ -22,17 +23,18 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro("");
-    setLoading(true);
+    setStatus("loading");
     try {
       const user = await loginWithEmailPassword({ email: email.trim(), password });
       setEmail("");
       setPassword("");
+      // Mostra o "certinho" de sucesso e fecha logo em seguida.
+      setStatus("success");
       await onLoginSuccess?.(user);
-      onClose?.();
+      setTimeout(() => onClose?.(), 950);
     } catch (err) {
+      setStatus("idle");
       setErro(err?.message ?? "Falha ao fazer login. Tente novamente.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -95,8 +97,21 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
               autoComplete="current-password"
             />
           </label>
-          <button type="submit" className="login-modal-submit" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
+          <button
+            type="submit"
+            className={`login-modal-submit${status === "success" ? " is-success" : ""}`}
+            disabled={status !== "idle"}
+          >
+            {status === "success" ? (
+              <span className="login-modal-success">
+                <Check className="login-modal-check" size={22} strokeWidth={3} aria-hidden="true" />
+                Pronto!
+              </span>
+            ) : status === "loading" ? (
+              "Entrando..."
+            ) : (
+              "Entrar"
+            )}
           </button>
         </form>
       </div>

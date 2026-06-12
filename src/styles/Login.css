@@ -393,6 +393,42 @@ button:hover {
   filter: none;
 }
 
+/* Estado de sucesso: botão verde + "certinho" que aparece com pop. */
+.login-modal-submit.is-success {
+  cursor: default;
+  opacity: 1;
+  background: linear-gradient(135deg, #1f8a4c, #28a35c);
+  box-shadow: 0 10px 24px rgba(31, 138, 76, 0.28);
+}
+
+.login-modal-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login-modal-check {
+  border-radius: 999px;
+  animation: login-check-pop 0.32s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@keyframes login-check-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-12deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-modal-check {
+    animation: none;
+  }
+}
+
 .login-modal-error {
   margin: 0 0 0.85rem;
   padding: 0.75rem 0.85rem;
