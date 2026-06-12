@@ -58,6 +58,8 @@ function FooterIcon({ children }) {
 }
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="semades-footer no-print">
       <div className="semades-footer-accent" aria-hidden="true" />
@@ -94,13 +96,13 @@ export default function Footer() {
 
         <div className="semades-footer-bottom">
           <span className="semades-footer-copyright">
-            © Semades Dashboard
+            © {currentYear} Observatório SEMADES — Prefeitura de Campo Grande
           </span>
-          <nav aria-label="Links institucionais do rodap\u00e9">
+          <div className="semades-footer-meta">
             <span className="semades-footer-meta-text">LGPD</span>
             <span className="semades-footer-meta-separator" aria-hidden="true">•</span>
             <span className="semades-footer-meta-text">Privacidade</span>
-          </nav>
+          </div>
         </div>
       </div>
     </footer>

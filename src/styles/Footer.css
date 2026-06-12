@@ -140,13 +140,13 @@
 .semades-footer-copyright,
 .semades-footer-meta-text,
 .semades-footer-meta-separator {
-  color: rgba(219, 234, 254, 0.68);
+  color: rgba(219, 234, 254, 0.8);
   font-size: 0.72rem;
   font-weight: 500;
   line-height: 1.2;
 }
 
-.semades-footer-bottom nav {
+.semades-footer-meta {
   display: flex;
   align-items: center;
   gap: 0.45rem;

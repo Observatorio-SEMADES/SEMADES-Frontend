@@ -109,6 +109,17 @@ export default function TopBar() {
           </button>
         )}
 
+        {/* Atalho externo para o painel Qlink da Prefeitura */}
+        <a
+          className="side-menu-link"
+          href="https://paineis.campogrande.ms.gov.br/"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={closeMenu}
+        >
+          Qlink
+        </a>
+
         {/* Login / sessão dentro do menu das três listras */}
         <AuthMenuItems />
       </div>
