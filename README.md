@@ -8,8 +8,7 @@ Portal de visualização de indicadores econômicos e ambientais da SEMADES — 
 - Vite 7
 - React Router DOM v7
 - Recharts
-- Chart.js + react-chartjs-2
-- Autenticação via Google Identity Services (OAuth)
+- Autenticação: backend próprio (e-mail/senha + JWT) e Google Identity Services (OAuth)
 
 ## Instalação
 
@@ -73,9 +72,7 @@ VITE_ALLOWED_GOOGLE_EMAILS=usuario@exemplo.com,outro@exemplo.com
 
 ## Backend e API de autenticação
 
-Este repositório contém **apenas o frontend**.
-
-O backend Express (serve de produção + proxy RSS) e a API de autenticação (Node.js + MongoDB) ficam em repositórios separados. Consulte a equipe responsável para obter as URLs de deploy de cada serviço.
+O backend (API Express + MongoDB/Mongoose + JWT) fica na pasta `semades-backend/`, ao lado deste projeto — é um repositório Git próprio, versionado separadamente. Configure a URL dele em `VITE_API_URL`. Consulte o `README.md` do `semades-backend` para subir a API e criar usuários.
 
 ## Autores
 
