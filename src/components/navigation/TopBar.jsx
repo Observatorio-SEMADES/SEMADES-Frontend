@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import HeaderNavTabs from "./HeaderNavTabs";
 import AuthMenuItems from "../auth/AuthMenuItems";
 import { MenuContext } from "./menuContext";
+import { useAuthSession } from "../../hooks/useAuthSession";
+import { canAccessFeature } from "../../services/permissions";
 
 // Topbar única e estática, renderizada FORA do SlideRoutes (main.jsx): nas
 // trocas de rota só o conteúdo abaixo dela desliza. Antes cada página
@@ -16,6 +18,8 @@ const HIDDEN_PATHS = ["/login"];
 
 export default function TopBar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthSession();
   const navRef = useRef(null);
   // Estado do menu lateral em React (antes vivia só em document.body.classList).
   const [menuOpen, setMenuOpen] = useState(false);
@@ -63,6 +67,9 @@ export default function TopBar() {
   if (HIDDEN_PATHS.includes(location.pathname)) return null;
 
   const showExport = EXPORT_PATHS.includes(location.pathname);
+  const showFerramentas =
+    isAuthenticated &&
+    (canAccessFeature("ferramentas") || canAccessFeature("superintendencias"));
 
   // impressão (o #print-header vive dentro da página atual)
   const handleExport = () => {
@@ -98,8 +105,21 @@ export default function TopBar() {
 
       {/* MENU LATERAL */}
       <div className="side-menu no-print" id="side-menu">
+        {showFerramentas && (
+          <button
+            type="button"
+            onClick={() => {
+              navigate("/ferramentas");
+              closeMenu();
+            }}
+          >
+            Ferramentas
+          </button>
+        )}
+
         {showExport && (
           <button
+            type="button"
             onClick={() => {
               handleExport();
               closeMenu();

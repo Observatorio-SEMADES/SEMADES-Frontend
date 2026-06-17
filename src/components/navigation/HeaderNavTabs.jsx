@@ -13,7 +13,6 @@ const PUBLIC_TABS = [
 
 const RESTRICTED_TABS = [
   { label: "Superintendências", path: "/superintendencias", feature: "superintendencias" },
-  { label: "Ferramentas", path: "/ferramentas", feature: "ferramentas" },
 ];
 
 function HeaderNavButton({ tab }) {
@@ -62,16 +61,9 @@ export default function HeaderNavTabs() {
     };
   }, [isAuthenticated]);
 
-  const visibleRestrictedTabs = RESTRICTED_TABS.filter((tab) => {
-    if (tab.feature === "ferramentas") {
-      // Mostrar Ferramentas se o usuário tiver permissão explícita 'ferramentas'
-      // ou se já tem acesso a 'superintendencias' (comportamento idêntico).
-      return (
-        canAccessFeature("ferramentas") || canAccessFeature("superintendencias")
-      );
-    }
-    return canAccessFeature(tab.feature);
-  });
+  const visibleRestrictedTabs = RESTRICTED_TABS.filter((tab) =>
+    canAccessFeature(tab.feature)
+  );
   const tabs = [...PUBLIC_TABS, ...visibleRestrictedTabs];
 
   return (
