@@ -32,6 +32,7 @@ export default function Superintendencias() {
               source={item.fonte}
               description={item.subtitulo}
               href={item.link}
+              to={item.to}
             />
           ))}
         </div>

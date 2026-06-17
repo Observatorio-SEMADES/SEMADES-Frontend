@@ -1,0 +1,373 @@
+/* Plano de Gestão — BI genérico das superintendências (SUAF, SUDE…).
+   Mesmo padrão visual dos BIs de indicadores, com prefixo `pg-`. */
+
+/* Linha do botão voltar: escapa da navbar fixa e alinha à esquerda. */
+.pg-back-wrap {
+  text-align: left;
+  margin-top: 2.5rem;
+}
+
+.pg-back-wrap + .page-header {
+  margin-top: 0.75rem;
+  padding-top: 0;
+}
+
+.pg-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding: 0.38rem 1.5rem 0.38rem 1.2rem;
+  border: 1px solid var(--brand-700);
+  border-radius: 999px;
+  background: var(--brand-700);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(10, 79, 159, 0.25);
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.pg-back svg {
+  transition: transform 0.18s ease;
+}
+
+.pg-back:hover {
+  background: var(--brand-800);
+  border-color: var(--brand-800);
+  box-shadow: 0 4px 12px rgba(8, 58, 99, 0.32);
+  transform: translateY(-1px);
+}
+
+.pg-back:hover svg {
+  transform: translateX(-3px);
+}
+
+.pg-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Abinhas de navegação entre superintendências (acima dos filtros) ── */
+.pg-super-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.pg-super-tab {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pg-super-tab:hover {
+  border-color: var(--brand-600);
+  color: var(--brand-700);
+  background: #f4f8ff;
+}
+
+.pg-super-tab.active {
+  background: var(--brand-700);
+  border-color: var(--brand-700);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(10, 79, 159, 0.25);
+}
+
+/* ── Filtros (dropdowns: ano + situação) ── */
+.pg-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.5rem;
+}
+
+.pg-filter {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.pg-filter-label {
+  flex: 0 0 auto;
+  color: var(--gray-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Resumo (StatCards) — 4 cartões ── */
+.pg-resumo-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* ── Linhas de gráficos lado a lado ── */
+.pg-top-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.25rem;
+}
+
+/* Card base */
+.pg-card {
+  background: var(--surface);
+  border: 1px solid var(--gray-200);
+  border-radius: 18px;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.pg-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  color: var(--gray-800);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Legenda do donut (situação → cor + total). Itens são botões (clicar filtra). */
+.pg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.4rem;
+}
+
+.pg-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.pg-legend-item:hover {
+  background: #f4f8ff;
+  border-color: var(--gray-200);
+}
+
+.pg-legend-item.is-dim {
+  opacity: 0.45;
+}
+
+.pg-legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: 0 0 auto;
+}
+
+.pg-legend-item strong {
+  color: var(--gray-900);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cursor de clique nos gráficos interativos (donut/barras). */
+.pg-clickable .recharts-sector,
+.pg-clickable .recharts-bar-rectangle {
+  cursor: pointer;
+}
+
+/* ── Filtros ativos (chips removíveis) ── */
+.pg-active-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pg-fchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--brand-700);
+  border-radius: 999px;
+  background: var(--brand-700);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.12s ease;
+}
+
+.pg-fchip:hover {
+  transform: translateY(-1px);
+}
+
+.pg-fchip-clear {
+  background: transparent;
+  border-color: var(--gray-300, #cbd5e1);
+  color: var(--gray-600, #4b5563);
+}
+
+/* Estado vazio quando o filtro não retorna ações. */
+.pg-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+/* ── Tabelas ── */
+.pg-table-scroll {
+  max-height: 460px;
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+}
+
+.pg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.pg-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f4f8ff;
+  border-bottom: 1px solid var(--gray-200);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.pg-table th.num {
+  text-align: right;
+}
+
+.pg-th-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  padding: 0.6rem 0.95rem;
+  border: none;
+  background: transparent;
+  color: var(--gray-700);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pg-table th.num .pg-th-btn {
+  justify-content: flex-end;
+}
+
+.pg-th-btn:hover {
+  color: var(--brand-700);
+}
+
+.pg-table tbody td {
+  padding: 0.5rem 0.95rem;
+  border-bottom: 1px solid #eef2f7;
+  color: var(--gray-700);
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-table tbody tr:nth-child(even) td {
+  background: #fafcfe;
+}
+
+.pg-table tbody tr:hover td {
+  background: #eef5ff;
+}
+
+/* Linhas clicáveis (cross-filter por entrega/gerente). */
+.pg-table tbody tr.pg-row-click {
+  cursor: pointer;
+}
+
+.pg-table tbody tr.pg-row-active td {
+  background: #e3eeff;
+  box-shadow: inset 3px 0 0 var(--brand-700);
+}
+
+.pg-table tbody tr.pg-row-active:hover td {
+  background: #dae8ff;
+}
+
+.pg-table td.num {
+  text-align: right;
+}
+
+.pg-td-name {
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+/* Mini-barra de progresso usada na coluna "% executado / taxa". */
+.pg-bar {
+  position: relative;
+  height: 8px;
+  min-width: 70px;
+  border-radius: 999px;
+  background: var(--gray-200);
+  overflow: hidden;
+}
+
+.pg-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 999px;
+  background: var(--brand-600, #2f86d6);
+}
+
+/* Selo de situação (texto). */
+.pg-pill {
+  display: inline-block;
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pg-source {
+  margin: 0;
+  color: var(--gray-500);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 1000px) {
+  .pg-top-row {
+    grid-template-columns: 1fr;
+  }
+  .pg-resumo-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .pg-resumo-row {
+    grid-template-columns: 1fr;
+  }
+}

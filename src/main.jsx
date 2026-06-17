@@ -21,6 +21,10 @@ import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 import "./styles/global.css";
 import Superintendencias from "./components/superintendencias/Superintendencias";
+import SuafPage from "./pages/superintendencias/SuafPage";
+import SudePage from "./pages/superintendencias/SudePage";
+import SurbPage from "./pages/superintendencias/SurbPage";
+import ScarPage from "./pages/superintendencias/ScarPage";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -49,6 +53,43 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <FeatureRoute
               feature="superintendencias"
               element={<AppShell printable><Superintendencias /></AppShell>}
+            />
+          }
+        />
+        {/* Sub-páginas restritas das superintendências (mesma feature) */}
+        <Route
+          path="/superintendencias/suaf"
+          element={
+            <FeatureRoute
+              feature="superintendencias"
+              element={<AppShell printable><SuafPage /></AppShell>}
+            />
+          }
+        />
+        <Route
+          path="/superintendencias/sude"
+          element={
+            <FeatureRoute
+              feature="superintendencias"
+              element={<AppShell printable><SudePage /></AppShell>}
+            />
+          }
+        />
+        <Route
+          path="/superintendencias/surb"
+          element={
+            <FeatureRoute
+              feature="superintendencias"
+              element={<AppShell printable><SurbPage /></AppShell>}
+            />
+          }
+        />
+        <Route
+          path="/superintendencias/scar"
+          element={
+            <FeatureRoute
+              feature="superintendencias"
+              element={<AppShell printable><ScarPage /></AppShell>}
             />
           }
         />
