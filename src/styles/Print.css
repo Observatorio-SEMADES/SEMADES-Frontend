@@ -36,26 +36,26 @@
   }
 
   /* evitar que cards sejam cortados entre páginas */
-  .card, .economic-section, .environment-wrapper, .evolution-section {
+  .dash-card, .economic-section, .environment-wrapper, .evolution-section {
     page-break-inside: avoid;
   }
 
   /* melhorar aparência de gráficos (forçar background branco) */
-  .evolution-section, .economic-section, .card {
+  .evolution-section, .economic-section, .dash-card {
     background: #fff !important;
   }
 
   /* Cores das categorias para impressão */
   /* Textos das categorias no topo */
-  .legenda .tag { 
+  .page-header-legend .badge {
     background: none !important;
     padding: 0 !important;
     margin: 0 12px !important;
     font-weight: 500 !important;
   }
-  .legenda .tag.economia { color: #0288d1 !important; }
-  .legenda .tag.sustentabilidade { color: #4caf50 !important; }
-  .legenda .tag.inovacao { color: #ff9800 !important; }
+  .page-header-legend .badge-economia { color: #0288d1 !important; }
+  .page-header-legend .badge-sustentabilidade { color: #4caf50 !important; }
+  .page-header-legend .badge-inovacao { color: #ff9800 !important; }
 
   /* Layout de impressão: fazer cards grandes e horizontais */
   .card-grid {
@@ -68,7 +68,8 @@
     padding: 0 !important;
   }
 
-  .card {
+  .dash-card {
+    min-height: 0 !important;
     max-width: none !important;
     width: calc(100% - 4px) !important;
     margin: 0 !important;
@@ -85,56 +86,46 @@
   }
 
   /* Cores dos cards baseadas na categoria */
-  .card.economia { border-left-color: #0288d1 !important; }
-  .card.sustentabilidade { border-left-color: #4caf50 !important; }
-  .card.inovacao { border-left-color: #ff9800 !important; }
+  .dash-card-economia { border-left-color: #0288d1 !important; }
+  .dash-card-sustentabilidade { border-left-color: #4caf50 !important; }
+  .dash-card-inovacao { border-left-color: #ff9800 !important; }
 
   /* ícone à esquerda */
-  .card .icone {
-    flex: 0 0 40px !important;
-    font-size: 1.5rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
+  .dash-card .dash-card-top {
+    flex: 0 0 44px !important;
+  }
+
+  .dash-card .dash-card-icon {
+    background: none !important;
     color: #555 !important;
   }
 
+  /* link externo / "Em breve" não fazem sentido no papel */
+  .dash-card .dash-card-external,
+  .dash-card .dash-card-soon {
+    display: none !important;
+  }
+
   /* conteúdo do card */
-  .card h2 { 
-    font-size: 1.1rem !important; 
+  .dash-card h2 {
+    font-size: 1.1rem !important;
     margin: 0 0 2px 0 !important;
     color: #333 !important;
     font-weight: 600 !important;
   }
-  
-  .card .fonte { 
+
+  .dash-card .dash-card-source {
     font-size: 0.85rem !important;
     color: #666 !important;
     margin: 0 !important;
   }
-  
-  .card .subtitulo { 
+
+  .dash-card .dash-card-desc {
     font-size: 0.85rem !important;
     color: #666 !important;
     font-style: italic !important;
     margin: 2px 0 0 0 !important;
   }
-
-  /* posição no canto direito */
-  .card .posicao { 
-    position: absolute !important;
-    right: 24px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    background-color: transparent !important;
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-  }
-
-  /* Cores da posição baseadas na categoria */
-  .card.economia .posicao { color: #0288d1 !important; }
-  .card.sustentabilidade .posicao { color: #4caf50 !important; }
-  .card.inovacao .posicao { color: #ff9800 !important; }
 }
 
 /* na tela, esconder esses elementos (apenas redundância) */

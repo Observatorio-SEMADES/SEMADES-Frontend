@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { canAccessFeature, fetchMyPermissions } from "../../services/permissions";
 import { hasApiUrl } from "../../services/api";
 import { useAuthSession } from "../../hooks/useAuthSession";
+import { useMenu } from "./menuContext";
 
 const PUBLIC_TABS = [
   { label: "Início", path: "/home" },
@@ -17,10 +18,11 @@ const RESTRICTED_TABS = [
 function HeaderNavButton({ tab }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { closeMenu } = useMenu();
   const isActive = location.pathname === tab.path;
 
   const handleClick = () => {
-    document.body.classList.remove("menu-open");
+    closeMenu();
     navigate(tab.path);
   };
 

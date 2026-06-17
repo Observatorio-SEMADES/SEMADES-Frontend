@@ -20,8 +20,11 @@ export async function apiRequest(path, options = {}) {
   let response;
   try {
     response = await fetch(`${base}${path}`, { ...options, headers });
-  } catch {
-    throw new Error('Não foi possível conectar à API. Verifique se o backend está rodando.');
+  } catch (cause) {
+    if (cause instanceof TypeError) {
+      throw new Error('Não foi possível conectar à API. Verifique se o backend está rodando.');
+    }
+    throw cause;
   }
 
   const text = await response.text();

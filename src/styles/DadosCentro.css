@@ -1,135 +1,7 @@
-/* NAVBAR / HEADER */
-.navbar {
-  width: 100%;
-  height: 60px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 18px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 200;
-}
+/* Estilos específicos da página Dados Centro.
+   Navbar, menu lateral e cabeçalho vivem em Root.css/global.css. */
 
-.navbar-logo {
-  height: 60px;
-  opacity: 1.2;
-}
-
-.navbar-burger {
-  width: 32px;
-  height: 26px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.navbar-burger span {
-  width: 100%;
-  height: 4px;
-  background: #333;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.menu-open .navbar-burger span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
-.menu-open .navbar-burger span:nth-child(2) { opacity: 0; }
-.menu-open .navbar-burger span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
-
-/* SIDE MENU */
-.side-menu {
-  position: fixed;
-  top: 60px;
-  right: -270px;
-  width: 250px;
-  background: white;
-  padding: 20px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
-  border-radius: 0 0 0 22px;
-  transition: 0.28s ease-in-out;
-  z-index: 300;
-}
-
-.menu-open .side-menu { right: 0; }
-
-.side-menu button {
-  background: linear-gradient(90deg, #0091ea, #00bfa5);
-  border: 1px solid #ddd;
-  padding: 12px 14px;
-  border-radius: 12px;
-  font-weight: 600;
-  text-align: left;
-  cursor: pointer;
-  transition: 0.25s;
-  font-size: 15px;
-}
-
-.side-menu .logout-btn {
-  background: linear-gradient(90deg, #0091ea, #00bfa5);
-  border: none;
-  color: white;
-  text-align: left;
-}
-
-.menu-overlay {
-  position: fixed;
-  top: 60px;
-  left: 0;
-  width: 100%;
-  height: calc(100vh - 60px);
-  background: rgba(0, 0, 0, 0.25);
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.25s;
-  z-index: 150;
-}
-
-.menu-open .menu-overlay { opacity: 1; pointer-events: auto; }
-
-/* DASHBOARD HEADER (título) */
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 2.2rem;
-  background: none;
-  box-shadow: none;
-  border: none;
-  padding-top: 1.5rem;
-}
-
-.dashboard-header h1 {
-  font-size: 3.2rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
-  color: #ffffff;
-  background: none;
-  -webkit-background-clip: initial;
-  -webkit-text-fill-color: initial;
-  text-shadow: none;
-}
-
-.titulo-degrade {
-  background: linear-gradient(90deg, #0091ea 0%, #00bfa5 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  text-shadow: 0 0 12px rgba(0, 191, 165, 0.15);
-}
-
-.dashboard-header p {
-  color: #ffffff;
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Card contendo o gráfico */
+/* Card base dos gráficos */
 .dados-card {
   max-width: 820px;
   margin: 1.6rem auto 2rem auto;
@@ -141,10 +13,10 @@
   gap: 18px;
   align-items: center;
   position: relative;
-  overflow: visible; /* IMPORTANTE: garante que tooltips não sejam cortados */
+  overflow: visible; /* tooltips não cortam */
 }
 
-/* Paleta de 10 tons de azul — aplicada especificamente ao card de Dados Centro */
+/* Paleta de 10 tons de azul — usada nas fatias e swatches */
 .dados-card {
   --blue-1: #021a3b;
   --blue-2: #053a6b;
@@ -156,14 +28,6 @@
   --blue-8: #9cc9f8;
   --blue-9: #cfe9ff;
   --blue-10: #ecf7ff;
-}
-
-.chart-box {
-  flex: 0 0 420px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
 }
 
 .chart-header-left {
@@ -182,6 +46,17 @@
   margin-left: 6px;
 }
 
+/* ===========================
+   DONUT: layout linha (padrão standalone)
+   =========================== */
+.chart-box {
+  flex: 0 0 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
 .legend-box { flex: 1 1 auto; }
 
 .legend-list {
@@ -193,92 +68,142 @@
 .legend-item {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
   color: #333;
   cursor: pointer;
-  transition: opacity 0.18s ease, transform 0.12s ease, font-weight 0.12s ease;
+  transition: opacity 0.18s ease, transform 0.12s ease;
 }
 
 .legend-swatch {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  flex: 0 0 18px;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  flex: 0 0 16px;
+  margin-top: 1px;
   box-shadow: inset 0 -1px 0 rgba(0,0,0,0.06);
 }
 
-.legend-swatch.swatch-1 { background: var(--blue-1); }
-.legend-swatch.swatch-2 { background: var(--blue-2); }
-.legend-swatch.swatch-3 { background: var(--blue-3); }
-.legend-swatch.swatch-4 { background: var(--blue-4); }
-.legend-swatch.swatch-5 { background: var(--blue-5); }
-.legend-swatch.swatch-6 { background: var(--blue-6); }
-.legend-swatch.swatch-7 { background: var(--blue-7); }
-.legend-swatch.swatch-8 { background: var(--blue-8); }
-.legend-swatch.swatch-9 { background: var(--blue-9); }
+.legend-swatch.swatch-1  { background: var(--blue-1); }
+.legend-swatch.swatch-2  { background: var(--blue-2); }
+.legend-swatch.swatch-3  { background: var(--blue-3); }
+.legend-swatch.swatch-4  { background: var(--blue-4); }
+.legend-swatch.swatch-5  { background: var(--blue-5); }
+.legend-swatch.swatch-6  { background: var(--blue-6); }
+.legend-swatch.swatch-7  { background: var(--blue-7); }
+.legend-swatch.swatch-8  { background: var(--blue-8); }
+.legend-swatch.swatch-9  { background: var(--blue-9); }
 .legend-swatch.swatch-10 { background: var(--blue-10); }
 
 .legend-label {
+  font-size: 0.82rem;
   font-weight: 600;
   flex: 1 1 auto;
   text-align: left;
+  line-height: 1.3;
 }
 
 .legend-value {
   margin-left: auto;
+  font-size: 0.82rem;
   color: #666;
   white-space: nowrap;
 }
 
-@media (max-width: 860px) {
-  .dados-card { flex-direction: column; max-width: 92%; }
-  .chart-box { flex: none; }
-  .legend-box { width: 100%; }
+/* ===========================
+   DONUT COMPACTO (coluna)
+   Usado dentro de .donut-cards-row (lado a lado)
+   =========================== */
+.donut-compact {
+  flex-direction: column;
+  align-items: center;
+  padding-top: 44px; /* espaço pro header absoluto */
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 768px) {
-  .dashboard-header h1 { font-size: 2.3rem; }
+.chart-box-compact {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* ======== INTERAÇÃO DO DONUT (HOVER / DIM) ======== */
-.chart-box svg path {
+.donut-compact .legend-box {
+  width: 100%;
+}
+
+/* Legenda em grid 2×5 para o modo compacto */
+.legend-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+}
+
+/* Interação hover / dim */
+.chart-box svg path,
+.chart-box-compact svg path {
   cursor: pointer;
-  transition: fill 0.18s ease, opacity 0.18s ease, transform 0.12s ease, filter 0.18s ease;
-  transform-origin: center;
+  transition: opacity 0.18s ease;
 }
 
-.chart-box svg path:hover { filter: brightness(0.95); }
-
-.chart-box svg path.dimmed { opacity: 0.18; }
-.chart-box svg path.hovered-slice { opacity: 1; transform: scale(1.01); }
-
-.legend-item.dimmed { opacity: 0.32; }
+.legend-item.dimmed  { opacity: 0.32; }
 .legend-item.hovered { opacity: 1; font-weight: 800; transform: translateX(2px); }
 
 /* ===========================
-   2 CARDS DE BARRAS LADO A LADO
+   LINHA DE DONUTS LADO A LADO
    =========================== */
-
-.bar-cards-row {
+.donut-cards-row {
   width: 100%;
-  max-width: min(1180px, calc(100vw - 32px)); /* <<< evita vazar pro lado */
+  max-width: min(1180px, calc(100vw - 32px));
   margin: 1.6rem auto 2rem auto;
   display: flex;
   gap: 18px;
   align-items: stretch;
-  padding: 0 16px; /* <<< mais seguro */
-  box-sizing: border-box; /* <<< impede overflow por padding */
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.donut-cards-row .dados-card {
+  margin: 0;
+  max-width: none;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 860px) {
+  .donut-cards-row {
+    flex-direction: column;
+    max-width: 92%;
+    padding: 0;
+  }
+  /* card volta a ocupar a largura total — layout compacto continua */
+  .dados-card {
+    flex-direction: column;
+    max-width: 92%;
+  }
+  .chart-box { flex: none; }
+  .legend-box { width: 100%; }
+}
+
+/* ===========================
+   2 CARDS DE BARRAS LADO A LADO
+   =========================== */
+.bar-cards-row {
+  width: 100%;
+  max-width: min(1180px, calc(100vw - 32px));
+  margin: 1.6rem auto 2rem auto;
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 .bar-cards-row .dados-card {
   margin: 0;
   max-width: none;
   flex: 1 1 0;
-  min-width: 0; /* <<< MUITO IMPORTANTE: flex não estoura */
+  min-width: 0;
 }
 
-/* Card de barras com layout vertical */
 .dados-card.bar-card {
   flex-direction: column;
   align-items: stretch;
@@ -286,153 +211,11 @@
   padding-top: 44px; /* espaço pro header absoluto */
 }
 
-/* wrap geral */
 .bar-chart-wrap {
   width: 100%;
   padding: 6px 6px 2px 6px;
 }
 
-/* ===== PLOT REAL (só o gráfico) ===== */
-.bar-plot {
-  position: relative;
-  height: 230px;
-  border-left: 2px solid #9ca3af;   /* eixo Y */
-  border-bottom: 2px solid #9ca3af; /* eixo X (linha do 0) */
-  border-radius: 10px;
-  background: #fff;
-  overflow: visible; /* <<< AQUI: TOOLTIP NÃO CORTA MAIS */
-  z-index: 1;
-}
-
-/* grid só dentro do plot */
-.bar-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.bar-grid-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 0;
-  border-top: 1px dashed rgba(2, 26, 59, 0.16);
-}
-
-.bar-grid-vline {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  border-left: 1px dashed rgba(2, 26, 59, 0.14);
-}
-
-/* y labels fora do plot (à esquerda) */
-.bar-ylabels {
-  position: absolute;
-  left: -44px;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #9ca3af;
-  pointer-events: none;
-  text-align: right;
-  padding: 2px 0;
-}
-
-/* barras dentro do plot, base no 0 */
-.bars-row {
-  position: absolute;
-  inset: 12px 10px 10px 10px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.bar-col {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  position: relative;
-}
-
-.bar-rect {
-  width: 100%;
-  max-width: 62px;
-  background: #053a6b; /* COR PEDIDA */
-  border-radius: 10px 10px 8px 8px;
-  box-shadow: 0 8px 16px rgba(2, 26, 59, 0.14);
-  transition: transform 0.12s ease, filter 0.18s ease;
-  cursor: pointer;
-  min-height: 2px;
-}
-
-.bar-rect:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.06);
-}
-
-/* labels do eixo X fora do plot */
-.bar-xlabels {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 8px 10px 0 10px;
-}
-
-.bar-xlabel {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 92px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #334155;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-}
-
-/* tooltip */
-.bar-tooltip {
-  position: absolute;
-  z-index: 999; /* garante por cima */
-  min-width: 230px;
-  max-width: 340px;
-  background: #ffffff;
-  border: 1px solid rgba(2, 26, 59, 0.10);
-  border-radius: 12px;
-  padding: 10px 12px;
-  box-shadow: 0 14px 30px rgba(2, 26, 59, 0.18);
-  pointer-events: none;
-  transform: translate(-50%, -112%);
-}
-
-.bar-tooltip-title {
-  font-weight: 800;
-  color: #053a6b;
-  font-size: 13px;
-  line-height: 1.2;
-  margin-bottom: 6px;
-}
-
-.bar-tooltip-value {
-  font-size: 12px;
-  color: #475569;
-  font-weight: 700;
-}
-
-/* fonte fora do plot */
 .bar-source {
   text-align: center;
   margin-top: 10px;
@@ -455,13 +238,9 @@
   }
 }
 
-
-
-
 /* ===========================
-   CARDS RESUMO (ANTES DOS GRÁFICOS) + CARD LOOKER
+   CARDS RESUMO + CARD LOOKER
    =========================== */
-
 .resumo-row {
   width: 100%;
   max-width: min(1180px, calc(100vw - 32px));
@@ -479,67 +258,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   min-width: 0;
-}
-
-.resumo-card {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 14px;
-  padding: 12px 14px;      /* ← ligeiramente menor (fininho) */
-  height: 82px;            /* ← ALTURA FIXA (igual ao Valor Total) */
-  box-sizing: border-box;  /* ← garante consistência */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  min-width: 0;
-}
-
-.resumo-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #0091ea, #00bfa5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 38px;
-}
-
-.resumo-icon::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-}
-
-.resumo-text {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-  transform: translateX(-26px);
-  flex: 1;              /* ocupa todo o espaço restante do card */
-  align-items: center;  /* centraliza título/valor */
-  text-align: center;   /* centraliza o texto */
-}
-
-
-.resumo-title {
-  font-weight: 800;
-  color: #1f2933;
-  font-size: 0.95rem;
-  line-height: 1.1;
-}
-
-.resumo-value {
-  color: #053a6b;
-  font-weight: 900;
-  font-size: 1.05rem;
-  line-height: 1.1;
-  word-break: break-word;
 }
 
 .looker-linkcard {
@@ -563,42 +281,33 @@
   transition: transform 0.14s ease, box-shadow 0.18s ease;
 }
 
-.looker-linkcard:hover .looker-card {
+.looker-linkcard:not(.looker-disabled):hover .looker-card {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
 }
 
-.looker-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: rgba(0, 145, 234, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 42px;
+/* Estado "Em breve" */
+.looker-disabled {
+  cursor: default;
 }
 
-.looker-icon::before {
-  content: "";
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  background: #0091ea;
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+.looker-disabled .looker-card {
+  opacity: 0.72;
 }
 
-.looker-topbadge {
+.looker-soon-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255, 172, 0, 0.16);
-  color: #a35a00;
-  border: 1px solid rgba(255, 172, 0, 0.30);
-  font-weight: 900;
-  font-size: 0.85rem;
-  padding: 6px 10px;
-  border-radius: 12px;
+  top: 10px;
+  right: 10px;
+  background: var(--gray-100, #f3f4f6);
+  color: var(--gray-500, #6b7280);
+  border: 1px dashed var(--gray-300, #d1d5db);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 999px;
 }
 
 .looker-text {
@@ -606,7 +315,7 @@
   flex-direction: column;
   gap: 6px;
   min-width: 0;
-  padding-right: 52px; /* espaço pro badge */
+  padding-right: 72px; /* espaço pro badge */
 }
 
 .looker-title {
@@ -617,19 +326,17 @@
 }
 
 .looker-meta {
-  margin-top: 6px;   /* empurra para baixo */
+  margin-top: 6px;
   font-size: 0.92rem;
   font-weight: 700;
   color: #64748b;
 }
-
 
 .looker-desc {
   position: absolute;
   left: 50%;
   bottom: 14px;
   transform: translateX(-50%);
-
   font-size: 0.78rem;
   font-weight: 600;
   color: #94a3b8;
@@ -638,6 +345,14 @@
   white-space: nowrap;
 }
 
+.looker-flag {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex: 0 0 42px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
 
 @media (max-width: 980px) {
   .resumo-row {
@@ -657,49 +372,6 @@
   }
 }
 
-/* substitui o quadradinho azul por uma imagem (bandeira) */
-.looker-flag {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  object-fit: cover;
-  flex: 0 0 42px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-  background: #ffffff;
+@media (max-width: 768px) {
+  .dashboard-header h1 { font-size: 2.3rem; }
 }
-
-/* ícones em imagem nos cards resumo */
-.resumo-icon-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  object-fit: contain;
-  flex: 0 0 38px;
-  background: #ffffff;
-}
-
-/* Aumenta ícones dos cards:
-   Área do Terreno */
-.resumo-card:nth-child(4) .resumo-icon-img {
-  width: 50px;
-  height: 50px;
-  flex: 0 0 50px;
-}
-
-/* Aumenta ícones dos cards:
-   Quantidade de Imóveis */
-.resumo-card:nth-child(1) .resumo-icon-img {
-  width: 60px;
-  height: 60px;
-  flex: 0 0 60px;
-}
-
-
-/* Aumenta ícones dos cards:
-   Valor Venal */
-  .resumo-card:nth-child(2) .resumo-icon-img {
-  width: 68px;
-  height: 68px;
-  flex: 0 0 68px;
-  }

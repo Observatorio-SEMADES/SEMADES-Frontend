@@ -2,17 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { Routes, useLocation } from "react-router-dom";
 import "../../styles/SlideRoutes.css";
 
-// Transição de "empurrão" entre rotas: a página atual desliza para fora e a
-// nova entra pelo lado oposto, ambas animadas ao mesmo tempo. A direção segue
-// a ordem das abas (ROUTE_ORDER): navegar para uma aba mais à direita empurra
-// o conteúdo para a esquerda, e vice-versa.
+// Transição curta entre rotas: a página que sai faz um fade + deslize leve, e a
+// nova entra do lado oposto com o mesmo movimento. A direção segue a ordem das
+// abas (ROUTE_ORDER): ir para uma aba mais à direita desliza para a esquerda, e
+// vice-versa. Antes era um "empurrão" de 100vw em 800ms; agora é um movimento
+// curto (24px) de ~250ms, mais discreto e rápido.
 //
 // Durante a animação a página antiga é re-renderizada com a location anterior
 // (<Routes location={...}>) por cima, em position: absolute; a nova fica no
 // fluxo normal, mantendo a altura/scroll do documento corretos.
 
-const ROUTE_ORDER = ["/home", "/dashboard", "/dados-centro", "/superintendencias"];
-const DURATION_MS = 800; // manter em sincronia com SlideRoutes.css
+const ROUTE_ORDER = ["/home", "/dashboard", "/dashboard/empresas", "/dashboard/empregos", "/dashboard/agro-pecuaria", "/dashboard/agro-agricultura", "/dados-centro", "/superintendencias"];
+const DURATION_MS = 250; // manter em sincronia com SlideRoutes.css
 
 function routeIndex(pathname) {
   const i = ROUTE_ORDER.indexOf(pathname);

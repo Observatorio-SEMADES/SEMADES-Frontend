@@ -2,12 +2,23 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Route, Navigate } from "react-router-dom";
 import Login from "./components/auth/Login";
-import Root from "./Root.jsx";
-import HomePageWrapper from "./components/dashboard/HomePageWrapper.jsx";
+import AppShell from "./components/layout/AppShell";
+import HomePage from "./components/dashboard/HomePage";
+import DashboardPage from "./pages/DashboardPage";
+import EmpresasPage from "./pages/EmpresasPage";
+import EmpregosPage from "./pages/EmpregosPage";
+import AgroPecuariaPage from "./pages/AgroPecuariaPage";
+import AgroAgriculturaPage from "./pages/AgroAgriculturaPage";
+import DadosCentroPage from "./pages/DadosCentroPage";
 import FeatureRoute from "./components/routes/FeatureRoute";
 import LoginStatusBadge from "./components/auth/LoginStatusBadge";
 import TopBar from "./components/navigation/TopBar";
 import SlideRoutes from "./components/transitions/SlideRoutes";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/inter/800.css";
 import "./styles/global.css";
 import Superintendencias from "./components/superintendencias/Superintendencias";
 
@@ -24,13 +35,22 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         {/* Login antigo continua acessível, mas não é a entrada do site */}
         <Route path="/login" element={<Login />} />
         {/* Rotas públicas — acessíveis sem login */}
-        <Route path="/home" element={<HomePageWrapper />} />
-        <Route path="/dashboard" element={<Root />} />
-        <Route path="/dados-centro" element={<Root />} />
+        <Route path="/home" element={<AppShell><HomePage /></AppShell>} />
+        <Route path="/dashboard" element={<AppShell printable><DashboardPage /></AppShell>} />
+        <Route path="/dashboard/empresas" element={<AppShell printable><EmpresasPage /></AppShell>} />
+        <Route path="/dashboard/empregos" element={<AppShell printable><EmpregosPage /></AppShell>} />
+        <Route path="/dashboard/agro-pecuaria" element={<AppShell printable><AgroPecuariaPage /></AppShell>} />
+        <Route path="/dashboard/agro-agricultura" element={<AppShell printable><AgroAgriculturaPage /></AppShell>} />
+        <Route path="/dados-centro" element={<AppShell printable><DadosCentroPage /></AppShell>} />
         {/* Rota restrita — exige autenticação + feature "superintendencias" */}
         <Route
           path="/superintendencias"
-          element={<FeatureRoute feature="superintendencias" element={<Superintendencias />} />}
+          element={
+            <FeatureRoute
+              feature="superintendencias"
+              element={<AppShell printable><Superintendencias /></AppShell>}
+            />
+          }
         />
       </SlideRoutes>
     </Router>

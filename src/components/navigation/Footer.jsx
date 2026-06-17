@@ -1,4 +1,5 @@
 import React from "react";
+import { MapPin } from "lucide-react";
 import "../../styles/Footer.css";
 
 const socialLinks = [
@@ -57,52 +58,51 @@ function FooterIcon({ children }) {
 }
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="semades-footer no-print">
+      <div className="semades-footer-accent" aria-hidden="true" />
       <div className="semades-footer-content">
         <div className="semades-footer-main">
-          <section className="semades-footer-address" aria-label="Endere\u00e7o">
-            <div className="semades-footer-address-icon">
-              <img
-                src="/logo/IconLocalRodape.png"
-                alt="Ícone de localização institucional"
-              />
-            </div>
+          <div className="semades-footer-brand">
+            <span className="semades-footer-kicker">Prefeitura de Campo Grande</span>
+            <h2>Observatório SEMADES</h2>
+          </div>
+
+          <section className="semades-footer-address" aria-label="Endereço institucional">
+            <span className="semades-footer-address-mark" aria-hidden="true">
+              <MapPin size={16} strokeWidth={1.9} />
+            </span>
             <p>R. Mal. Rondon, 2655 - Centro, Campo Grande - MS, Brasil</p>
           </section>
 
-          <section className="semades-footer-column" aria-labelledby="footer-contact-title">
-            <h2 id="footer-contact-title">Contato</h2>
-            <a href="#">Email</a>
-            <a href="#">Telefone</a>
-          </section>
-
-          <section className="semades-footer-column" aria-labelledby="footer-social-title">
-            <h2 id="footer-social-title">Redes Sociais</h2>
-            <div className="semades-footer-socials">
-              {socialLinks.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={item.label}
-                  title={item.label}
-                >
-                  <FooterIcon>{item.icon}</FooterIcon>
-                </a>
-              ))}
-            </div>
-          </section>
+          <nav className="semades-footer-socials" aria-label="Redes oficiais">
+            {socialLinks.map((item) => (
+              <a
+                className="semades-footer-social-link"
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={item.label}
+                title={item.label}
+              >
+                <FooterIcon>{item.icon}</FooterIcon>
+              </a>
+            ))}
+          </nav>
         </div>
 
         <div className="semades-footer-bottom">
-          <span> © Semades Dashboard</span>
-          <nav aria-label="Links institucionais do rodap\u00e9">
-            <a href="#">Lei Geral de Proteção de Dados</a>
-            <span className="footer-separator" aria-hidden="true">|</span>
-            <a href="#">Política de Privacidade</a>
-          </nav>
+          <span className="semades-footer-copyright">
+            © {currentYear} Observatório SEMADES — Prefeitura de Campo Grande
+          </span>
+          <div className="semades-footer-meta">
+            <span className="semades-footer-meta-text">LGPD</span>
+            <span className="semades-footer-meta-separator" aria-hidden="true">•</span>
+            <span className="semades-footer-meta-text">Privacidade</span>
+          </div>
         </div>
       </div>
     </footer>

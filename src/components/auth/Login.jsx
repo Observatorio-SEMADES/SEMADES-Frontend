@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Login.css";
 import GoogleAuth from "./Google_auth";
+import Skeleton from "../ui/Skeleton";
 import {
   getGoogleAccessMessage,
   hasConfiguredGoogleAccessRules,
@@ -235,7 +236,9 @@ function Login() {
             ))}
           </div>
         ) : (
-          <div className="carousel-loading">Carregando imagens...</div>
+          <div className="carousel-loading" aria-busy="true" aria-label="Carregando imagens">
+            <Skeleton width="100%" height="100%" radius={0} />
+          </div>
         )}
       </div>
     </div>
