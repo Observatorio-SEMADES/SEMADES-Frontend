@@ -9,7 +9,7 @@ import { MenuContext } from "./menuContext";
 // renderizava o próprio <nav>, o que fazia a barra deslizar junto.
 
 // Páginas com conteúdo imprimível mostram o botão "Exportar" no menu lateral.
-const EXPORT_PATHS = ["/dashboard", "/dados-centro", "/superintendencias"];
+const EXPORT_PATHS = ["/dashboard", "/dados-centro", "/superintendencias", "/ferramentas"];
 
 // A tela de login tem layout próprio, sem topbar.
 const HIDDEN_PATHS = ["/login"];

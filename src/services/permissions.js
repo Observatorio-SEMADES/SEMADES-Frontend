@@ -60,8 +60,12 @@ export function canAccessFeature(feature) {
   const cached = getCachedPermissions();
   if (cached) {
     if (cached.role === 'admin') return true;
-    if (feature === 'superintendencias') return Boolean(cached.canAccessSuperintendencias);
-    if (feature === 'prodes') return Boolean(cached.canAccessProdes);
+    if (feature === 'superintendencias')
+      return Boolean(cached.canAccessSuperintendencias ?? (Array.isArray(cached.allowedFeatures) && cached.allowedFeatures.includes(feature)));
+    if (feature === 'ferramentas')
+      return Boolean(cached.canAccessFerramentas ?? (Array.isArray(cached.allowedFeatures) && cached.allowedFeatures.includes(feature)));
+    if (feature === 'prodes')
+      return Boolean(cached.canAccessProdes ?? (Array.isArray(cached.allowedFeatures) && cached.allowedFeatures.includes(feature)));
     return Array.isArray(cached.allowedFeatures) && cached.allowedFeatures.includes(feature);
   }
 

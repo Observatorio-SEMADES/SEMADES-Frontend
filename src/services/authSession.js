@@ -26,6 +26,7 @@ export function notifySessionChanged() {
 export function setSession({ token, user }) {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USER_KEY, JSON.stringify(user));
+  localStorage.removeItem(PERMISSIONS_KEY);
   notifySessionChanged();
 }
 

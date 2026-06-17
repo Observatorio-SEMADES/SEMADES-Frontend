@@ -21,6 +21,7 @@ import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 import "./styles/global.css";
 import Superintendencias from "./components/superintendencias/Superintendencias";
+import Ferramentas from "./components/ferramentas/Ferramentas";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -49,6 +50,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <FeatureRoute
               feature="superintendencias"
               element={<AppShell printable><Superintendencias /></AppShell>}
+            />
+          }
+        />
+        <Route
+          path="/ferramentas"
+          element={
+            <FeatureRoute
+              feature="ferramentas"
+              element={<AppShell printable><Ferramentas /></AppShell>}
             />
           }
         />
