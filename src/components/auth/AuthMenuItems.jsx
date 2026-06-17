@@ -34,7 +34,10 @@ export default function AuthMenuItems() {
   const handleLogout = () => {
     logout(); // limpa authToken, authUser e authPermissions + notifica
     closeMenu();
-    if (location.pathname === "/superintendencias") {
+    if (
+      location.pathname.startsWith("/superintendencias") ||
+      location.pathname === "/ferramentas"
+    ) {
       navigate("/home");
     }
   };

@@ -39,7 +39,7 @@ export async function validateCurrentSession() {
         return null;
       }
       const current = getStoredUser();
-      setSession({ token, user: { ...current, ...user } });
+      setSession({ token, user: { ...current, ...user } }, { preservePermissions: true });
       return user;
     } catch (err) {
       if (err?.status === 401 || err?.status === 403) {

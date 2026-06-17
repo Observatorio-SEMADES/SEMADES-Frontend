@@ -23,10 +23,12 @@ export function notifySessionChanged() {
   window.dispatchEvent(new CustomEvent(SESSION_CHANGE_EVENT));
 }
 
-export function setSession({ token, user }) {
+export function setSession({ token, user }, { preservePermissions = false } = {}) {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USER_KEY, JSON.stringify(user));
-  localStorage.removeItem(PERMISSIONS_KEY);
+  if (!preservePermissions) {
+    localStorage.removeItem(PERMISSIONS_KEY);
+  }
   notifySessionChanged();
 }
 

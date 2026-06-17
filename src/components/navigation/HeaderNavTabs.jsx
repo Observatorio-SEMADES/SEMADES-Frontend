@@ -20,7 +20,8 @@ function HeaderNavButton({ tab }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { closeMenu } = useMenu();
-  const isActive = location.pathname === tab.path;
+  const isActive =
+    location.pathname === tab.path || location.pathname.startsWith(`${tab.path}/`);
 
   const handleClick = () => {
     closeMenu();

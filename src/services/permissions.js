@@ -1,5 +1,5 @@
 import { apiRequest, hasApiUrl } from './api.js';
-import { clearSession } from './authSession.js';
+import { clearSession, notifySessionChanged } from './authSession.js';
 
 const PERMISSIONS_KEY = 'authPermissions';
 
@@ -33,6 +33,7 @@ function getCachedPermissions() {
 function setCachedPermissions(perms) {
   if (typeof window === 'undefined') return;
   localStorage.setItem(PERMISSIONS_KEY, JSON.stringify(perms));
+  notifySessionChanged();
 }
 
 export function clearPermissionsCache() {
