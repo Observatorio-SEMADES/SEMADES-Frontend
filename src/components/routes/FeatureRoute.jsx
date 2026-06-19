@@ -27,18 +27,21 @@ export default function FeatureRoute({ feature, element }) {
   // a permissão é sempre validada pelo backend (não engana a regra).
   const devBypass = DEV_MODE && isLocalhost() && !apiConfigured;
 
-  const hasFeatureOrSuper = (f) =>
-    canAccessFeature(f) || (f === "ferramentas" && canAccessFeature("superintendencias"));
+  const hasRequiredAccess = (f) =>
+    !f ||
+    canAccessFeature(f) ||
+    (f === "ferramentas" && canAccessFeature("superintendencias"));
 
   const [state, setState] = useState(() => {
     if (devBypass) return "allowed";
     if (!apiConfigured) {
       if (!isAuthenticated()) return "unauth";
-      return hasFeatureOrSuper(feature) ? "allowed" : "denied";
+      return hasRequiredAccess(feature) ? "allowed" : "denied";
     }
     // Se já existe cache local que permite a feature, mostrar imediatamente
     // para evitar atraso; o efeito abaixo valida a sessão e atualiza o estado.
-    return hasFeatureOrSuper(feature) ? "allowed" : "pending";
+    if (!isAuthenticated()) return "pending";
+    return hasRequiredAccess(feature) ? "allowed" : "pending";
   });
 
   useEffect(() => {
@@ -61,9 +64,13 @@ export default function FeatureRoute({ feature, element }) {
         setState("unauth");
         return;
       }
+      if (!feature) {
+        setState("allowed");
+        return;
+      }
       await fetchMyPermissions();
       if (!active) return;
-      setState(hasFeatureOrSuper(feature) ? "allowed" : "denied");
+      setState(hasRequiredAccess(feature) ? "allowed" : "denied");
     })();
 
     return () => {

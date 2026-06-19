@@ -46,7 +46,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/dashboard/empregos" element={<AppShell printable><EmpregosPage /></AppShell>} />
         <Route path="/dashboard/agro-pecuaria" element={<AppShell printable><AgroPecuariaPage /></AppShell>} />
         <Route path="/dashboard/agro-agricultura" element={<AppShell printable><AgroAgriculturaPage /></AppShell>} />
-        <Route path="/dados-centro" element={<AppShell printable><DadosCentroPage /></AppShell>} />
+        <Route
+          path="/dados-centro"
+          element={
+            <FeatureRoute
+              element={<AppShell printable><DadosCentroPage /></AppShell>}
+            />
+          }
+        />
         {/* Rota restrita — exige autenticação + feature "superintendencias" */}
         <Route
           path="/superintendencias"

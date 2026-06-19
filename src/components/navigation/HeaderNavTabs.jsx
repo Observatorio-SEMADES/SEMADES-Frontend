@@ -8,6 +8,9 @@ import { useMenu } from "./menuContext";
 const PUBLIC_TABS = [
   { label: "Início", path: "/home" },
   { label: "Indicadores Observatório", path: "/dashboard" },
+];
+
+const AUTHENTICATED_TABS = [
   { label: "Dados Centro", path: "/dados-centro" },
 ];
 
@@ -64,7 +67,11 @@ export default function HeaderNavTabs() {
   const visibleRestrictedTabs = RESTRICTED_TABS.filter((tab) =>
     canAccessFeature(tab.feature)
   );
-  const tabs = [...PUBLIC_TABS, ...visibleRestrictedTabs];
+  const tabs = [
+    ...PUBLIC_TABS,
+    ...(isAuthenticated ? AUTHENTICATED_TABS : []),
+    ...visibleRestrictedTabs,
+  ];
 
   return (
     <div className="navbar-tabs" aria-label="Navegação principal">

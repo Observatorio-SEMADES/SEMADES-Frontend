@@ -35,11 +35,11 @@
 }
 
 /* ===========================
-   GRID DE 3 StatCards
+   GRID DE StatCards
    =========================== */
 .env-stats-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
   margin-bottom: 0.4rem;
 }
@@ -48,28 +48,6 @@
   .env-stats-row {
     grid-template-columns: 1fr;
   }
-}
-
-/* ===========================
-   TAXA DE PLANTIO — barra de progresso
-   =========================== */
-.taxa-card {
-  align-items: flex-start !important;
-}
-
-.taxa-progress {
-  height: 5px;
-  border-radius: 999px;
-  background: var(--gray-200, #e5e7eb);
-  overflow: hidden;
-  margin-top: 5px;
-  width: 100%;
-}
-
-.taxa-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  background: var(--cat-sustentabilidade, #66bb6a);
 }
 
 /* ===========================

@@ -3,8 +3,6 @@ import { Sprout, Leaf } from "lucide-react";
 // Dados da seção Sustentabilidade e Meio Ambiente (/dashboard).
 // Fonte: SEMADES / Planurb, 2025.
 
-export const plantingRate = 34.7;
-
 export const forestData = [
   { icon: Sprout, label: "Mudas Doadas/Distribuídas", value: 27153 },
   { icon: Leaf,   label: "Mudas Plantadas",           value: 9429  },

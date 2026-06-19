@@ -4,34 +4,15 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
-import { Sprout, Leaf, TreePine, Scissors, Eye, ChevronDown, X } from "lucide-react";
+import { Leaf, TreePine, Scissors, Eye, ChevronDown, X } from "lucide-react";
 import SectionTitle from "../ui/SectionTitle";
 import StatCard from "../ui/StatCard";
 import { useDialog } from "../../hooks/useDialog";
 import {
-  forestData, plantingRate, arbolinkTableData, arbolinkTotals,
+  forestData, arbolinkTableData, arbolinkTotals,
 } from "../../data/sustentabilidade";
 
 const PERIOD = "Jan/2025 – Dez/2025";
-
-// Card de taxa de plantio com barra de progresso visual.
-function TaxaCard() {
-  return (
-    <div className="stat-card taxa-card">
-      <span className="stat-card-icon">
-        <Sprout size={20} strokeWidth={2} aria-hidden="true" />
-      </span>
-      <span className="stat-card-text">
-        <span className="stat-card-label">Taxa de Plantio</span>
-        <span className="stat-card-value">{plantingRate}%</span>
-        <div className="taxa-progress" aria-hidden="true">
-          <div className="taxa-progress-fill" style={{ width: `${plantingRate}%` }} />
-        </div>
-        <span className="stat-card-detail">das mudas doadas foram plantadas</span>
-      </span>
-    </div>
-  );
-}
 
 // Modal com a tabela mensal completa — entra pela parte superior da tela.
 function ArbolinkModal({ onClose }) {
@@ -70,9 +51,9 @@ function ArbolinkModal({ onClose }) {
               <thead>
                 <tr>
                   <th>Mês</th>
-                  <th>Poda / Remoção</th>
+                  <th>Solicitações de Avaliação Arbórea</th>
                   <th>Árvores Avaliadas</th>
-                  <th>Supressão Expedidas</th>
+                  <th>Autorizações de Supressão Expedidas</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,9 +101,9 @@ export default function EnvironmentCards() {
 
   const chartData = arbolinkTableData.map((row) => ({
     month: row.month.slice(0, 3),
-    "Poda/Remoção": row.pruning,
-    "Avaliadas":    row.evaluated,
-    "Supressão":    row.suppression,
+    "Solicitações de Avaliação Arbórea": row.pruning,
+    "Avaliadas": row.evaluated,
+    "Autorizações de Supressão Expedidas": row.suppression,
   }));
 
   return (
@@ -134,7 +115,7 @@ export default function EnvironmentCards() {
         <p className="env-period">{PERIOD}</p>
       </div>
 
-      {/* ── Mudas: 3 StatCards ── */}
+      {/* ── Mudas ── */}
       <div className="env-stats-row">
         <StatCard
           icon={forestData[0].icon}
@@ -146,7 +127,6 @@ export default function EnvironmentCards() {
           label={forestData[1].label}
           value={forestData[1].value.toLocaleString("pt-BR")}
         />
-        <TaxaCard />
       </div>
 
       {/* ── Arbolink: totais + gráfico + trigger ── */}
@@ -156,7 +136,7 @@ export default function EnvironmentCards() {
         <div className="env-stats-row">
           <StatCard
             icon={Scissors}
-            label="Poda / Remoção (Total)"
+            label="Solicitações de Avaliação Arbórea (Total)"
             value={arbolinkTotals.pruning.toLocaleString("pt-BR")}
           />
           <StatCard
@@ -166,7 +146,7 @@ export default function EnvironmentCards() {
           />
           <StatCard
             icon={Leaf}
-            label="Supressões Expedidas (Total)"
+            label="Autorizações de Supressão Expedidas (Total)"
             value={arbolinkTotals.suppression.toLocaleString("pt-BR")}
           />
         </div>
@@ -186,9 +166,9 @@ export default function EnvironmentCards() {
                 formatter={(v) => v.toLocaleString("pt-BR")}
               />
               <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 8, fontSize: 11 }} />
-              <Bar dataKey="Poda/Remoção" fill="#2e7d32" radius={[3,3,0,0]} isAnimationActive={false} />
+              <Bar dataKey="Solicitações de Avaliação Arbórea" fill="#2e7d32" radius={[3,3,0,0]} isAnimationActive={false} />
               <Bar dataKey="Avaliadas"    fill="#66bb6a" radius={[3,3,0,0]} isAnimationActive={false} />
-              <Bar dataKey="Supressão"    fill="#a5d6a7" radius={[3,3,0,0]} isAnimationActive={false} />
+              <Bar dataKey="Autorizações de Supressão Expedidas" fill="#a5d6a7" radius={[3,3,0,0]} isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </div>

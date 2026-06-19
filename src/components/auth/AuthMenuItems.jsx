@@ -36,7 +36,8 @@ export default function AuthMenuItems() {
     closeMenu();
     if (
       location.pathname.startsWith("/superintendencias") ||
-      location.pathname === "/ferramentas"
+      location.pathname === "/ferramentas" ||
+      location.pathname === "/dados-centro"
     ) {
       navigate("/home");
     }
