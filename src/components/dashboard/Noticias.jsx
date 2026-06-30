@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/Noticias.css";
 import SectionTitle from "../ui/SectionTitle";
-import { noticias, verTudoLink } from "../../data/noticias";
+import {
+  noticias as noticiasIniciais,
+  verTudoLink as verTudoLinkInicial,
+} from "../../data/noticias";
+import { fetchNoticias } from "../../services/noticiasApi";
 
 function NoticiaCard({ noticia, variant = "side" }) {
   return (
@@ -27,8 +31,28 @@ function NoticiaCard({ noticia, variant = "side" }) {
 }
 
 export default function Noticias() {
-  const noticiaPrincipal = noticias.find((noticia) => noticia.destaque);
-  const noticiasLaterais = noticias.filter((noticia) => !noticia.destaque);
+  const [noticias, setNoticias] = useState(noticiasIniciais);
+  const [verTudoLink, setVerTudoLink] = useState(verTudoLinkInicial);
+
+  useEffect(() => {
+    let ativo = true;
+    fetchNoticias().then((data) => {
+      if (!ativo) return;
+      if (data.noticias?.length) setNoticias(data.noticias);
+      if (data.verTudoLink) setVerTudoLink(data.verTudoLink);
+    });
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  const noticiaPrincipal =
+    noticias.find((noticia) => noticia.destaque) ?? noticias[0];
+  const noticiasLaterais = noticias.filter(
+    (noticia) => noticia !== noticiaPrincipal
+  );
+
+  if (!noticiaPrincipal) return null;
 
   return (
     <section className="noticias-section" aria-labelledby="noticias-title">
