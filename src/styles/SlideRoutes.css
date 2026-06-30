@@ -3,6 +3,19 @@
 
 .slide-stage {
   position: relative;
+  /* Elo da cadeia do sticky footer: estica dentro da coluna flex do #root. */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* A página visível (a que está saindo fica em position:absolute) ocupa toda a
+   altura disponível, para o rodapé descer até o fim em telas curtas. */
+.slide-stage > div:not(.slide-page) {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .slide-stage.is-animating {

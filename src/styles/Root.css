@@ -7,6 +7,19 @@
   max-width: 1300px;
   /* centraliza e limita largura */
   margin: 0 auto;
+  /* width explícito para não encolher como item flex; centralização mantida
+     pelo max-width + margin auto acima. */
+  width: 100%;
+  /* Último elo do sticky footer: vira coluna flex e estica; o <main> cresce
+     (regra abaixo) e empurra o <Footer> para o fim da tela. */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* O conteúdo da página ocupa o espaço livre, mantendo o rodapé no rodapé. */
+.dashboard-container > main {
+  flex: 1 0 auto;
 }
 
 

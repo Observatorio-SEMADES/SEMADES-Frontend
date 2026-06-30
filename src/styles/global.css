@@ -70,6 +70,14 @@ body,
   background: var(--bg);
 }
 
+/* Sticky footer: #root vira coluna flex para que o conteúdo empurre o rodapé
+   até o fim da tela mesmo em páginas curtas (ex.: Ferramentas). A cadeia
+   continua em .slide-stage e .dashboard-container. */
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
 body {
   font-family: var(--font-sans);
   color: var(--gray-900);

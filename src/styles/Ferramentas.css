@@ -5,3 +5,12 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+/* O .card-grid global usa auto-fit com 1fr, o que faz um único card esticar e
+   ocupar a largura toda. Aqui limitamos a largura do card e centralizamos, para
+   a tela ficar equilibrada com uma ferramenta só — e continuar alinhada caso
+   novas ferramentas sejam adicionadas. */
+.ferramentas-container .card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(290px, 360px));
+  justify-content: center;
+}
