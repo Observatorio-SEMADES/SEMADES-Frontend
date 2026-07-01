@@ -9,10 +9,17 @@ const CATEGORY_LABELS = {
   externo: "Fonte externa",
 };
 
-export default function Badge({ category, children }) {
-  return (
-    <span className={`badge badge-${category}`}>
-      {children ?? CATEGORY_LABELS[category]}
-    </span>
-  );
+export default function Badge({ category, children, onClick }) {
+  const label = children ?? CATEGORY_LABELS[category];
+  const className = `badge badge-${category}`;
+
+  if (onClick) {
+    return (
+      <button type="button" className={className} onClick={onClick}>
+        {label}
+      </button>
+    );
+  }
+
+  return <span className={className}>{label}</span>;
 }

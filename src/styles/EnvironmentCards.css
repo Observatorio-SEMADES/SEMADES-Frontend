@@ -17,6 +17,13 @@
   margin-bottom: 1.4rem;
 }
 
+.env-header-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
 /* Sobrescreve o alinhamento central padrão do SectionTitle nesta seção */
 .env-header .section-heading {
   text-align: left;
@@ -32,6 +39,37 @@
   font-size: 0.88rem;
   color: var(--gray-500, #6b7280);
   margin: 0;
+}
+
+
+.arbolink-external-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.78rem 1rem; /* um pouco maior para mais presença */
+  border: 1.5px solid rgba(46, 125, 50, 0.22);
+  border-radius: var(--radius-sm, 8px);
+  background: #f3fbf3;
+  color: #2e7d32;
+  font-size: 0.92rem; /* levemente maior */
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+  white-space: nowrap;
+  gap: 0.5rem; /* espaço entre ícone e texto */
+}
+
+.arbolink-external-link:hover,
+.arbolink-external-link:focus-visible {
+  background: #e8f5e9;
+  border-color: rgba(46, 125, 50, 0.38);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.arbolink-link-icon {
+  color: #2e7d32;
+  flex-shrink: 0;
 }
 
 /* ===========================

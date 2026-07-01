@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
-import { Leaf, TreePine, Scissors, Eye, ChevronDown, X } from "lucide-react";
+import { Leaf, TreePine, Scissors, Eye, ChevronDown, X, Sprout } from "lucide-react";
 import SectionTitle from "../ui/SectionTitle";
 import StatCard from "../ui/StatCard";
 import { useDialog } from "../../hooks/useDialog";
@@ -107,11 +107,22 @@ export default function EnvironmentCards() {
   }));
 
   return (
-    <section className="env-container">
+    <section className="env-container" id="arborizacao-urbana">
       <div className="env-header">
-        <SectionTitle icon={TreePine} align="left">
-          Sustentabilidade e Meio Ambiente
-        </SectionTitle>
+        <div className="env-header-top">
+          <SectionTitle icon={TreePine} align="left">
+            Arborização Urbana
+          </SectionTitle>
+          <a
+            className="arbolink-external-link"
+            href="https://cg-painel-publico.arbolink.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Sprout size={16} strokeWidth={1.75} className="arbolink-link-icon" aria-hidden="true" />
+            <span>Painel Público de Arborização</span>
+          </a>
+        </div>
         <p className="env-period">{PERIOD}</p>
       </div>
 

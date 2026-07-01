@@ -72,6 +72,13 @@
   font-weight: 600;
   color: #fff;
   background: var(--gray-500);
+  border: 0;
+  font-family: inherit;
+}
+
+.badge[type="button"],
+.badge[role="button"] {
+  cursor: pointer;
 }
 
 /* Contraste AA: economia usa um azul mais escuro (texto branco passa ≥4.5:1);

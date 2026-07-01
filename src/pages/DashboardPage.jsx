@@ -11,6 +11,14 @@ import MetroVerseButton from "../components/Metroverse/MetroVerse";
 // Saiu do antigo Root.jsx (que servia /dashboard e /dados-centro com um if).
 // O container/main/rodapé agora vêm do AppShell.
 export default function DashboardPage() {
+  const handleArborizacaoClick = () => {
+    // Filtro de assunto: leva o usuário até a seção de Arborização Urbana.
+    document.getElementById("arborizacao-urbana")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <>
       <PageHeader
@@ -18,7 +26,9 @@ export default function DashboardPage() {
         subtitle="SEMADES - Secretaria Municipal de Meio Ambiente, Gestão Urbana e Desenvolvimento Econômico, Turístico e Sustentável"
       >
         <Badge category="economia" />
-        <Badge category="sustentabilidade" />
+        <Badge category="sustentabilidade" onClick={handleArborizacaoClick}>
+          Arborização
+        </Badge>
         <Badge category="inovacao" />
       </PageHeader>
 
