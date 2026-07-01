@@ -52,6 +52,17 @@ export default function DashboardPage() {
       <MetroVerseButton />
 
       <section className="economic-wrapper">
+        <a
+          className="treecity-insignia-link"
+          href="https://www.campogrande.ms.gov.br/cgnoticias/noticia/pela-7a-vez-seguida-campo-grande-conquista-titulo-cidade-arvore-do-mundo/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="/imagens-cg/InsigniaCGTreeCity.png"
+            alt="Insígnia Campo Grande Tree City 2020 a 2026"
+          />
+        </a>
         <EconomicSection />
         <EnvironmentCards />
       </section>
