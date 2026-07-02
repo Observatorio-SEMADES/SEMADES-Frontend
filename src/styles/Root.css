@@ -231,6 +231,7 @@
 }
 
 .treecity-insignia-link {
+  position: relative;
   width: clamp(170px, 18vw, 240px);
   z-index: 5;
   display: block;
@@ -241,11 +242,11 @@
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   pointer-events: none;
   opacity: 0;
-  box-shadow: 0 0 0 0 rgba(247, 244, 225, 0);
-  transition: opacity 280ms ease, box-shadow 280ms ease, transform 280ms ease;
+  box-shadow: 0 0 0 0 rgba(125, 176, 96, 0);
+  transition: opacity 280ms ease, box-shadow 280ms ease;
 }
 
 .treecity-insignia-link img {
@@ -259,35 +260,13 @@
 .treecity-insignia-link:hover::after,
 .treecity-insignia-link:focus-visible::after {
   opacity: 1;
-  box-shadow: 0 0 32px 6px rgba(125, 176, 96, 0.16);
-  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(125, 176, 96, 0.16);
 }
 
 .treecity-insignia-link:hover img,
 .treecity-insignia-link:focus-visible img {
-  transform: scale(1.035);
-  filter: brightness(1.08) drop-shadow(0 0 18px rgba(93, 142, 81, 0.22));
-}
-
-.treecity-insignia-link:hover::before,
-.treecity-insignia-link:focus-visible::before {
-  content: "";
-  position: absolute;
-  top: -20%;
-  left: -15%;
-  width: 140%;
-  height: 120%;
-  background: linear-gradient(130deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.28) 48%, rgba(255,255,255,0.0) 100%);
-  transform: translateX(-100%) rotate(-12deg);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.8s ease, opacity 0.55s ease;
-}
-
-.treecity-insignia-link:hover::before,
-.treecity-insignia-link:focus-visible::before {
-  transform: translateX(100%) rotate(-12deg);
-  opacity: 0.42;
+  transform: scale(1.03);
+  filter: brightness(1.05) drop-shadow(0 0 5px rgba(125, 176, 96, 0.16));
 }
 
 @media (max-width: 1200px) {

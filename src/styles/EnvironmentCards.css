@@ -46,30 +46,42 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.78rem 1rem; /* um pouco maior para mais presença */
-  border: 1.5px solid rgba(46, 125, 50, 0.22);
-  border-radius: var(--radius-sm, 8px);
-  background: #f3fbf3;
-  color: #2e7d32;
-  font-size: 0.92rem; /* levemente maior */
+  gap: 0.55rem;
+  padding: 0.72rem 1.15rem;
+  border: 1.5px solid rgba(46, 125, 50, 0.24);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f8f2 100%);
+  color: #1f6b28;
+  font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition: background 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
   white-space: nowrap;
-  gap: 0.5rem; /* espaço entre ícone e texto */
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .arbolink-external-link:hover,
 .arbolink-external-link:focus-visible {
-  background: #e8f5e9;
-  border-color: rgba(46, 125, 50, 0.38);
+  background: linear-gradient(180deg, #f3fbf3 0%, #e3f4e5 100%);
+  border-color: #2e7d32;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.16);
   transform: translateY(-1px);
   outline: none;
+}
+
+.arbolink-external-link:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(46, 125, 50, 0.18);
 }
 
 .arbolink-link-icon {
   color: #2e7d32;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.arbolink-external-link:hover .arbolink-link-icon {
+  transform: scale(1.08);
 }
 
 /* Duplica o botão no fluxo normal apenas em telas estreitas, onde o botão
