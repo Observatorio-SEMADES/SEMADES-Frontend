@@ -154,7 +154,7 @@ export default function EconomicSection() {
       )}
 
       {/* ── Visualização Econômica (embaixo, maior) ── */}
-      <div className="economic-card chart-card">
+      <div className="economic-card chart-card" id="visualizacao-economica">
         <div className="chart-header">
           <h3 className="economic-title">Visualização Econômica</h3>
           <p className="economic-subtitle">

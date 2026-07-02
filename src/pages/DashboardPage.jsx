@@ -12,12 +12,21 @@ import { Sprout } from "lucide-react";
 // Saiu do antigo Root.jsx (que servia /dashboard e /dados-centro com um if).
 // O container/main/rodapé agora vêm do AppShell.
 export default function DashboardPage() {
+  const scrollToSection = (id, offset = 72) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const top = section.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
   const handleArborizacaoClick = () => {
     // Filtro de assunto: leva o usuário até a seção de Arborização Urbana.
-    document.getElementById("arborizacao-urbana")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    scrollToSection("arborizacao-urbana");
+  };
+
+  const handleEconomiaClick = () => {
+    // Filtro de assunto: leva o usuário até a seção Visualização Econômica.
+    scrollToSection("visualizacao-economica");
   };
 
   return (
@@ -26,7 +35,7 @@ export default function DashboardPage() {
         title="Observatório de Desenvolvimento Econômico"
         subtitle="SEMADES - Secretaria Municipal de Meio Ambiente, Gestão Urbana e Desenvolvimento Econômico, Turístico e Sustentável"
       >
-        <Badge category="economia" />
+        <Badge category="economia" onClick={handleEconomiaClick} />
         <Badge category="sustentabilidade" onClick={handleArborizacaoClick}>
           Arborização
         </Badge>
