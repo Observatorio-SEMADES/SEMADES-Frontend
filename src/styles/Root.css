@@ -216,20 +216,21 @@
   margin: 3rem auto 0;
 }
 
-.treecity-insignia-link {
+.treecity-floating-group {
   position: absolute;
   top: 48%;
   right: -0.8rem;
-  width: clamp(170px, 18vw, 240px);
   z-index: 5;
-  display: block;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.treecity-floating-button {
+  flex-shrink: 0;
 }
 
 .treecity-insignia-link {
-  position: absolute;
-  top: 48%;
-  right: -0.8rem;
   width: clamp(170px, 18vw, 240px);
   z-index: 5;
   display: block;
@@ -290,25 +291,34 @@
 }
 
 @media (max-width: 1200px) {
-  .treecity-insignia-link {
+  .treecity-floating-group {
     top: 48%;
     right: 1rem;
+  }
+  .treecity-insignia-link {
     width: clamp(150px, 20vw, 200px);
   }
 }
 
 @media (max-width: 880px) {
-  .treecity-insignia-link {
+  .treecity-floating-group {
     top: 52%;
     right: 1rem;
+  }
+  .treecity-insignia-link {
     width: clamp(140px, 22vw, 180px);
+  }
+  .treecity-floating-group .treecity-floating-button {
+    display: none;
   }
 }
 
 @media (max-width: 680px) {
-  .treecity-insignia-link {
+  .treecity-floating-group {
     top: 55%;
     right: 0.8rem;
+  }
+  .treecity-insignia-link {
     width: clamp(130px, 26vw, 160px);
   }
 }

@@ -114,7 +114,7 @@ export default function EnvironmentCards() {
             Arborização Urbana
           </SectionTitle>
           <a
-            className="arbolink-external-link"
+            className="arbolink-external-link arbolink-mobile-button"
             href="https://cg-painel-publico.arbolink.com.br"
             target="_blank"
             rel="noopener noreferrer"

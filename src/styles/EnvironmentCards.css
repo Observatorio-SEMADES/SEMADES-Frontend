@@ -72,6 +72,18 @@
   flex-shrink: 0;
 }
 
+/* Duplica o botão no fluxo normal apenas em telas estreitas, onde o botão
+   flutuante ao lado da insígnia (Root.css) é ocultado para não sobrepor conteúdo. */
+.arbolink-mobile-button {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .arbolink-mobile-button {
+    display: inline-flex;
+  }
+}
+
 /* ===========================
    GRID DE StatCards
    =========================== */

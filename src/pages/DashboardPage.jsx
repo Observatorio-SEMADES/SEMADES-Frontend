@@ -6,6 +6,7 @@ import Badge from "../components/ui/Badge";
 import DashboardCard from "../components/ui/DashboardCard";
 import { indicadores } from "../data/indicadores";
 import MetroVerseButton from "../components/Metroverse/MetroVerse";
+import { Sprout } from "lucide-react";
 
 // Página "/dashboard" — Observatório de Desenvolvimento Econômico.
 // Saiu do antigo Root.jsx (que servia /dashboard e /dados-centro com um if).
@@ -52,17 +53,28 @@ export default function DashboardPage() {
       <MetroVerseButton />
 
       <section className="economic-wrapper">
-        <a
-          className="treecity-insignia-link"
-          href="https://www.campogrande.ms.gov.br/cgnoticias/noticia/pela-7a-vez-seguida-campo-grande-conquista-titulo-cidade-arvore-do-mundo/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src="/imagens-cg/InsigniaCGTreeCity.png"
-            alt="Insígnia Campo Grande Tree City 2020 a 2026"
-          />
-        </a>
+        <div className="treecity-floating-group">
+          <a
+            className="arbolink-external-link treecity-floating-button"
+            href="https://cg-painel-publico.arbolink.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Sprout size={16} strokeWidth={1.75} className="arbolink-link-icon" aria-hidden="true" />
+            <span>Painel Público de Arborização</span>
+          </a>
+          <a
+            className="treecity-insignia-link"
+            href="https://www.campogrande.ms.gov.br/cgnoticias/noticia/pela-7a-vez-seguida-campo-grande-conquista-titulo-cidade-arvore-do-mundo/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src="/imagens-cg/InsigniaCGTreeCity.png"
+              alt="Insígnia Campo Grande Tree City 2020 a 2026"
+            />
+          </a>
+        </div>
         <EconomicSection />
         <EnvironmentCards />
       </section>
