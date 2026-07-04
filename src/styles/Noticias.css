@@ -201,6 +201,46 @@
   transform: scaleX(1);
 }
 
+/* ── Cards sem foto real (texto-first) ──────────────────────────────────────
+   Quando a notícia não tem imagem própria, o card dispensa a área de foto e
+   ganha um filete lateral com as cores da marca no lugar. A dupla classe
+   (.noticias-card-side.noticias-card-textonly) vence os grids das media
+   queries abaixo em qualquer largura de tela. */
+.noticias-card-side.noticias-card-textonly,
+.noticias-card-featured.noticias-card-textonly {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+.noticias-card-textonly::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #efbb07, #008f7a);
+  pointer-events: none;
+}
+
+.noticias-card-side.noticias-card-textonly .noticias-card-content {
+  padding: 1.1rem 1.25rem 1.1rem 1.4rem;
+}
+
+.noticias-card-featured.noticias-card-textonly .noticias-card-content {
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.2rem 2.4rem;
+}
+
+.noticias-card-featured.noticias-card-textonly h3 {
+  font-size: 1.8rem;
+}
+
+.noticias-card-featured.noticias-card-textonly p {
+  font-size: 1.05rem;
+}
+
 @media (max-width: 1024px) {
   .noticias-grid {
     grid-template-columns: 1fr;

@@ -7,18 +7,28 @@ import {
 } from "../../data/noticias";
 import { fetchNoticias } from "../../services/noticiasApi";
 
+// O backend usa fotos locais de rod\u00edzio (/imagens-cg/noticias/*) quando a
+// not\u00edcia n\u00e3o tem imagem pr\u00f3pria. Nesses casos o card vira s\u00f3-texto, em vez de
+// exibir uma foto gen\u00e9rica que parece ser da mat\u00e9ria.
+const FALLBACK_IMG_PREFIX = "/imagens-cg/noticias/";
+const temFotoReal = (noticia) =>
+  Boolean(noticia.imagem) && !noticia.imagem.startsWith(FALLBACK_IMG_PREFIX);
+
 function NoticiaCard({ noticia, variant = "side" }) {
+  const comFoto = temFotoReal(noticia);
   return (
     <a
-      className={`noticias-card noticias-card-${variant}`}
+      className={`noticias-card noticias-card-${variant}${comFoto ? "" : " noticias-card-textonly"}`}
       href={noticia.link}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Ler not\u00edcia: ${noticia.titulo}`}
     >
-      <div className="noticias-card-image">
-        <img src={noticia.imagem} alt={noticia.alt} loading="lazy" />
-      </div>
+      {comFoto && (
+        <div className="noticias-card-image">
+          <img src={noticia.imagem} alt={noticia.alt} loading="lazy" />
+        </div>
+      )}
 
       <div className="noticias-card-content">
         <span className="noticias-tag">CG Not&iacute;cias</span>
@@ -46,8 +56,12 @@ export default function Noticias() {
     };
   }, []);
 
+  // A foto real (quando existe) ganha o destaque; sem nenhuma foto real,
+  // mantém a ordem original do feed.
   const noticiaPrincipal =
-    noticias.find((noticia) => noticia.destaque) ?? noticias[0];
+    noticias.find(temFotoReal) ??
+    noticias.find((noticia) => noticia.destaque) ??
+    noticias[0];
   const noticiasLaterais = noticias.filter(
     (noticia) => noticia !== noticiaPrincipal
   );
