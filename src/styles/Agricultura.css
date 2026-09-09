@@ -1,4 +1,4 @@
-/* Página nativa de Agronegócio: Agricultura (/dashboard/agro-agricultura). Padrão Empregos/Pecuária. */
+/* Abas de Agricultura do painel de Agronegócio (/dashboard/agronegocio). Padrão Empregos/Pecuária. */
 
 .agr-back-wrap {
   text-align: left;
@@ -70,41 +70,6 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-}
-
-/* ── Abas ── */
-.agr-tabs {
-  display: flex;
-  width: 100%;
-  border-bottom: 2px solid var(--gray-200);
-  margin-bottom: -0.25rem;
-}
-
-.agr-tab {
-  position: relative;
-  flex: 1;
-  padding: 0.7rem 1.15rem;
-  margin-bottom: -2px;
-  border: none;
-  border-bottom: 3px solid transparent;
-  background: transparent;
-  color: var(--gray-500);
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-align: center;
-  cursor: pointer;
-  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
-}
-
-.agr-tab:hover {
-  color: var(--brand-700);
-  background: #f4f8ff;
-}
-
-.agr-tab.active {
-  color: var(--brand-700);
-  border-bottom-color: var(--accent);
-  background: #f4f8ff;
 }
 
 .agr-tab-panel {

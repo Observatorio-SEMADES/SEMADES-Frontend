@@ -1,7 +1,6 @@
 import {
   Building2,
   Briefcase,
-  Beef,
   Wheat,
   Ship,
   Package,
@@ -29,22 +28,14 @@ export const indicadores = [
     to: "/dashboard/empregos",
   },
   {
-    icone: Beef,
-    cor: "sustentabilidade",
-    titulo: "Agronegócio: Pecuária",
-    fonte: "IBGE, 2024",
-    subtitulo: "Produção e movimentação de rebanhos",
-    // Dashboard nativo no próprio site (substitui o Looker Studio).
-    to: "/dashboard/agro-pecuaria",
-  },
-  {
     icone: Wheat,
     cor: "sustentabilidade",
-    titulo: "Agronegócio: Agricultura",
+    titulo: "Agronegócio",
     fonte: "IBGE, 2024",
-    subtitulo: "Produção e área plantada das principais culturas",
-    // Dashboard nativo no próprio site (substitui o Looker Studio).
-    to: "/dashboard/agro-agricultura",
+    subtitulo: "Rebanho, abate e lavoura em um só painel",
+    // Dashboard nativo no próprio site (substitui o Looker Studio). Reúne o que
+    // antes eram dois cards separados (Pecuária e Agricultura).
+    to: "/dashboard/agronegocio",
   },
   {
     icone: Ship,

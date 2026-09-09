@@ -77,7 +77,7 @@ function ChipFilter({ label, allLabel, options, value, onChange }) {
 const rebQtd = (animal, ano) =>
   rebanhoDados.find((d) => d.animal === animal && d.ano === ano)?.quantidade || 0;
 
-function RebanhoTab() {
+export function RebanhoTab() {
   const [animal, setAnimal] = useState(null);
   const [ano, setAno] = useState(null);
   const refAno = ano || rebanhoAnos[rebanhoAnos.length - 1]; // sem filtro → ano mais recente
@@ -201,7 +201,7 @@ function RebanhoTab() {
 }
 
 // ── ABA ABATE · Mato Grosso do Sul (2024) ─────────────────────────────────────
-function AbateTab() {
+export function AbateTab() {
   const [animal, setAnimal] = useState(null);
   const [mes, setMes] = useState(null);
 
@@ -340,34 +340,5 @@ function AbateTab() {
   );
 }
 
-const TABS = [
-  { id: "rebanho", label: "Rebanho · Campo Grande" },
-  { id: "abate", label: "Abate · Mato Grosso do Sul" },
-];
-
-export default function Pecuaria() {
-  const [tab, setTab] = useState("rebanho");
-
-  return (
-    <div className="pec-page">
-      <div className="pec-tabs" role="tablist" aria-label="Seções do painel">
-        {TABS.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            id={`pec-tab-${t.id}`}
-            aria-selected={tab === t.id}
-            aria-controls="pec-tab-panel"
-            className={`pec-tab${tab === t.id ? " active" : ""}`}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {tab === "rebanho" ? <RebanhoTab /> : <AbateTab />}
-    </div>
-  );
-}
+// Sem componente-página próprio: as duas abas acima são montadas pelo painel
+// unificado de Agronegócio (../agronegocio/Agronegocio.jsx).

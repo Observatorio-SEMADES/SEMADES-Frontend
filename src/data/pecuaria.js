@@ -1,4 +1,4 @@
-// Agronegócio: Pecuária (/dashboard/agro-pecuaria). Dados agregados, nada sensível.
+// Agronegócio: Pecuária (/dashboard/agronegocio). Dados agregados, nada sensível.
 // Duas bases/escopos distintos:
 //  • REBANHO — efetivo dos rebanhos de CAMPO GRANDE (IBGE), anual 2019–2023.
 //  • ABATE   — abate de MATO GROSSO DO SUL (estado), mensal 2024.

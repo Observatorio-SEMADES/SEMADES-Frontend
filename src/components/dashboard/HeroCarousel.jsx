@@ -8,7 +8,7 @@ const newsItems = [
     id: 2,
     title: 'Capital dos Ipês em Flor',
     description: 'Entre avenidas largas e áreas verdes, os ipês reforçam a identidade de Campo Grande como uma das cidades mais arborizadas do país.',
-    image: '/imagens-cg/campo2.jpg',
+    image: '/imagens-cg/capital-ipes-flor.jpg',
     position: 'center center',
     date: '18/01/2026',
   },

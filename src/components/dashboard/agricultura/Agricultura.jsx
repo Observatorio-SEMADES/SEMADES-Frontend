@@ -62,8 +62,10 @@ function Filtros({ produto, setProduto, ano, setAno }) {
   );
 }
 
-export default function Agricultura() {
-  const [tab, setTab] = useState("produto");
+// `tab` vem do painel unificado de Agronegócio ("produto" | "evolucao"). Os
+// filtros e os StatCards são compartilhados pelas duas abas, por isso o estado
+// mora aqui e sobrevive à troca entre elas.
+export default function Agricultura({ tab = "produto" }) {
   const [produto, setProduto] = useState(null); // null = todos os produtos
   const [ano, setAno] = useState(agriculturaAnoRecente); // null = acumulado; default 2023
 
@@ -126,24 +128,6 @@ export default function Agricultura() {
       <div className="agr-resumo-row">
         {cards.map((c) => (
           <StatCard key={c.label} icon={c.icon} label={c.label} value={c.value} detail={c.detail} />
-        ))}
-      </div>
-
-      <div className="agr-tabs" role="tablist" aria-label="Seções do painel">
-        {[
-          { id: "produto", label: "Por produto" },
-          { id: "evolucao", label: "Evolução anual" },
-        ].map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            aria-selected={tab === t.id}
-            className={`agr-tab${tab === t.id ? " active" : ""}`}
-            onClick={() => setTab(t.id)}
-          >
-            {t.label}
-          </button>
         ))}
       </div>
 

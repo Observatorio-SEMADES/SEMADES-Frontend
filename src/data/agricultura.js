@@ -1,4 +1,4 @@
-// Agronegócio: Agricultura (/dashboard/agro-agricultura). Lavoura de Campo Grande - MS.
+// Agronegócio: Agricultura (/dashboard/agronegocio). Lavoura de Campo Grande - MS.
 // Fonte: IBGE / Produção Agrícola Municipal (PAM). Produto x Ano (2015–2023),
 // métricas Valor da Produção (R$) e Área Plantada (ha). Dados agregados, nada sensível.
 // Gerado por gen_agricultura.py. Obs.: dados esparsos (nem todo produto tem todo ano).

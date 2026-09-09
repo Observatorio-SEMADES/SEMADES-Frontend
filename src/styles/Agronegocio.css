@@ -1,0 +1,71 @@
+/* Painel unificado de Agronegócio (/dashboard/agronegocio). Reúne numa única
+   barra as abas que antes viviam em duas páginas: Pecuária (Rebanho/Abate) e
+   Agricultura (Lavoura). Os painéis em si seguem estilizados por Pecuaria.css
+   e Agricultura.css — aqui mora só a barra de abas e o wrapper da página. */
+
+.agro-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Barra única com as 4 abas. Ao contrário das barras de 2 abas (.pec-tabs /
+   .agr-tabs), aqui os rótulos são longos e em telas estreitas espremer não
+   cabe — então as abas quebram em linha nova em vez de encolher. */
+.agro-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border-bottom: 2px solid var(--gray-200);
+  margin-bottom: -0.25rem;
+}
+
+.agro-tab {
+  position: relative;
+  flex: 1 1 11rem;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: -2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.agro-tab:hover {
+  color: var(--brand-700);
+  background: #f4f8ff;
+}
+
+.agro-tab.active {
+  color: var(--brand-700);
+  border-bottom-color: var(--accent);
+  background: #f4f8ff;
+}
+
+/* Prefixo do domínio ("Pecuária ·" / "Agricultura ·"): mais leve que o rótulo
+   da aba, para o olho pousar primeiro no assunto e só depois no grupo. */
+.agro-tab-dom {
+  font-weight: 600;
+  opacity: 0.72;
+}
+
+/* Wrapper do tabpanel: bloco neutro. Quem controla o ritmo vertical interno
+   continua sendo o painel de dentro (.pec-tab-panel / .agr-page), que já é um
+   flex column com gap próprio. Evitamos `display: contents` aqui porque em
+   parte dos navegadores ele descarta a semântica do role="tabpanel". */
+.agro-panel {
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .agro-tab {
+    flex: 1 1 45%;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.86rem;
+  }
+}
