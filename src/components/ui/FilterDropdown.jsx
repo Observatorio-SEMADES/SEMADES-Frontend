@@ -7,7 +7,7 @@ import "../../styles/ui.css";
 // Renderiza apenas o controle; envolva num wrapper com o rótulo na página
 // (ex.: <div className="emg-filter"><span className="emg-filter-label">Período:</span> …).
 // `value === null` representa "todos" (o `allLabel`).
-export default function FilterDropdown({ allLabel, options, value, onChange, minWidth }) {
+export default function FilterDropdown({ allLabel, options, value, onChange, minWidth, formatOption = (option) => option }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -40,7 +40,7 @@ export default function FilterDropdown({ allLabel, options, value, onChange, min
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
       >
-        <span>{value || allLabel}</span>
+        <span>{value ? formatOption(value) : allLabel}</span>
         <ChevronDown size={16} aria-hidden="true" />
       </button>
       {open && (
@@ -53,7 +53,7 @@ export default function FilterDropdown({ allLabel, options, value, onChange, min
           {options.map((o) => (
             <li key={o}>
               <button type="button" className={`ui-dd-item${value === o ? " active" : ""}`} onClick={() => pick(o)}>
-                {o}
+                {formatOption(o)}
               </button>
             </li>
           ))}

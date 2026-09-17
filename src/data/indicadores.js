@@ -2,6 +2,7 @@ import {
   Building2,
   Briefcase,
   Wheat,
+  Sprout,
   Ship,
   Package,
   Globe,
@@ -31,11 +32,19 @@ export const indicadores = [
     icone: Wheat,
     cor: "sustentabilidade",
     titulo: "Agronegócio",
-    fonte: "IBGE, 2024",
-    subtitulo: "Rebanho, abate e lavoura em um só painel",
+    fonte: "IBGE PPM/PAM e Pesquisa Trimestral do Abate",
+    subtitulo: "Rebanho e lavoura municipais; abate estadual",
     // Dashboard nativo no próprio site (substitui o Looker Studio). Reúne o que
     // antes eram dois cards separados (Pecuária e Agricultura).
     to: "/dashboard/agronegocio",
+  },
+  {
+    icone: Sprout,
+    cor: "sustentabilidade",
+    titulo: "Agricultura familiar",
+    fonte: "Registros SEMADES, 2026",
+    subtitulo: "Entregas de mudas e bandejas; PAA em validação",
+    to: "/dashboard/agricultura-familiar",
   },
   {
     icone: Ship,

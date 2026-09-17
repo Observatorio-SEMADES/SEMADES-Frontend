@@ -1,344 +1,78 @@
-import React, { useState, useMemo } from "react";
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Cell,
-  ResponsiveContainer,
-} from "recharts";
-import { Beef, Bird, PiggyBank, Drumstick, Scale, Layers } from "lucide-react";
+import React, { useState } from "react";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Beef, Layers, Scale, CalendarDays } from "lucide-react";
 import StatCard from "../../ui/StatCard";
 import FilterDropdown from "../../ui/FilterDropdown";
-import {
-  rebanhoAnimais,
-  rebanhoAnos,
-  rebanhoDados,
-  abateAnimais,
-  abateMeses,
-  abateDados,
-} from "../../../data/pecuaria";
+import SourceMeta from "../../ui/SourceMeta";
+import { rebanhoRows, abateRows } from "../../../data/observatorio";
+import { formatNumber, sumAvailable, unique, valueOf } from "../../../data/observatorioCsv";
 
-// Paleta institucional (navy #0a4f9f, azul claro #2f86d6, amarelo #efbb07).
-const NAVY = "#0a4f9f";
-const AMARELO = "#efbb07";
+const years = unique(rebanhoRows.map((row) => row.periodo));
+const species = unique(rebanhoRows.map((row) => row.categoria));
+const abateYears = unique(abateRows.map((row) => row.periodo.slice(0, 4)));
+const abateSpecies = unique(abateRows.map((row) => row.categoria));
+const monthBR = new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric", timeZone: "UTC" });
+const monthLabel = (period) => monthBR.format(new Date(`${period}-01T00:00:00Z`));
+const ton = (kg) => kg == null ? null : kg / 1000;
+const formatTon = (kg) => kg == null ? "Sem dado" : `${formatNumber(ton(kg))} t`;
+const axis = { fill: "#6b7280", fontSize: 11 };
 
-const nf = new Intl.NumberFormat("pt-BR");
-const sum = (arr) => arr.reduce((a, b) => a + b, 0);
-const tipStyle = { borderRadius: 8, border: "1px solid #e5e7eb" };
-const dimOf = (sel, key) => (sel && sel !== key ? 0.28 : 1);
-// Barra destacada quando há seleção: amarelo no escolhido, navy nos demais.
-const fillOf = (sel, key) => (sel === key ? AMARELO : NAVY);
-
-const ICONE_ANIMAL = {
-  Bovinos: Beef,
-  Galináceo: Bird,
-  Frangos: Drumstick,
-  Suínos: PiggyBank,
-  Ovinos: Layers,
-  Caprinos: Layers,
-};
-
-// ── Barra de filtro genérica (chips estilo BI) ────────────────────────────────
-function ChipFilter({ label, allLabel, options, value, onChange }) {
-  return (
-    <div className="pec-filter" role="group" aria-label={`Filtrar por ${label}`}>
-      <span className="pec-filter-label">{label}:</span>
-      <div className="pec-chips">
-        <button
-          type="button"
-          className={`pec-chip${value === null ? " active" : ""}`}
-          aria-pressed={value === null}
-          onClick={() => onChange(null)}
-        >
-          {allLabel}
-        </button>
-        {options.map((o) => (
-          <button
-            key={o}
-            type="button"
-            className={`pec-chip${value === o ? " active" : ""}`}
-            aria-pressed={value === o}
-            onClick={() => onChange(o)}
-          >
-            {o}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+function Chips({ options, value, onChange, allLabel }) {
+  return <div className="pec-filter"><span className="pec-filter-label">Espécie:</span><div className="pec-chips">
+    {[null, ...options].map((item) => <button key={item || "all"} type="button" className={`pec-chip${value === item ? " active" : ""}`} aria-pressed={value === item} onClick={() => onChange(item)}>{item || allLabel}</button>)}
+  </div></div>;
 }
-
-// ── ABA REBANHO · Campo Grande (IBGE, 2019–2023) ──────────────────────────────
-const rebQtd = (animal, ano) =>
-  rebanhoDados.find((d) => d.animal === animal && d.ano === ano)?.quantidade || 0;
 
 export function RebanhoTab() {
+  const [year, setYear] = useState("2024");
   const [animal, setAnimal] = useState(null);
-  const [ano, setAno] = useState(null);
-  const refAno = ano || rebanhoAnos[rebanhoAnos.length - 1]; // sem filtro → ano mais recente
-
-  const porAnimal = useMemo(
-    () => rebanhoAnimais.map((a) => ({ animal: a, quantidade: rebQtd(a, refAno) })),
-    [refAno]
-  );
-  const evolucao = useMemo(
-    () =>
-      rebanhoAnos.map((an) => ({
-        ano: an,
-        quantidade: animal
-          ? rebQtd(animal, an)
-          : sum(rebanhoDados.filter((d) => d.ano === an).map((d) => d.quantidade)),
-      })),
-    [animal]
-  );
-
-  const totalRef = sum(porAnimal.map((d) => d.quantidade));
-  const cards = [
-    { icon: Layers, label: `Rebanho total · ${refAno}`, value: nf.format(totalRef), detail: "cabeças (IBGE)" },
-    { icon: Beef, label: "Bovinos", value: nf.format(rebQtd("Bovinos", refAno)) },
-    { icon: Bird, label: "Galináceo", value: nf.format(rebQtd("Galináceo", refAno)) },
-    { icon: PiggyBank, label: "Suínos", value: nf.format(rebQtd("Suínos", refAno)) },
-  ];
-
-  const toggleAnimal = (a) => setAnimal((cur) => (cur === a ? null : a));
-
-  return (
-    <div className="pec-tab-panel" key={`reb-${animal || "todos"}-${ano || "all"}`}>
-      <div className="pec-filters">
-        <ChipFilter label="Animal" allLabel="Todos os animais" options={rebanhoAnimais} value={animal} onChange={setAnimal} />
-        <div className="pec-filter">
-          <span className="pec-filter-label">Ano:</span>
-          <FilterDropdown allLabel="Mais recente" options={rebanhoAnos} value={ano} onChange={setAno} />
-        </div>
-      </div>
-
-      <div className="pec-resumo-row">
-        {cards.map((c) => (
-          <StatCard key={c.label} icon={c.icon} label={c.label} value={c.value} detail={c.detail} />
-        ))}
-      </div>
-
-      <div className="pec-top-row">
-        <section className="pec-card">
-          <div className="pec-card-title">Rebanho por animal · {refAno}</div>
-          <div className="pec-clickbars" style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={porAnimal} layout="vertical" margin={{ top: 4, right: 48, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" horizontal={false} />
-                <XAxis type="number" tick={{ fill: "#6b7280", fontSize: 10 }} tickFormatter={(v) => nf.format(v)} />
-                <YAxis type="category" dataKey="animal" tick={{ fill: "#374151", fontSize: 11 }} width={84} />
-                <Tooltip formatter={(v) => [`${nf.format(v)} cabeças`, null]} contentStyle={tipStyle} cursor={{ fill: "rgba(10,79,159,0.05)" }} />
-                <Bar dataKey="quantidade" radius={[0, 4, 4, 0]} isAnimationActive={false} onClick={(d) => toggleAnimal(d.animal)}>
-                  {porAnimal.map((d) => (
-                    <Cell key={d.animal} fill={fillOf(animal, d.animal)} fillOpacity={dimOf(animal, d.animal)} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-
-        <section className="pec-card">
-          <div className="pec-card-title">Evolução do rebanho · {animal || "total"} (2019–2023)</div>
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={evolucao} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" vertical={false} />
-                <XAxis dataKey="ano" tick={{ fill: "#6b7280", fontSize: 11 }} />
-                <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} tickFormatter={(v) => nf.format(v)} width={54} />
-                <Tooltip formatter={(v) => [`${nf.format(v)} cabeças`, null]} contentStyle={tipStyle} />
-                <Line type="monotone" dataKey="quantidade" stroke={NAVY} strokeWidth={2.5} dot={{ r: 3 }} isAnimationActive={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-      </div>
-
-      <section className="pec-card">
-        <div className="pec-card-title">Efetivo do rebanho por animal e ano · cabeças</div>
-        <div className="pec-table-scroll">
-          <table className="pec-table">
-            <thead>
-              <tr>
-                <th>Animal</th>
-                {rebanhoAnos.map((an) => (
-                  <th key={an} className="num">{an}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rebanhoAnimais.map((a) => (
-                <tr key={a} className={animal === a ? "sel" : ""}>
-                  <td className="pec-td-name">{a}</td>
-                  {rebanhoAnos.map((an) => (
-                    <td key={an} className="num">{nf.format(rebQtd(a, an))}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>Total</td>
-                {rebanhoAnos.map((an) => (
-                  <td key={an} className="num">
-                    {nf.format(sum(rebanhoAnimais.map((a) => rebQtd(a, an))))}
-                  </td>
-                ))}
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </section>
-
-      <p className="pec-source">Fonte: <b>IBGE</b> · Efetivo dos rebanhos de Campo Grande - MS · 2019–2023</p>
+  const chosen = year || "2024";
+  const current = rebanhoRows.filter((row) => row.periodo === chosen && (!animal || row.categoria === animal));
+  const chart = current.map((row) => ({ animal: row.categoria, quantidade: row.valor }));
+  const total = sumAvailable(current.map((row) => row.valor));
+  const history = years.map((ano) => ({ ano, quantidade: sumAvailable(rebanhoRows.filter((row) => row.periodo === ano && (!animal || row.categoria === animal)).map((row) => row.valor)) }));
+  const tableSpecies = animal ? [animal] : species;
+  return <div className="pec-tab-panel">
+    <div className="pec-filters"><Chips options={species} value={animal} onChange={setAnimal} allLabel="Cinco espécies" />
+      <div className="pec-filter"><span className="pec-filter-label">Ano:</span><FilterDropdown allLabel="2024" options={years} value={year} onChange={setYear} /></div></div>
+    <SourceMeta rows={current} period={chosen} unit="cabeças" note="Total: soma apenas de bovinos, suínos, caprinos, ovinos e galináceos da PPM. A evolução mostra a série histórica da seleção de espécie." />
+    <div className="pec-resumo-row"><StatCard icon={Layers} label={`${animal || "Cinco espécies do painel"} · ${chosen}`} value={formatNumber(total)} detail="cabeças" />
+      <StatCard icon={Beef} label="Espécies exibidas" value={formatNumber(current.length)} /><StatCard icon={CalendarDays} label="Série histórica" value={`${years[0]}–${years.at(-1)}`} /></div>
+    <div className="pec-top-row">
+      <section className="pec-card"><div className="pec-card-title">Rebanho por espécie · {chosen}</div><div style={{ height: 300 }}><ResponsiveContainer><BarChart data={chart} layout="vertical" margin={{ right: 32 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis type="number" tick={axis} tickFormatter={formatNumber}/><YAxis type="category" dataKey="animal" width={90} tick={axis}/><Tooltip formatter={(v) => `${formatNumber(v)} cabeças`}/><Bar dataKey="quantidade" fill="#0a4f9f" radius={[0, 4, 4, 0]} isAnimationActive={false}/></BarChart></ResponsiveContainer></div></section>
+      <section className="pec-card"><div className="pec-card-title">Evolução histórica · {animal || "cinco espécies"}</div><div style={{ height: 300 }}><ResponsiveContainer><LineChart data={history} margin={{ right: 16 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis dataKey="ano" tick={axis}/><YAxis tick={axis} tickFormatter={formatNumber} width={72}/><Tooltip formatter={(v) => v == null ? "Sem dado" : `${formatNumber(v)} cabeças`}/><Line dataKey="quantidade" stroke="#0a4f9f" strokeWidth={2.5} isAnimationActive={false}/></LineChart></ResponsiveContainer></div></section>
     </div>
-  );
+    <section className="pec-card"><div className="pec-card-title">Efetivo por espécie · {chosen} · cabeças</div><div className="pec-table-scroll"><table className="pec-table"><thead><tr><th>Espécie</th><th className="num">{chosen}</th></tr></thead><tbody>{tableSpecies.map((name) => <tr key={name}><td className="pec-td-name">{name}</td><td className="num">{formatNumber(valueOf(rebanhoRows, "efetivo_rebanho", chosen, name))}</td></tr>)}</tbody><tfoot><tr><td>Total da seleção</td><td className="num">{formatNumber(total)}</td></tr></tfoot></table></div></section>
+  </div>;
 }
 
-// ── ABA ABATE · Mato Grosso do Sul (2024) ─────────────────────────────────────
 export function AbateTab() {
+  const [year, setYear] = useState("2025");
+  const [month, setMonth] = useState(null);
   const [animal, setAnimal] = useState(null);
-  const [mes, setMes] = useState(null);
-
-  const noMes = (d) => !mes || d.mes === mes;
-
-  // Peso por animal (no escopo do mês), para o gráfico comparável.
-  const porAnimal = useMemo(
-    () =>
-      abateAnimais.map((a) => ({
-        animal: a,
-        peso: sum(abateDados.filter((d) => d.animal === a && noMes(d)).map((d) => d.peso)),
-        unidades: sum(abateDados.filter((d) => d.animal === a && noMes(d)).map((d) => d.unidades)),
-      })),
-    [mes]
-  );
-
-  // Evolução mensal por peso (toneladas, somável): total ou animal selecionado.
-  const evolucao = useMemo(
-    () =>
-      abateMeses.map((m) => ({
-        mes: m,
-        peso: sum(
-          abateDados.filter((d) => d.mes === m && (!animal || d.animal === animal)).map((d) => d.peso)
-        ),
-      })),
-    [animal]
-  );
-
-  // Tabela mensal: Unidades + Peso (filtra por animal).
-  const tableRows = useMemo(
-    () =>
-      abateMeses.map((m) => {
-        const sel = abateDados.filter((d) => d.mes === m && (!animal || d.animal === animal));
-        return { mes: m, unidades: sum(sel.map((d) => d.unidades)), peso: sum(sel.map((d) => d.peso)) };
-      }),
-    [animal]
-  );
-
-  const un = (a) => porAnimal.find((d) => d.animal === a)?.unidades || 0;
-  const pesoTotal = sum(porAnimal.map((d) => d.peso));
-  const escopo = mes ? ` · ${mes}` : " · 2024";
-  const cards = [
-    { icon: Scale, label: `Peso abatido${escopo}`, value: `${nf.format(pesoTotal)} t`, detail: "todas as espécies" },
-    { icon: Beef, label: "Bovinos", value: nf.format(un("Bovinos")), detail: "unidades" },
-    { icon: PiggyBank, label: "Suínos", value: nf.format(un("Suínos")), detail: "unidades" },
-    { icon: Drumstick, label: "Frangos", value: nf.format(un("Frangos")), detail: "unidades" },
-  ];
-
-  const toggleAnimal = (a) => setAnimal((cur) => (cur === a ? null : a));
-
-  return (
-    <div className="pec-tab-panel" key={`ab-${animal || "todos"}-${mes || "all"}`}>
-      <div className="pec-filters">
-        <ChipFilter label="Animal" allLabel="Todos os animais" options={abateAnimais} value={animal} onChange={setAnimal} />
-        <div className="pec-filter">
-          <span className="pec-filter-label">Mês:</span>
-          <FilterDropdown allLabel="Ano inteiro" options={abateMeses} value={mes} onChange={setMes} />
-        </div>
-      </div>
-
-      <div className="pec-resumo-row">
-        {cards.map((c) => (
-          <StatCard key={c.label} icon={c.icon} label={c.label} value={c.value} detail={c.detail} />
-        ))}
-      </div>
-
-      <div className="pec-top-row">
-        <section className="pec-card">
-          <div className="pec-card-title">Abate por animal · peso (toneladas){escopo}</div>
-          <div className="pec-clickbars" style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={porAnimal} layout="vertical" margin={{ top: 4, right: 56, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" horizontal={false} />
-                <XAxis type="number" tick={{ fill: "#6b7280", fontSize: 10 }} tickFormatter={(v) => nf.format(v)} />
-                <YAxis type="category" dataKey="animal" tick={{ fill: "#374151", fontSize: 11 }} width={78} />
-                <Tooltip formatter={(v) => [`${nf.format(v)} t`, null]} contentStyle={tipStyle} cursor={{ fill: "rgba(10,79,159,0.05)" }} />
-                <Bar dataKey="peso" radius={[0, 4, 4, 0]} isAnimationActive={false} onClick={(d) => toggleAnimal(d.animal)}>
-                  {porAnimal.map((d) => (
-                    <Cell key={d.animal} fill={fillOf(animal, d.animal)} fillOpacity={dimOf(animal, d.animal)} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-
-        <section className="pec-card">
-          <div className="pec-card-title">Abate mensal · peso (toneladas) · {animal || "total"}</div>
-          <div style={{ width: "100%", height: 300 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={evolucao} margin={{ top: 8, right: 16, left: 0, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" vertical={false} />
-                <XAxis dataKey="mes" tick={{ fill: "#6b7280", fontSize: 10 }} interval="preserveStartEnd" />
-                <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} tickFormatter={(v) => nf.format(v)} width={54} />
-                <Tooltip formatter={(v) => [`${nf.format(v)} t`, null]} contentStyle={tipStyle} />
-                <Line type="monotone" dataKey="peso" stroke={NAVY} strokeWidth={2.5} dot={false} isAnimationActive={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-      </div>
-
-      <section className="pec-card">
-        <div className="pec-card-title">Abate mês a mês · {animal || "todos os animais"} (2024)</div>
-        <div className="pec-table-scroll">
-          <table className="pec-table">
-            <thead>
-              <tr>
-                <th>Mês</th>
-                <th className="num">Unidades abatidas</th>
-                <th className="num">Peso (toneladas)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableRows.map((r) => (
-                <tr key={r.mes}>
-                  <td className="pec-td-name">{r.mes}</td>
-                  <td className="num">{nf.format(r.unidades)}</td>
-                  <td className="num">{nf.format(r.peso)}</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>Total</td>
-                <td className="num">{nf.format(sum(tableRows.map((r) => r.unidades)))}</td>
-                <td className="num">{nf.format(sum(tableRows.map((r) => r.peso)))}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </section>
-
-      <p className="pec-source">Fonte: Abate de <b>Mato Grosso do Sul</b> (estado) · 2024</p>
+  const chosen = year || "2025";
+  const months = unique(abateRows.filter((row) => row.periodo.startsWith(`${chosen}-`)).map((row) => row.periodo));
+  const period = month && months.includes(month) ? month : null;
+  const scope = abateRows.filter((row) => row.periodo.startsWith(`${chosen}-`) && (!period || row.periodo === period) && (!animal || row.categoria === animal));
+  const animals = animal ? [animal] : abateSpecies;
+  const value = (indicator, name, rows = scope) => sumAvailable(rows.filter((row) => row.indicador === indicator && (!name || row.categoria === name)).map((row) => row.valor));
+  const byAnimal = animals.map((name) => ({ animal: name, peso: ton(value("peso_carcacas", name)) }));
+  const byMonth = (period ? [period] : months).map((m) => { const rows = scope.filter((row) => row.periodo === m); return { period: m, mes: monthLabel(m), peso: ton(value("peso_carcacas", null, rows)), unidades: value("animais_abatidos", null, rows) }; });
+  const partial = scope.some((row) => row.situacao_periodo === "parcial_ate_junho");
+  const periodText = period ? monthLabel(period) : partial ? `${chosen} · janeiro a junho (parcial_ate_junho)` : `${chosen} · ano completo`;
+  const onYear = (next) => { setYear(next); setMonth(null); };
+  return <div className="pec-tab-panel">
+    <div className="pec-filters"><Chips options={abateSpecies} value={animal} onChange={setAnimal} allLabel="Três espécies" />
+      <div className="pec-filter"><span className="pec-filter-label">Ano:</span><FilterDropdown allLabel="2025" options={abateYears} value={year} onChange={onYear}/></div>
+      <div className="pec-filter"><span className="pec-filter-label">Mês:</span><FilterDropdown allLabel="Todos os meses disponíveis" options={months} value={period} onChange={setMonth} formatOption={monthLabel}/></div></div>
+    <SourceMeta rows={scope} period={periodText} unit="cabeças; peso de carcaças em toneladas (CSV em kg)" note={partial ? "Situação: parcial_ate_junho. O acumulado de 2026 não é comparável diretamente aos anos completos. Local de abate em Mato Grosso do Sul." : "Local de abate em Mato Grosso do Sul; não representa apenas Campo Grande."}/>
+    <div className="pec-resumo-row"><StatCard icon={Scale} label={`Peso de carcaças · ${periodText}`} value={formatTon(value("peso_carcacas"))} />
+      <StatCard icon={Beef} label={`Animais abatidos · ${animal || "três espécies"}`} value={formatNumber(value("animais_abatidos"))} detail="cabeças" />
+      <StatCard icon={CalendarDays} label="Meses no recorte" value={formatNumber(byMonth.length)} detail={partial ? "período parcial" : "período completo"}/></div>
+    <div className="pec-top-row">
+      <section className="pec-card"><div className="pec-card-title">Peso por espécie · Mato Grosso do Sul · t</div><div style={{ height: 300 }}><ResponsiveContainer><BarChart data={byAnimal} layout="vertical" margin={{ right: 32 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis type="number" tick={axis} tickFormatter={formatNumber}/><YAxis type="category" dataKey="animal" width={80} tick={axis}/><Tooltip formatter={(v) => v == null ? "Sem dado" : `${formatNumber(v)} t`}/><Bar dataKey="peso" fill="#0a4f9f" radius={[0, 4, 4, 0]} isAnimationActive={false}/></BarChart></ResponsiveContainer></div></section>
+      <section className="pec-card"><div className="pec-card-title">Abate mensal · {animal || "três espécies"} · t</div><div style={{ height: 300 }}><ResponsiveContainer><LineChart data={byMonth} margin={{ right: 16 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis dataKey="mes" tick={axis}/><YAxis tick={axis} tickFormatter={formatNumber} width={70}/><Tooltip formatter={(v) => v == null ? "Sem dado" : `${formatNumber(v)} t`}/><Line dataKey="peso" stroke="#0a4f9f" strokeWidth={2.5} isAnimationActive={false}/></LineChart></ResponsiveContainer></div></section>
     </div>
-  );
+    <section className="pec-card"><div className="pec-card-title">Abate mês a mês · Mato Grosso do Sul · {periodText}</div><div className="pec-table-scroll"><table className="pec-table"><thead><tr><th>Mês</th><th className="num">Cabeças</th><th className="num">Peso (t)</th></tr></thead><tbody>{byMonth.map((row) => <tr key={row.period}><td>{row.mes}</td><td className="num">{formatNumber(row.unidades)}</td><td className="num">{row.peso == null ? "Sem dado" : formatNumber(row.peso)}</td></tr>)}</tbody><tfoot><tr><td>Total do recorte</td><td className="num">{formatNumber(value("animais_abatidos"))}</td><td className="num">{formatTon(value("peso_carcacas"))}</td></tr></tfoot></table></div></section>
+  </div>;
 }
-
-// Sem componente-página próprio: as duas abas acima são montadas pelo painel
-// unificado de Agronegócio (../agronegocio/Agronegocio.jsx).

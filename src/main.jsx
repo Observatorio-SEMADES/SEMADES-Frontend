@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import EmpresasPage from "./pages/EmpresasPage";
 import EmpregosPage from "./pages/EmpregosPage";
 import AgronegocioPage from "./pages/AgronegocioPage";
+import AgriculturaFamiliarPage from "./pages/AgriculturaFamiliarPage";
 import DadosCentroPage from "./pages/DadosCentroPage";
 import FeatureRoute from "./components/routes/FeatureRoute";
 import LoginStatusBadge from "./components/auth/LoginStatusBadge";
@@ -44,6 +45,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/dashboard/empresas" element={<AppShell printable><EmpresasPage /></AppShell>} />
         <Route path="/dashboard/empregos" element={<AppShell printable><EmpregosPage /></AppShell>} />
         <Route path="/dashboard/agronegocio" element={<AppShell printable><AgronegocioPage /></AppShell>} />
+        <Route path="/dashboard/agricultura-familiar" element={<AppShell printable><AgriculturaFamiliarPage /></AppShell>} />
         {/* Rotas antigas (painéis separados de pecuária/agricultura) — mantidas
             como redirect para não quebrar links já compartilhados. */}
         <Route path="/dashboard/agro-pecuaria" element={<Navigate to="/dashboard/agronegocio" replace />} />

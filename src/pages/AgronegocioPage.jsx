@@ -23,7 +23,7 @@ export default function AgronegocioPage() {
 
       <PageHeader
         title="Agronegócio"
-        subtitle="Pecuária e agricultura de Campo Grande - MS · rebanho, abate e lavoura"
+        subtitle="Rebanho e lavoura de Campo Grande · abate em Mato Grosso do Sul"
       />
 
       <Agronegocio />

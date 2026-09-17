@@ -115,7 +115,7 @@
 /* ── Resumo (StatCards) — 4 cartões ── */
 .agr-resumo-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 1rem;
 }
 
@@ -148,6 +148,7 @@
   border-bottom: 1px solid var(--gray-200);
   text-align: left;
   white-space: nowrap;
+  padding: 0.6rem 0.95rem;
 }
 
 .agr-table th.num {
