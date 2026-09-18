@@ -6,7 +6,7 @@ import PageHeader from "../components/ui/PageHeader";
 import StatCard from "../components/ui/StatCard";
 import FilterDropdown from "../components/ui/FilterDropdown";
 import SourceMeta from "../components/ui/SourceMeta";
-import { mudasRows, paaRows } from "../data/observatorio";
+import { mudasRows } from "../data/observatorio";
 import { formatNumber, sumAvailable, unique, valueOf } from "../data/observatorioCsv";
 import "../styles/Pecuaria.css";
 import "../styles/AgriculturaFamiliar.css";
@@ -51,10 +51,6 @@ export default function AgriculturaFamiliarPage() {
         <section className="pec-card"><div className="pec-card-title">Resumo por mês · {periodText}</div><div className="pec-table-scroll"><table className="pec-table"><thead><tr><th>Mês</th><th className="num">Entregas registradas</th><th className="num">Bandejas</th><th className="num">Mudas</th></tr></thead><tbody>{byMonth.map((row) => <tr key={row.period}><td>{row.mes}</td><td className="num">{formatNumber(row.entregas)}</td><td className="num">{formatNumber(row.bandejas)}</td><td className="num">{formatNumber(row.mudas)}</td></tr>)}</tbody><tfoot><tr><td>Total</td><td className="num">{formatNumber(total("entregas"))}</td><td className="num">{formatNumber(total("bandejas"))}</td><td className="num">{formatNumber(total("mudas"))}</td></tr></tfoot></table></div></section>
       </div>
       <section className="pec-card"><div className="pec-card-title">Bandejas por cultura · detalhamento</div><div className="pec-table-scroll"><table className="pec-table"><thead><tr><th>Cultura</th><th className="num">Bandejas</th></tr></thead><tbody>{cultures.map((row) => <tr key={row.cultura}><td>{row.cultura}</td><td className="num">{formatNumber(row.bandejas)}</td></tr>)}</tbody><tfoot><tr><td>Total das culturas</td><td className="num">{formatNumber(sumAvailable(cultures.map((row) => row.bandejas)))}</td></tr></tfoot></table></div></section>
-      <section className="pec-card family-validation"><div className="pec-card-title">Dados em validação · PAA</div>
-        <p>Os registros agregados do Programa de Aquisição de Alimentos estão marcados como <b>pendente_validacao</b> no CSV. O período não foi informado e os cartões gerais divergem dos quadros por produto e comunidade. Por isso, estes registros ainda não compõem os resultados consolidados acima.</p>
-        <SourceMeta rows={paaRows} period="não informado" unit="R$, kg, projetos e solicitações (conforme indicador)" note="Fonte: aba PaginaInicial. Conferir período, recorte e reconciliação entre cartões e quadros antes da publicação dos indicadores."/>
-      </section>
     </div>
   </>;
 }

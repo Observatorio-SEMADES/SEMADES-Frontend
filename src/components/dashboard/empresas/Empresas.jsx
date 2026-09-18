@@ -152,6 +152,8 @@ function BairroTable() {
     copy.sort((a, b) => {
       const av = a[sortKey];
       const bv = b[sortKey];
+      // Sem detalhamento (null) vai sempre para o fim, em qualquer direção.
+      if (av == null || bv == null) return av == null && bv == null ? 0 : av == null ? 1 : -1;
       const cmp = typeof av === "string" ? av.localeCompare(bv, "pt-BR") : av - bv;
       return asc ? cmp : -cmp;
     });
@@ -159,6 +161,7 @@ function BairroTable() {
   }, [sortKey, asc]);
 
   const maxTotal = empresasTabelaBairro.reduce((m, r) => Math.max(m, r.total), 0);
+  const semDetalhe = empresasTabelaBairro.filter((r) => r.servicos == null);
 
   const handleSort = (key) => {
     if (key === sortKey) {
@@ -199,15 +202,28 @@ function BairroTable() {
                   <span className="emp-td-bar" style={{ width: `${(r.total / maxTotal) * 100}%` }} aria-hidden="true" />
                   <span className="emp-td-name">{r.bairro}</span>
                 </td>
-                <td className="num">{nf.format(r.servicos)}</td>
-                <td className="num">{nf.format(r.comercio)}</td>
-                <td className="num">{nf.format(r.industria)}</td>
+                {r.servicos == null ? (
+                  <td className="num emp-td-missing" colSpan={3}>Sem detalhamento por setor</td>
+                ) : (
+                  <>
+                    <td className="num">{nf.format(r.servicos)}</td>
+                    <td className="num">{nf.format(r.comercio)}</td>
+                    <td className="num">{nf.format(r.industria)}</td>
+                  </>
+                )}
                 <td className="num strong">{nf.format(r.total)}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {semDetalhe.length > 0 && (
+        <p className="emp-table-note">
+          {semDetalhe.length} bairros ({nf.format(semDetalhe.reduce((s, r) => s + r.total, 0))} empresas) estão sem
+          divisão por setor: a base setorial por bairro não casou com esses nomes na origem. Os totais do bairro e da
+          cidade estão corretos; a divisão será refeita quando a base PLANURB por bairro for reprocessada.
+        </p>
+      )}
     </section>
   );
 }

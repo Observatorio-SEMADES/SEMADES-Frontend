@@ -515,3 +515,17 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Bairros sem divisão por setor (dado ausente, não zero). */
+.emp-td-missing {
+  color: var(--gray-500, #6b7280);
+  font-style: italic;
+  text-align: center !important;
+}
+
+.emp-table-note {
+  margin: 0.75rem 0 0;
+  color: var(--gray-600, #4b5563);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}

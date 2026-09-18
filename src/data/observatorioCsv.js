@@ -1,5 +1,6 @@
 // Leitura única dos CSVs públicos do observatório. Valor ausente é null; zero é 0.
-export function parseCsv(source) {
+// `delimiter` é "," nos CSVs antigos e ";" nos CSVs das fontes oficiais (csv/oficiais).
+export function parseCsv(source, delimiter = ",") {
   const text = source.replace(/^\uFEFF/, "");
   const records = [];
   let record = [];
@@ -10,7 +11,7 @@ export function parseCsv(source) {
     if (char === '"') {
       if (quoted && text[i + 1] === '"') { field += '"'; i += 1; }
       else quoted = !quoted;
-    } else if (char === "," && !quoted) {
+    } else if (char === delimiter && !quoted) {
       record.push(field); field = "";
     } else if ((char === "\n" || char === "\r") && !quoted) {
       if (char === "\r" && text[i + 1] === "\n") i += 1;

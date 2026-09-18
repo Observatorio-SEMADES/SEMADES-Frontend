@@ -4,11 +4,16 @@ import { Beef, Layers, Scale, CalendarDays } from "lucide-react";
 import StatCard from "../../ui/StatCard";
 import FilterDropdown from "../../ui/FilterDropdown";
 import SourceMeta from "../../ui/SourceMeta";
-import { rebanhoRows, abateRows } from "../../../data/observatorio";
-import { formatNumber, sumAvailable, unique, valueOf } from "../../../data/observatorioCsv";
+import { ppmRows as ppmSource, abateRows, metaIbge } from "../../../data/observatorio";
+import { PPM_CINCO_ESPECIES, PPM_SUBCATEGORIAS } from "../../../data/fontesOficiais";
+import { formatNumber, sumAvailable, unique } from "../../../data/observatorioCsv";
 
-const years = unique(rebanhoRows.map((row) => row.periodo));
-const species = unique(rebanhoRows.map((row) => row.categoria));
+// PPM/IBGE 2015–2024 no formato usado pelo painel (periodo/categoria/valor).
+const ppmRows = ppmSource.map((row) => ({ periodo: row.ano, categoria: row.especie, valor: row.cabecas, marcador: row.marcador_ibge }));
+const years = unique(ppmRows.map((row) => row.periodo));
+const latestYear = years.at(-1);
+const mainSpecies = unique(ppmSource.filter((row) => !row.subcategoria_de).map((row) => row.especie));
+const markerText = (row) => row?.marcador ? `${row.marcador} (IBGE)` : "Sem dado";
 const abateYears = unique(abateRows.map((row) => row.periodo.slice(0, 4)));
 const abateSpecies = unique(abateRows.map((row) => row.categoria));
 const monthBR = new Intl.DateTimeFormat("pt-BR", { month: "short", year: "numeric", timeZone: "UTC" });
@@ -24,25 +29,31 @@ function Chips({ options, value, onChange, allLabel }) {
 }
 
 export function RebanhoTab() {
-  const [year, setYear] = useState("2024");
+  const [year, setYear] = useState(null);
   const [animal, setAnimal] = useState(null);
-  const chosen = year || "2024";
-  const current = rebanhoRows.filter((row) => row.periodo === chosen && (!animal || row.categoria === animal));
+  const chosen = year || latestYear;
+  const inYear = ppmRows.filter((row) => row.periodo === chosen);
+  const selection = animal ? [animal] : PPM_CINCO_ESPECIES;
+  const current = inYear.filter((row) => selection.includes(row.categoria));
   const chart = current.map((row) => ({ animal: row.categoria, quantidade: row.valor }));
   const total = sumAvailable(current.map((row) => row.valor));
-  const history = years.map((ano) => ({ ano, quantidade: sumAvailable(rebanhoRows.filter((row) => row.periodo === ano && (!animal || row.categoria === animal)).map((row) => row.valor)) }));
-  const tableSpecies = animal ? [animal] : species;
+  const history = years.map((ano) => ({ ano, quantidade: sumAvailable(ppmRows.filter((row) => row.periodo === ano && selection.includes(row.categoria)).map((row) => row.valor)) }));
+  // Tabela: espécies principais e, logo abaixo da espécie-mãe, as subcategorias (nunca somadas).
+  const tableRows = (animal ? [animal] : mainSpecies).flatMap((name) => [
+    { name, row: inYear.find((row) => row.categoria === name), sub: false },
+    ...Object.entries(PPM_SUBCATEGORIAS).filter(([, parent]) => parent === name).map(([child]) => ({ name: child, row: inYear.find((row) => row.categoria === child), sub: true })),
+  ]);
   return <div className="pec-tab-panel">
-    <div className="pec-filters"><Chips options={species} value={animal} onChange={setAnimal} allLabel="Cinco espécies" />
-      <div className="pec-filter"><span className="pec-filter-label">Ano:</span><FilterDropdown allLabel="2024" options={years} value={year} onChange={setYear} /></div></div>
-    <SourceMeta rows={current} period={chosen} unit="cabeças" note="Total: soma apenas de bovinos, suínos, caprinos, ovinos e galináceos da PPM. A evolução mostra a série histórica da seleção de espécie." />
-    <div className="pec-resumo-row"><StatCard icon={Layers} label={`${animal || "Cinco espécies do painel"} · ${chosen}`} value={formatNumber(total)} detail="cabeças" />
+    <div className="pec-filters"><Chips options={mainSpecies} value={animal} onChange={setAnimal} allLabel="Cinco espécies" />
+      <div className="pec-filter"><span className="pec-filter-label">Ano:</span><FilterDropdown allLabel={latestYear} options={years} value={year} onChange={setYear} /></div></div>
+    <SourceMeta rows={metaIbge(ppmSource.filter((row) => row.ano === chosen), "IBGE PPM · SIDRA 3939")} period={chosen} unit="cabeças" note={`Total “cinco espécies”: bovino, suíno (total), caprino, ovino e galináceos (total). Galinhas estão contidas em galináceos e matrizes em suínos; essas subcategorias aparecem na tabela, mas não entram em somas. Bubalino, equino e codornas podem ser vistos individualmente. PPM disponível até ${latestYear}; símbolos do IBGE são exibidos como na fonte.`} />
+    <div className="pec-resumo-row"><StatCard icon={Layers} label={`${animal || "Cinco espécies do painel"} · ${chosen}`} value={total == null ? markerText(current[0]) : formatNumber(total)} detail="cabeças" />
       <StatCard icon={Beef} label="Espécies exibidas" value={formatNumber(current.length)} /><StatCard icon={CalendarDays} label="Série histórica" value={`${years[0]}–${years.at(-1)}`} /></div>
     <div className="pec-top-row">
-      <section className="pec-card"><div className="pec-card-title">Rebanho por espécie · {chosen}</div><div style={{ height: 300 }}><ResponsiveContainer><BarChart data={chart} layout="vertical" margin={{ right: 32 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis type="number" tick={axis} tickFormatter={formatNumber}/><YAxis type="category" dataKey="animal" width={90} tick={axis}/><Tooltip formatter={(v) => `${formatNumber(v)} cabeças`}/><Bar dataKey="quantidade" fill="#0a4f9f" radius={[0, 4, 4, 0]} isAnimationActive={false}/></BarChart></ResponsiveContainer></div></section>
+      <section className="pec-card"><div className="pec-card-title">Rebanho por espécie · {chosen}</div><div style={{ height: 300 }}><ResponsiveContainer><BarChart data={chart} layout="vertical" margin={{ right: 32 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis type="number" tick={axis} tickFormatter={formatNumber}/><YAxis type="category" dataKey="animal" width={120} tick={axis}/><Tooltip formatter={(v) => v == null ? "Sem dado" : `${formatNumber(v)} cabeças`}/><Bar dataKey="quantidade" fill="#0a4f9f" radius={[0, 4, 4, 0]} isAnimationActive={false}/></BarChart></ResponsiveContainer></div></section>
       <section className="pec-card"><div className="pec-card-title">Evolução histórica · {animal || "cinco espécies"}</div><div style={{ height: 300 }}><ResponsiveContainer><LineChart data={history} margin={{ right: 16 }}><CartesianGrid strokeDasharray="3 3" stroke="#eef2f7"/><XAxis dataKey="ano" tick={axis}/><YAxis tick={axis} tickFormatter={formatNumber} width={72}/><Tooltip formatter={(v) => v == null ? "Sem dado" : `${formatNumber(v)} cabeças`}/><Line dataKey="quantidade" stroke="#0a4f9f" strokeWidth={2.5} isAnimationActive={false}/></LineChart></ResponsiveContainer></div></section>
     </div>
-    <section className="pec-card"><div className="pec-card-title">Efetivo por espécie · {chosen} · cabeças</div><div className="pec-table-scroll"><table className="pec-table"><thead><tr><th>Espécie</th><th className="num">{chosen}</th></tr></thead><tbody>{tableSpecies.map((name) => <tr key={name}><td className="pec-td-name">{name}</td><td className="num">{formatNumber(valueOf(rebanhoRows, "efetivo_rebanho", chosen, name))}</td></tr>)}</tbody><tfoot><tr><td>Total da seleção</td><td className="num">{formatNumber(total)}</td></tr></tfoot></table></div></section>
+    <section className="pec-card"><div className="pec-card-title">Efetivo por espécie · {chosen} · cabeças</div><div className="pec-table-scroll"><table className="pec-table"><thead><tr><th>Espécie</th><th className="num">{chosen}</th></tr></thead><tbody>{tableRows.map(({ name, row, sub }) => <tr key={name}><td className="pec-td-name">{sub ? `↳ ${name} (contido no total acima; fora da soma)` : `${name}${!animal && !PPM_CINCO_ESPECIES.includes(name) ? " (fora da soma)" : ""}`}</td><td className="num">{row?.valor == null ? markerText(row) : formatNumber(row.valor)}</td></tr>)}</tbody><tfoot><tr><td>{animal ? "Total da seleção" : "Soma das cinco espécies"}</td><td className="num">{formatNumber(total)}</td></tr></tfoot></table></div></section>
   </div>;
 }
 

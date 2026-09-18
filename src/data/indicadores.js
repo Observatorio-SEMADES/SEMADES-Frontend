@@ -8,7 +8,7 @@ import {
   Globe,
 } from "lucide-react";
 
-// Cards de dashboards externos (Looker Studio) do Observatório Econômico (/dashboard).
+// Cards dos painéis do Observatório Econômico (/dashboard): `to` = página nativa, `link` = externo.
 export const indicadores = [
   {
     icone: Building2,
@@ -23,8 +23,9 @@ export const indicadores = [
     icone: Briefcase,
     cor: "economia",
     titulo: "Empregos",
-    fonte: "CAGED, 2026",
-    subtitulo: "Geração de empregos formais e informais",
+    fonte: "Novo Caged/MTE · até jul/2026",
+    // O Caged cobre apenas o emprego formal (CLT).
+    subtitulo: "Admissões, desligamentos e saldo do emprego formal",
     // Dashboard nativo no próprio site (substitui o Looker Studio).
     to: "/dashboard/empregos",
   },
@@ -32,7 +33,7 @@ export const indicadores = [
     icone: Wheat,
     cor: "sustentabilidade",
     titulo: "Agronegócio",
-    fonte: "IBGE PPM/PAM e Pesquisa Trimestral do Abate",
+    fonte: "IBGE PAM 2025, PPM 2024 e Pesquisa Trimestral do Abate",
     subtitulo: "Rebanho e lavoura municipais; abate estadual",
     // Dashboard nativo no próprio site (substitui o Looker Studio). Reúne o que
     // antes eram dois cards separados (Pecuária e Agricultura).
@@ -43,24 +44,25 @@ export const indicadores = [
     cor: "sustentabilidade",
     titulo: "Agricultura familiar",
     fonte: "Registros SEMADES, 2026",
-    subtitulo: "Entregas de mudas e bandejas; PAA em validação",
+    subtitulo: "Entregas de mudas e bandejas",
     to: "/dashboard/agricultura-familiar",
   },
   {
     icone: Ship,
     cor: "inovacao",
     titulo: "Comércio Exterior Exportação",
-    fonte: "COMEXTAT, 2025",
+    fonte: "Comex Stat/MDIC · jan/2025–ago/2026",
     subtitulo: "Principais produtos exportados pelo município",
-    link: "https://lookerstudio.google.com/reporting/b726ca0c-1ace-468a-822f-4e6bca1a56d7",
+    // Painel nativo (CSV do MDIC). O Looker anterior segue linkado dentro da página.
+    to: "/dashboard/comercio-exterior",
   },
   {
     icone: Package,
     cor: "inovacao",
     titulo: "Comércio Exterior Importação",
-    fonte: "COMEXTAT, 2025",
+    fonte: "Comex Stat/MDIC · jan/2025–ago/2026",
     subtitulo: "Principais produtos importados pelo município",
-    link: "https://lookerstudio.google.com/reporting/f63d1dd2-0f38-4580-a7b7-e50e17f4c8d1",
+    to: "/dashboard/comercio-exterior?fluxo=importacao",
   },
   // {
   //   icone: "📊",

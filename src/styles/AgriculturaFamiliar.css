@@ -1,3 +1,1 @@
 .family-page { display: flex; flex-direction: column; gap: 1.25rem; }
-.family-validation { border-color: #e6c96c; background: #fffdf4; }
-.family-validation p { margin: 0 0 1rem; color: var(--gray-700); line-height: 1.55; }

@@ -18,6 +18,8 @@ import {
 import { ChevronUp, ChevronDown, Scale, UserPlus, UserMinus, Briefcase, Timer } from "lucide-react";
 import StatCard from "../../ui/StatCard";
 import FilterDropdown from "../../ui/FilterDropdown";
+import SourceMeta from "../../ui/SourceMeta";
+import { cagedMeses, cagedAcumulado, cagedDozeMeses } from "../../../data/caged";
 import {
   empregosPeriodo,
   empregosSetores,
@@ -330,6 +332,73 @@ function EstoqueNoTempo({ serie }) {
   );
 }
 
+// ── Números oficiais do MTE (Tabela 3) · 2026 ──────────────────────────────────
+// Meses sem ajuste (planilha de cada competência) e acumulados com ajustes (planilha
+// do último mês). São versões diferentes da série: exibidas lado a lado, nunca somadas.
+const MESES_BR = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+const mesCurto = (iso) => `${MESES_BR[Number(iso.slice(5, 7)) - 1]}/${iso.slice(2, 4)}`;
+
+function OficialMte() {
+  const ultimo = cagedMeses.at(-1);
+  const somaSemAjuste = cagedMeses.reduce((s, r) => s + r.saldo, 0);
+  const serie = cagedMeses.map((r) => ({ mes: mesCurto(r.inicio), admitidos: r.admissoes, desligados: r.desligamentos, saldo: r.saldo }));
+  const meta = [...cagedMeses, cagedAcumulado, cagedDozeMeses].map((r) => ({
+    territorio: `Campo Grande (MS) · IBGE ${r.municipio_ibge} (MTE 500270)`,
+    fonte: `Novo Caged ${mesCurto(r.fim)} · ${r.localizacao_na_fonte}`,
+    fonte_url: r.fonte_pagina,
+    data_extracao: r.data_extracao,
+  }));
+  const cards = [
+    { icon: Scale, label: `Saldo de ${mesCurto(ultimo.inicio)}`, value: sign(ultimo.saldo), detail: `${nf.format(ultimo.admissoes)} admissões − ${nf.format(ultimo.desligamentos)} desligamentos · sem ajuste` },
+    { icon: UserPlus, label: `Acumulado ${mesCurto(cagedAcumulado.inicio)}–${mesCurto(cagedAcumulado.fim)}`, value: sign(cagedAcumulado.saldo), detail: `${nf.format(cagedAcumulado.admissoes)} − ${nf.format(cagedAcumulado.desligamentos)} · com ajustes` },
+    { icon: Briefcase, label: `Últimos 12 meses (${mesCurto(cagedDozeMeses.inicio)}–${mesCurto(cagedDozeMeses.fim)})`, value: sign(cagedDozeMeses.saldo), detail: `${nf.format(cagedDozeMeses.admissoes)} − ${nf.format(cagedDozeMeses.desligamentos)} · com ajustes` },
+  ];
+  return (
+    <section className="emg-oficial" aria-labelledby="emg-oficial-title">
+      <h2 id="emg-oficial-title" className="emg-section-title">Números oficiais do MTE · 2026</h2>
+      <SourceMeta
+        rows={meta}
+        period={`${mesCurto(cagedMeses[0].inicio)} a ${mesCurto(ultimo.inicio)} (meses) · acumulados até ${mesCurto(cagedAcumulado.fim)}`}
+        unit="vínculos formais (admissões, desligamentos e saldo)"
+        note={`Meses sem ajuste, cada um da planilha da própria competência; acumulado do ano e 12 meses com ajustes (declarações fora do prazo). A soma dos saldos mensais sem ajuste (${sign(somaSemAjuste)}) difere do acumulado oficial com ajustes (${sign(cagedAcumulado.saldo)}) em ${sign(cagedAcumulado.saldo - somaSemAjuste)}: é revisão da série, não erro. O Caged cobre apenas o emprego formal.`}
+      />
+      <div className="emg-resumo-row">
+        {cards.map((c) => <StatCard key={c.label} icon={c.icon} label={c.label} value={c.value} detail={c.detail} />)}
+      </div>
+      <div className="emg-top-row">
+        <section className="emg-card">
+          <div className="emg-card-title">Saldo mensal · sem ajuste</div>
+          <div style={{ width: "100%", height: 260 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={serie} margin={{ top: 8, right: 12, left: 0, bottom: 4 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f7" vertical={false} />
+                <XAxis dataKey="mes" tick={{ fill: "#6b7280", fontSize: 10 }} />
+                <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} tickFormatter={(v) => nf.format(v)} width={48} />
+                <Tooltip formatter={(v) => [sign(v), "Saldo"]} contentStyle={tipStyle} cursor={{ fill: "rgba(239,187,7,0.12)" }} />
+                <ReferenceLine y={0} stroke="#cbd5e1" />
+                <Bar dataKey="saldo" fill={SALDO} radius={[3, 3, 0, 0]} isAnimationActive={false} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+        <section className="emg-card">
+          <div className="emg-card-title">Movimentação mensal · sem ajuste</div>
+          <div className="emg-table-scroll">
+            <table className="emg-table">
+              <thead><tr><th>Mês</th><th className="num">Admissões</th><th className="num">Desligamentos</th><th className="num">Saldo</th></tr></thead>
+              <tbody>{serie.map((r) => <tr key={r.mes}><td className="emg-td-mes">{r.mes}</td><td className="num">{nf.format(r.admitidos)}</td><td className="num">{nf.format(r.desligados)}</td><td className="num strong">{sign(r.saldo)}</td></tr>)}</tbody>
+              <tfoot>
+                <tr><td>Soma dos meses (sem ajuste)</td><td className="num">—</td><td className="num">—</td><td className="num strong">{sign(somaSemAjuste)}</td></tr>
+                <tr><td>Acumulado oficial (com ajustes)</td><td className="num">{nf.format(cagedAcumulado.admissoes)}</td><td className="num">{nf.format(cagedAcumulado.desligamentos)}</td><td className="num strong">{sign(cagedAcumulado.saldo)}</td></tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+  );
+}
+
 const TABS = [
   { id: "geral", label: "Visão geral" },
   { id: "evolucao", label: "Evolução mensal" },
@@ -372,6 +441,14 @@ export default function Empregos() {
 
   return (
     <div className="emg-page">
+      <OficialMte />
+
+      <h2 className="emg-section-title">Detalhe por setor · {empregosPeriodo}</h2>
+      <p className="emg-section-note">
+        Base de microdados agregada por grande grupamento (inclui estoque e tempo médio). Não é a Tabela 3 oficial:
+        Dez/25, Jan/26 e Fev/26 diferem dos números sem ajuste do MTE (Mar/26 e Abr/26 conferem), e o estoque de Abr/26
+        cai de forma incompatível com o saldo do mês — em verificação. Para 2026, use os números oficiais acima.
+      </p>
       <div className="emg-filters">
         <ChipFilter label="Setor" allLabel="Todos os setores" options={empregosSetores} value={setor} onChange={setSetor} />
         <div className="emg-filter">
@@ -432,7 +509,7 @@ export default function Empregos() {
       </div>
 
       <p className="emg-source">
-        Fonte: <b>CAGED / Ministério do Trabalho e Emprego</b> · {empregosPeriodo}
+        Fonte: <b>Novo Caged / Ministério do Trabalho e Emprego</b> · detalhe por setor: {empregosPeriodo} · oficiais: até {mesCurto(cagedMeses.at(-1).inicio)}
       </p>
     </div>
   );

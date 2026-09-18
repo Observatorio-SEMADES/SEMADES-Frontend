@@ -259,3 +259,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Comércio exterior: descrições SH4 longas truncadas (texto completo no title). */
+.pec-table td.comex-td-name {
+  max-width: 22rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}

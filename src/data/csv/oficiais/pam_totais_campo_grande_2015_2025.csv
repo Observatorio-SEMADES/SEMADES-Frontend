@@ -1,0 +1,12 @@
+﻿ano;municipio_ibge;municipio;uf;area_plantada_ha;area_colhida_ha;valor_producao_mil_reais;data_extracao;fonte_url
+2015;5002704;Campo Grande;MS;64287;64287;143215;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2016;5002704;Campo Grande;MS;75679;75592;228770;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2017;5002704;Campo Grande;MS;84434;84384;209002;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2018;5002704;Campo Grande;MS;95013;95013;305938;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2019;5002704;Campo Grande;MS;121036;121036;358865;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2020;5002704;Campo Grande;MS;121073;121073;458175;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2021;5002704;Campo Grande;MS;161219;161219;1236744;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2022;5002704;Campo Grande;MS;165302;165302;1341797;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2023;5002704;Campo Grande;MS;168827;168827;1079039;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2024;5002704;Campo Grande;MS;171959;171835;1013964;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
+2025;5002704;Campo Grande;MS;180874;180874;1026375;2026-09-18;https://apisidra.ibge.gov.br/values/t/5457/n6/5002704/v/all/p/2015-2025/c782/all?formato=json
