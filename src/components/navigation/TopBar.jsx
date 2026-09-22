@@ -84,7 +84,8 @@ export default function TopBar() {
     <MenuContext.Provider value={{ closeMenu }}>
       <nav className="navbar no-print" ref={navRef}>
         <div className="navbar-left">
-          <img src="/logo/prefcg1.png" alt="Prefeitura" className="navbar-logo" />
+          <img src="/logo/brasao-prefeitura.png" alt="Prefeitura de Campo Grande" className="navbar-logo" />
+          <img src="/logo/semades.png" alt="SEMADES" className="navbar-logo navbar-logo-semades" />
         </div>
 
         <HeaderNavTabs />

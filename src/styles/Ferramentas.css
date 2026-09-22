@@ -14,3 +14,22 @@
   grid-template-columns: repeat(auto-fit, minmax(290px, 360px));
   justify-content: center;
 }
+
+.ferramentas-container .dash-card {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ferramentas-container .dash-card:hover,
+.ferramentas-container .dash-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.ferramentas-maintenance {
+  margin: 1.25rem auto 0;
+  color: #b42318;
+  font-weight: 700;
+}

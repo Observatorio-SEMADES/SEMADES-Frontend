@@ -59,10 +59,11 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         <div className="login-modal-header">
           <div className="login-modal-brand">
             <img
-              src="/logo/prefcg1.png"
+              src="/logo/brasao-prefeitura.png"
               alt="Prefeitura de Campo Grande"
               className="login-modal-logo"
             />
+            <img src="/logo/semades.png" alt="SEMADES" className="login-modal-semades-logo" />
           </div>
           <h2>Entrar</h2>
           <p className="login-modal-subtitle">

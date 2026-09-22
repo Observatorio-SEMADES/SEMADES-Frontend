@@ -18,9 +18,10 @@ export default function DashboardCard({
   description,
   href,
   to,
+  onClick,
 }) {
   const isInternal = Boolean(to);
-  const isAvailable = isInternal || Boolean(href);
+  const isAvailable = isInternal || Boolean(href) || Boolean(onClick);
 
   const content = (
     <>
@@ -45,6 +46,18 @@ export default function DashboardCard({
       {description && <p className="dash-card-desc">{description}</p>}
     </>
   );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        className={`dash-card dash-card-${category}`}
+        onClick={onClick}
+      >
+        {content}
+      </button>
+    );
+  }
 
   if (!isAvailable) {
     return (
