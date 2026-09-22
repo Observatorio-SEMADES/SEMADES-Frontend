@@ -151,10 +151,11 @@ function Login() {
       <div className="login-left">
         <div className="login-box">
           <img
-            src="/logo/prefcg1.png"
+            src="/logo/brasao-prefeitura.png"
             alt="Prefeitura de Campo Grande"
             className="logo-prefeitura"
           />
+          <img src="/logo/semades.png" alt="SEMADES" className="logo-semades" />
 
           <h1 className="login-title">
             Seja bem-vindo ao
