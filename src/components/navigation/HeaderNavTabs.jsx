@@ -12,6 +12,7 @@ const PUBLIC_TABS = [
 
 const AUTHENTICATED_TABS = [
   { label: "Dados Centro", path: "/dados-centro" },
+  { label: "Agricultura Familiar", path: "/dashboard/agricultura-familiar" },
 ];
 
 const RESTRICTED_TABS = [
@@ -44,7 +45,8 @@ function HeaderNavButton({ tab }) {
 
 // Abas da topbar. NÃO inclui Login/Sair — o controle de sessão vive dentro do
 // menu das três listras (AuthMenuItems). Aqui só mostramos navegação pública e,
-// quando o backend autoriza, a aba restrita (Superintendências).
+// quando autenticado, os dados internos; Superintendências continua sujeita
+// à permissão específica do backend.
 export default function HeaderNavTabs() {
   // Reage a login/logout (sessionchange) para reavaliar as abas visíveis.
   const { isAuthenticated } = useAuthSession();

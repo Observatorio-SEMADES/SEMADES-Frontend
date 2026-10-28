@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { isAuthenticated, canAccessFeature, fetchMyPermissions } from "../../services/permissions";
 import { validateCurrentSession } from "../../services/authApi";
 import { hasApiUrl } from "../../services/api";
@@ -21,11 +21,17 @@ const DEV_USER = {
 };
 
 // Estados: 'pending' (validando) | 'allowed' | 'denied' | 'unauth'
-export default function FeatureRoute({ feature, element }) {
+export default function FeatureRoute({
+  feature,
+  element,
+  allowDevBypass = true,
+  requireServerValidation = false,
+}) {
+  const location = useLocation();
   const apiConfigured = hasApiUrl();
   // Bypass de dev SÓ quando não há backend configurado. Com VITE_API_URL,
   // a permissão é sempre validada pelo backend (não engana a regra).
-  const devBypass = DEV_MODE && isLocalhost() && !apiConfigured;
+  const devBypass = allowDevBypass && DEV_MODE && isLocalhost() && !apiConfigured;
 
   const hasRequiredAccess = (f) =>
     !f ||
@@ -34,6 +40,7 @@ export default function FeatureRoute({ feature, element }) {
 
   const [state, setState] = useState(() => {
     if (devBypass) return "allowed";
+    if (requireServerValidation && apiConfigured) return "pending";
     if (!apiConfigured) {
       if (!isAuthenticated()) return "unauth";
       return hasRequiredAccess(feature) ? "allowed" : "denied";
@@ -58,7 +65,7 @@ export default function FeatureRoute({ feature, element }) {
 
     let active = true;
     (async () => {
-      const user = await validateCurrentSession();
+      const user = await validateCurrentSession({ requireServerValidation });
       if (!active) return;
       if (!user) {
         setState("unauth");
@@ -76,12 +83,12 @@ export default function FeatureRoute({ feature, element }) {
     return () => {
       active = false;
     };
-  }, [feature, devBypass, apiConfigured]);
+  }, [feature, devBypass, apiConfigured, requireServerValidation]);
 
   if (devBypass) return element;
   if (state === "pending") return null; // valida a sessão antes de renderizar (sem layout)
   // Site é público: sem auth ou sem permissão, volta para a home pública.
-  if (state === "unauth") return <Navigate to="/home" replace />;
+  if (state === "unauth") return <Navigate to="/login" state={{ from: location }} replace />;
   if (state === "denied") return <Navigate to="/home" replace />;
   return element;
 }

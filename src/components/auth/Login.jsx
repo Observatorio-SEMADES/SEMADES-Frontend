@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../styles/Login.css";
 import GoogleAuth from "./Google_auth";
 import Skeleton from "../ui/Skeleton";
@@ -37,6 +37,17 @@ function Login() {
   const [slides, setSlides] = useState([]);
   const [slideAtual, setSlideAtual] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const requestedRoute = location.state?.from;
+  const requestedPath = requestedRoute?.pathname;
+  const afterLogin =
+    typeof requestedPath === "string" &&
+    requestedPath.startsWith("/") &&
+    !requestedPath.startsWith("//") &&
+    requestedPath !== "/login"
+      ? requestedPath + (requestedRoute.search || "") + (requestedRoute.hash || "")
+      : "/home";
 
   const apiConfigured = hasApiUrl();
 
@@ -47,19 +58,20 @@ function Login() {
       setErro(getGoogleAccessMessage());
       return;
     }
-    if (credential) localStorage.setItem("authToken", credential);
-    if (profile) {
-      localStorage.setItem(
-        "authUser",
-        JSON.stringify({
-          name: profile.name,
-          email: profile.email,
-          picture: profile.picture,
-          provider: "google",
-        })
-      );
+    if (!credential) {
+      setErro("Não foi possível iniciar a sessão Google. Tente novamente.");
+      return;
     }
-    navigate("/home");
+    setSession({
+      token: credential,
+      user: {
+        name: profile.name,
+        email: profile.email,
+        picture: profile.picture,
+        provider: "google",
+      },
+    });
+    navigate(afterLogin, { replace: true });
   };
 
   const handleEmailLogin = async (e) => {
@@ -68,7 +80,7 @@ function Login() {
     setLoading(true);
     try {
       await loginWithEmailPassword({ email: email.trim(), password });
-      navigate("/home");
+      navigate(afterLogin, { replace: true });
     } catch (err) {
       setErro(err.message ?? "Falha ao fazer login. Tente novamente.");
     } finally {
@@ -84,16 +96,16 @@ function Login() {
       if (!localStorage.getItem("authToken")) {
         setSession({ token: "local-admin", user: DEV_USER });
       }
-      navigate("/home");
+      navigate(afterLogin, { replace: true });
       return;
     }
 
     const user = localStorage.getItem("authUser");
     const token = localStorage.getItem("authToken");
     if (user && token) {
-      navigate("/home");
+      navigate(afterLogin, { replace: true });
     }
-  }, [navigate, apiConfigured]);
+  }, [navigate, apiConfigured, afterLogin]);
 
   // ── Slides ──────────────────────────────────────────────────────────────────
   useEffect(() => {

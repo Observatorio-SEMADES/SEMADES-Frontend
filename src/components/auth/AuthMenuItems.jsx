@@ -29,6 +29,11 @@ export default function AuthMenuItems() {
       await fetchMyPermissions();
     }
     notifySessionChanged();
+    const requestedRoute = location.state?.from;
+    const pathname = requestedRoute?.pathname;
+    if (typeof pathname === "string" && pathname.startsWith("/") && !pathname.startsWith("//")) {
+      navigate(pathname + (requestedRoute.search || "") + (requestedRoute.hash || ""), { replace: true });
+    }
   };
 
   const handleLogout = () => {
@@ -37,7 +42,8 @@ export default function AuthMenuItems() {
     if (
       location.pathname.startsWith("/superintendencias") ||
       location.pathname === "/ferramentas" ||
-      location.pathname === "/dados-centro"
+      location.pathname === "/dados-centro" ||
+      location.pathname === "/dashboard/agricultura-familiar"
     ) {
       navigate("/home");
     }

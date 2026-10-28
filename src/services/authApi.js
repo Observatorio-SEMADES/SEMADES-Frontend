@@ -27,7 +27,7 @@ export function logout() {
 // - Erro de rede → mantém a sessão local (mas não a considera validada).
 // - DEV sem API → fallback local (usuário armazenado).
 // - Produção sem API → null (não confiar em sessão local p/ área restrita).
-export async function validateCurrentSession() {
+export async function validateCurrentSession({ requireServerValidation = false } = {}) {
   const token = getAuthToken();
   if (!token) return null;
 
@@ -47,7 +47,7 @@ export async function validateCurrentSession() {
         return null;
       }
       // Erro de rede/servidor: não derruba a sessão, mas não valida.
-      return getStoredUser();
+      return requireServerValidation ? null : getStoredUser();
     }
   }
 

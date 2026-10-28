@@ -48,6 +48,31 @@
   gap: 1.25rem;
 }
 
+.agr-area-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.agr-chart-context {
+  margin: -0.35rem 0 0.65rem;
+  color: var(--gray-600);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.agr-chart-empty {
+  display: grid;
+  min-height: 11rem;
+  place-items: center;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px dashed var(--gray-300);
+  border-radius: 12px;
+  color: var(--gray-600);
+  text-align: center;
+}
+
 /* ── Filtros (Produto + Ano, ambos dropdown) ── */
 .agr-filters {
   display: flex;
@@ -124,6 +149,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
+}
+
+.agr-quantity-section,
+.agr-soybean-history {
+  grid-column: 1 / -1;
 }
 
 /* ── Tabela ── */
@@ -229,8 +259,236 @@
   text-align: right;
 }
 
+.agr-quantity-details-button {
+  align-self: flex-start;
+  min-height: 42px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--brand-700);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--brand-700);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.agr-quantity-details-button:hover:not(:disabled) {
+  background: var(--brand-50);
+}
+
+.agr-quantity-details-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.agr-quantity-chart .recharts-surface {
+  cursor: pointer;
+}
+
+.agr-quantity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  column-gap: 1.25rem;
+  margin-top: 0.35rem;
+}
+
+.agr-quantity-panel {
+  min-width: 0;
+  padding: 0.95rem 0.15rem 0.85rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.agr-quantity-panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.8rem;
+}
+
+.agr-quantity-panel-header h4 {
+  margin: 0;
+  color: var(--gray-800);
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.agr-quantity-latest {
+  color: var(--gray-600);
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+.agr-quantity-chart {
+  height: 210px;
+  margin-top: 0.3rem;
+}
+
+.agr-quantity-point {
+  cursor: pointer;
+}
+
+.agr-quantity-point-mark {
+  transform-origin: center;
+  transition: transform 120ms ease;
+}
+
+.agr-quantity-point:hover .agr-quantity-point-mark {
+  transform: scale(1.3);
+}
+
+.agr-quantity-series-button {
+  min-height: 40px;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--brand-700);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.agr-quantity-series-button:hover,
+.agr-quantity-series-button:focus-visible {
+  border-color: var(--brand-700);
+  background: var(--brand-50);
+  outline: none;
+}
+
+.agr-quantity-series-button:focus-visible,
+.agr-quantity-details-button:focus-visible {
+  outline: 3px solid rgba(40, 53, 135, 0.3);
+  outline-offset: 2px;
+}
+
+.agr-quantity-note {
+  margin-top: 0.85rem;
+}
+
+.agr-quantity-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.48);
+}
+
+.agr-quantity-dialog {
+  width: min(100%, 620px);
+  max-height: min(82vh, 720px);
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+
+.agr-quantity-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.3rem 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.agr-quantity-dialog-header h3 {
+  margin: 0;
+  color: var(--gray-900);
+  font-size: 1.12rem;
+}
+
+.agr-quantity-dialog-header p {
+  margin: 0.4rem 0 0;
+  color: var(--gray-600);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.agr-quantity-dialog-close {
+  display: grid;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--gray-600);
+  cursor: pointer;
+}
+
+.agr-quantity-dialog-close:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.agr-quantity-dialog-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0.5rem 1.3rem;
+}
+
+.agr-quantity-dialog-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.agr-quantity-dialog-row:last-child {
+  border-bottom: 0;
+}
+
+.agr-quantity-dialog-row dt {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  color: var(--gray-800);
+  font-weight: 600;
+}
+
+.agr-quantity-swatch {
+  flex: 0 0 0.7rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+}
+
+.agr-quantity-dialog-row dd {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--gray-900);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: right;
+}
+
+.agr-quantity-dialog-footer {
+  padding: 0.8rem 1.3rem 1rem;
+  border-top: 1px solid var(--gray-200);
+  color: var(--gray-600);
+  font-size: 0.82rem;
+}
+
 /* ── Responsivo ── */
 @media (max-width: 1000px) {
+  .agr-area-grid {
+    grid-template-columns: 1fr;
+  }
   .agr-evo-grid {
     grid-template-columns: 1fr;
   }
@@ -242,5 +500,19 @@
 @media (max-width: 560px) {
   .agr-resumo-row {
     grid-template-columns: 1fr;
+  }
+
+  .agr-quantity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .agr-quantity-chart {
+    height: 190px;
+  }
+
+  .agr-quantity-dialog-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
   }
 }

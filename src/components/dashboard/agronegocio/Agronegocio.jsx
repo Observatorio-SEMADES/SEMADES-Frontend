@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RebanhoTab, AbateTab } from "../pecuaria/Pecuaria";
+import { RebanhoTab, AbateTab, AquiculturaTab } from "../pecuaria/Pecuaria";
 import Agricultura from "../agricultura/Agricultura";
 
 // Painel único de Agronegócio: uma só barra de abas reunindo o que antes eram
@@ -14,6 +14,7 @@ import Agricultura from "../agricultura/Agricultura";
 const TABS = [
   { id: "rebanho", dominio: "Pecuária", label: "Rebanho" },
   { id: "abate", dominio: "Pecuária", label: "Abate" },
+  { id: "aquicultura", dominio: "Pecuária", label: "Piscicultura" },
   { id: "lavoura", dominio: "Agricultura", label: "Por produto" },
   { id: "evolucao", dominio: "Agricultura", label: "Evolução anual" },
 ];
@@ -50,6 +51,8 @@ export default function Agronegocio() {
           <Agricultura tab={abaAgricultura} />
         ) : tab === "rebanho" ? (
           <RebanhoTab />
+        ) : tab === "aquicultura" ? (
+          <AquiculturaTab />
         ) : (
           <AbateTab />
         )}
