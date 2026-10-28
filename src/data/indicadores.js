@@ -2,7 +2,6 @@ import {
   Building2,
   Briefcase,
   Wheat,
-  Sprout,
   Ship,
   Package,
   Globe,
@@ -38,14 +37,6 @@ export const indicadores = [
     // Dashboard nativo no próprio site (substitui o Looker Studio). Reúne o que
     // antes eram dois cards separados (Pecuária e Agricultura).
     to: "/dashboard/agronegocio",
-  },
-  {
-    icone: Sprout,
-    cor: "sustentabilidade",
-    titulo: "Agricultura familiar",
-    fonte: "Registros SEMADES, 2026",
-    subtitulo: "Entregas de mudas e bandejas",
-    to: "/dashboard/agricultura-familiar",
   },
   {
     icone: Ship,
