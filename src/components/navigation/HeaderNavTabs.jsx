@@ -12,7 +12,6 @@ const PUBLIC_TABS = [
 
 const AUTHENTICATED_TABS = [
   { label: "Dados Centro", path: "/dados-centro" },
-  { label: "Agricultura Familiar", path: "/dashboard/agricultura-familiar" },
 ];
 
 const RESTRICTED_TABS = [
