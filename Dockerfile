@@ -1,0 +1,26 @@
+FROM node:22-bookworm-slim AS build
+
+WORKDIR /app
+
+COPY SEMADES-Frontend/package*.json ./
+RUN npm ci
+
+COPY SEMADES-Frontend/ ./
+
+ARG VITE_API_URL=http://localhost:3000
+ARG VITE_GOOGLE_CLIENT_ID=
+ARG VITE_ALLOWED_GOOGLE_EMAILS=
+ARG VITE_ALLOWED_GOOGLE_DOMAINS=
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}
+ENV VITE_ALLOWED_GOOGLE_EMAILS=${VITE_ALLOWED_GOOGLE_EMAILS}
+ENV VITE_ALLOWED_GOOGLE_DOMAINS=${VITE_ALLOWED_GOOGLE_DOMAINS}
+
+RUN npm run build
+
+FROM nginx:1.27-alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY docker/nginx-static.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80

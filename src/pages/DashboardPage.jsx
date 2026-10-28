@@ -7,11 +7,14 @@ import DashboardCard from "../components/ui/DashboardCard";
 import { indicadores } from "../data/indicadores";
 import MetroVerseButton from "../components/Metroverse/MetroVerse";
 import { Sprout } from "lucide-react";
+import { useAuthSession } from "../hooks/useAuthSession";
 
 // Página "/dashboard" — Observatório de Desenvolvimento Econômico.
 // Saiu do antigo Root.jsx (que servia /dashboard e /dados-centro com um if).
 // O container/main/rodapé agora vêm do AppShell.
 export default function DashboardPage() {
+  const { isAuthenticated } = useAuthSession();
+  const visibleIndicadores = indicadores.filter((item) => !item.requireAuth || isAuthenticated);
   const scrollToSection = (id, offset = 72) => {
     const section = document.getElementById(id);
     if (!section) return;
@@ -44,7 +47,7 @@ export default function DashboardPage() {
 
       <div className="dashboard-content">
         <div className="card-grid">
-          {indicadores.map((item) => (
+          {visibleIndicadores.map((item) => (
             <DashboardCard
               key={item.titulo}
               icon={item.icone}

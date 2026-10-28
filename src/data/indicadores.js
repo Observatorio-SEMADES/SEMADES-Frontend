@@ -5,6 +5,7 @@ import {
   Ship,
   Package,
   Globe,
+  Sprout,
 } from "lucide-react";
 
 // Cards dos painéis do Observatório Econômico (/dashboard): `to` = página nativa, `link` = externo.
@@ -37,6 +38,15 @@ export const indicadores = [
     // Dashboard nativo no próprio site (substitui o Looker Studio). Reúne o que
     // antes eram dois cards separados (Pecuária e Agricultura).
     to: "/dashboard/agronegocio",
+  },
+  {
+    icone: Sprout,
+    cor: "sustentabilidade",
+    titulo: "Agricultura Familiar",
+    fonte: "SEMADES · dados de mudas e bandejas",
+    subtitulo: "Hortas Urbanas, Patrulha Mecanizada, Feira e Agrosocial",
+    to: "/dashboard/agricultura-familiar",
+    requireAuth: true,
   },
   {
     icone: Ship,
